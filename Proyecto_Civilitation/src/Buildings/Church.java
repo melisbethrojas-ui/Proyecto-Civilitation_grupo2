@@ -1,6 +1,4 @@
-package Proyecto_Civilitation.src.Buildings;
-
-import units.Variables;
+import Proyecto_Civilitation.Proyecto_Civilitation.Buildings.Variables;
 
 public class Church implements Variables {
     private int level;
