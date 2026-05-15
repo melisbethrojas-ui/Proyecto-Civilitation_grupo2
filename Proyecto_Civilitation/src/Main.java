@@ -1,67 +1,52 @@
-package Proyecto_Civilitation.src.Proyecto_Civilitation;
-
 import java.util.Scanner;
 
-
 public class Main {
+
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
-        
-        System.out.println("------------------------------------------");
-        System.out.println("       BIENVENIDO A CIVILIZATIONS         ");
-        System.out.println("------------------------------------------");
-        
-        // 1. Inicializar la Civilización del jugador
-        Civilization miCivilizacion = new Civilization();
-        
-        boolean jugando = true;
-        
-        while (jugando) {
-            System.out.println("\n--- ESTADO DE LA CIUDAD ---");
-            System.out.println("Batallas ganadas: " + miCivilizacion.getBattles());
-            // Aquí la Persona 3 (GUI) mostrará recursos, pero por consola:
-            System.out.println("1. Ir a la Guerra (Battle)");
-            System.out.println("2. Gestionar Edificios");
-            System.out.println("3. Reclutar Unidades");
-            System.out.println("4. Salir");
-            System.out.print("Selecciona una opción: ");
-            
-            int opcion = sc.nextInt();
-            
-            switch (opcion) {
+
+        Civilization c1 = new Civilization();
+        Civilization c2 = new Civilization();
+
+        int option;
+
+        do {
+            System.out.println("\n=== MENÚ ===");
+            System.out.println("1. Construir Farm");
+            System.out.println("2. Crear Swordsman");
+            System.out.println("3. Producir recursos");
+            System.out.println("4. Stats");
+            System.out.println("5. Batalla");
+            System.out.println("0. Salir");
+
+            option = sc.nextInt();
+
+            try {
+                switch (option) {
                 case 1:
-                    // 2. Iniciar el motor de batalla que creaste
-                    System.out.println("\n¡Generando ejército enemigo y marchando al campo de batalla!");
-                    Proyecto_Civilitation.src.Logic.Battle batalla = new Proyecto_Civilitation.src.Logic.Battle(miCivilizacion);
-                    boolean victoria = batalla.startBattle();
-                    
-                    if (victoria) {
-                        System.out.println("¡Has vuelto victorioso! Recursos obtenidos.");
-                    } else {
-                        System.out.println("Tus tropas han sido diezmadas...");
-                    }
+                    c1.newFarm();
                     break;
-                    
                 case 2:
-                    System.out.println("Menu de edificios (En desarrollo por Persona 3)");
-                    // Aquí llamarías a miCivilizacion.getSmithy().levelUp(), etc.
+                    c1.newSwordsman(0);
                     break;
-                    
                 case 3:
-                    System.out.println("Menu de reclutamiento (En desarrollo por Persona 1/3)");
+                    c1.produceResources();
                     break;
-                    
                 case 4:
-                    jugando = false;
-                    System.out.println("Guardando partida... (Tarea de Persona 2)");
+                    c1.printStats();
                     break;
-                    
-                default:
-                    System.out.println("Opción no válida.");
+                case 5:
+                    Battle b = new Battle(c1, c2);
+                    b.startBattle();
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("ERROR: " + e.getMessage());
             }
-        }
-        
-        System.out.println("¡Gracias por jugar!");
+
+        } while (option != 0);
+
         sc.close();
     }
 }
