@@ -1,10 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase abstracta SpecialUnit.
- * Define el comportamiento base para unidades que requieren edificios 
- * específicos y consumo de maná (Magos y Sacerdotes).
- */
+
 public abstract class SpecialUnit extends MilitaryUnit {
 
     public SpecialUnit(int armor, int damage) {

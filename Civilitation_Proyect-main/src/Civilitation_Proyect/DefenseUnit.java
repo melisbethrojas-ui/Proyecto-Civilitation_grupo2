@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase abstracta DefenseUnit.
- * Base para todas las unidades defensivas (torres y maquinaria de asedio).
- */
+
 public abstract class DefenseUnit extends MilitaryUnit {
 
     public DefenseUnit(int armor, int damage) {

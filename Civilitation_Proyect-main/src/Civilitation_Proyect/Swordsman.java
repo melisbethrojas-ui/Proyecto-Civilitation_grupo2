@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Swordsman: Unidad de infantería pesada.
- * Es la unidad básica con mayor resistencia gracias a su armadura de hierro.
- */
+
 public class Swordsman extends AttackUnit {
 
     public Swordsman() {

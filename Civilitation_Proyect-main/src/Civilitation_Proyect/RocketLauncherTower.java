@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase RocketLauncherTower: La defensa definitiva de la civilización.
- * Posee un gran blindaje y una cadencia de fuego explosiva.
- */
+
 public class RocketLauncherTower extends DefenseUnit {
 
     public RocketLauncherTower() {

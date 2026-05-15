@@ -1,9 +1,5 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Crossbow: Unidad de ataque a distancia.
- * Utiliza las constantes de Variables para definir su comportamiento en batalla.
- */
 public class Crossbow extends AttackUnit {
 
     public Crossbow() {

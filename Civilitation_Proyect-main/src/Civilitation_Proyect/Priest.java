@@ -1,9 +1,5 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Priest: Unidad especial de tipo religioso.
- * Requiere una Church (Iglesia) construida para ser reclutado.
- */
 public class Priest extends SpecialUnit {
 
     public Priest() {

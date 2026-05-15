@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Church: Edificio religioso de la civilización.
- * Su presencia es obligatoria para poder reclutar unidades de tipo Priest.
- */
+
 public class Church implements Variables {
 
     private int level;

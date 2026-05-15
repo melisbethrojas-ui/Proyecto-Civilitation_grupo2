@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Spearman: Unidad de ataque básica (infantería ligera).
- * Se caracteriza por ser barata de producir y equilibrada en combate.
- */
+
 public class Spearman extends AttackUnit {
 
     public Spearman() {

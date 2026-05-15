@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase base para todas las unidades del juego.
- * Implementa Variables para tener acceso a los costes y stats de equilibrio.
- */
+
 public abstract class MilitaryUnit implements Variables {
 
     private int totalArmor;

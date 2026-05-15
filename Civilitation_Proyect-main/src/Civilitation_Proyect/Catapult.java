@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Catapult: Unidad de asedio pesada.
- * Tiene un daño base muy elevado, ideal para romper defensas.
- */
+
 public class Catapult extends AttackUnit {
 
     public Catapult() {

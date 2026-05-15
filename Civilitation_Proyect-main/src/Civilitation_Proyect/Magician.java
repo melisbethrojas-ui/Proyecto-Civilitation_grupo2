@@ -1,9 +1,6 @@
 package Civilitation_Proyect;
 
-/**
- * Clase Magician: Unidad especial de tipo mágico.
- * Requiere una MagicTower para ser reclutado y consume Maná.
- */
+
 public class Magician extends SpecialUnit {
 
     public Magician() {
