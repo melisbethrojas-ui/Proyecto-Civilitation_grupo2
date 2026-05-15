@@ -1,0 +1,23 @@
+<div class="contador-destacat">
+    <h3>Total de Batalles Jugades: <span class="numero-total">{{totalBatallas}}</span></h3>
+</div>
+
+<h1>Historial de Reportes de Batalla</h1>
+
+{{#if batallas}}
+    {{#each batallas}}
+    <div class="battle-card" style="border: 2px solid #ccc; margin: 15px 0; padding: 15px; background: #222; color: #fff; border-radius: 8px;">
+        <div class="battle-header" style="background: #444; padding: 10px; font-weight: bold;">
+            <h3>Batalla #{{this.id}} — ¡{{this.resultado}}!</h3>
+        </div>
+        <div class="battle-body" style="padding: 10px;">
+            <p><strong>Resultat de la simulació:</strong> {{this.resultado}}</p>
+            <p><a href="/informe?informe={{this.id}}" style="color: #00ffcc; font-weight: bold;">Anar al informe detallat de la batalla →</a></p>
+        </div>
+    </div>
+    {{/each}}
+{{else}}
+    <p>Encara no s'han registrat batalles en el sistema.</p>
+{{/if}}
+
+<p style="margin-top: 20px;"><a href="/">Tornar a la Portada</a></p>

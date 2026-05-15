@@ -1,0 +1,35 @@
+<div class="portada">
+    <h1>Benvingut a Civilizations Portal</h1>
+    <p class="subtitulo">Gestiona el teu imperi, entrena les teves tropes i conquereix els teus enemics.</p>
+    
+    <div class="galeria-captures">
+        <div class="captura-placeholder">[Captura de Joc: Gameplay]</div>
+        <div class="captura-placeholder">[Captura de Joc: Edificis]</div>
+    </div>
+
+    <hr>
+
+    <h2>Últimes 2 Batalles Jugades</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Enemic</th>
+                <th>Resultat</th>
+                <th>Data</th>
+                <th>Acció</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each ultimas}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.enemigo}}</td>
+                <td><span class="badge {{this.resultado}}">{{this.resultado}}</span></td>
+                <td>{{this.fecha_batalla}}</td>
+                <td><a href="/informe?informe={{this.id}}" class="btn-detalles">Veure Informe</a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
