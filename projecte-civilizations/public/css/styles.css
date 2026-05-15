@@ -1,0 +1,96 @@
+/* Estilos globales - Estilo Interfaz de Estrategia */
+body {
+    background-color: #1a1a24;
+    color: #e0e0e6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    color: #ffcc00; /* Dorado clásico de interfaz de juegos */
+    border-bottom: 2px solid #3a3a4f;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Enlaces de navegación */
+ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    background: #252533;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #3a3a4f;
+}
+
+ul li a {
+    color: #00ffcc;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ul li a:hover {
+    color: #ffcc00;
+}
+
+/* Sección de Recursos Actuales */
+ul:nth-of-type(2) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    background: #2a2a3a;
+    border-left: 5px solid #ffcc00;
+}
+
+ul:nth-of-type(2) li {
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+/* Tablas del Ejército */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #21212f;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #3a3a4f;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #2c2c3e;
+    color: #ffcc00;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+tr {
+    border-bottom: 1px solid #2d2d3d;
+}
+
+tr:hover {
+    background-color: #29293a;
+}
+
+td:first-child {
+    font-weight: bold;
+    color: #00ffcc;
+}
+
+/* Pie de página */
+footer, p:last-of-type {
+    margin-top: 40px;
+    text-align: center;
+    color: #6a6a8a;
+    font-size: 0.85rem;
+}
