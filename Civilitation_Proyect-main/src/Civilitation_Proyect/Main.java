@@ -86,10 +86,10 @@ public class Main implements Variables {
 
                 if (option == 1) {
                     System.out.println("\n--- MENÚ DE CONSTRUCCIÓN Y TECNOLOGÍA ---");
-                    System.out.println("1. Carpintería    (M:" + WOOD_COST_CARPENTRY + " H:" + IRON_COST_CARPENTRY + " C:" + FOOD_COST_CARPENTRY + ")");
-                    System.out.println("2. Herrería       (M:" + WOOD_COST_SMITHY + " H:" + IRON_COST_SMITHY + " C:" + FOOD_COST_SMITHY + ") *Coste aumenta por nivel");
+                    System.out.println("1. Carpintería    (M:" + WOOD_COST_CARPENTRY + " H:" + IRON_COST_CARPENTRY + " C:" + FOOD_COST_CARPENTRY);
+                    System.out.println("2. Herrería       (M:" + WOOD_COST_SMITHY + " H:" + IRON_COST_SMITHY + " C:" + FOOD_COST_SMITHY + ")");
                     System.out.println("3. Granja         (M:" + WOOD_COST_FARM + " H:" + IRON_COST_FARM + " C:" + FOOD_COST_FARM + ")");
-                    System.out.println("4. Torre Mágica   (M:" + WOOD_COST_MAGICTOWER + " H:" + IRON_COST_MAGICTOWER + " C:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER + ") *Coste aumenta por nivel");
+                    System.out.println("4. Torre Mágica   (M:" + WOOD_COST_MAGICTOWER + " H:" + IRON_COST_MAGICTOWER + " C:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER);
                     System.out.println("5. Iglesia        (M:" + WOOD_COST_CHURCH + " H:" + IRON_COST_CHURCH + " C:" + FOOD_COST_CHURCH + ")");
                     System.out.println("6. Investigar Tecnología de Ataque   (Hierro incremental)");
                     System.out.println("7. Investigar Tecnología de Armadura (Hierro incremental)");
