@@ -39,7 +39,7 @@ public class Main implements Variables {
             @Override
             public void run() {
                 if (!gameOver) {
-                    System.out.println("\n⚠️ ¡ALERTA! ¡LA FLOTA ENEMIGA TE HA LOCALIZADO Y LANZA UN ATAQUE AUTOMÁTICO! ⚠️");
+                    System.out.println("\n¡ALERTA! ¡LA FLOTA ENEMIGA TE HA LOCALIZADO Y LANZA UN ATAQUE AUTOMÁTICO! ⚠️");
                     
                     if (isArmyEmpty(myCiv.getArmy())) {
                         System.out.println("¡No tenías tropas defendiendo tu imperio! Tu civilización ha sido arrasada.");
@@ -160,12 +160,12 @@ public class Main implements Variables {
                     }
                     
                     System.out.println("Total de unidades militares: " + totalUnits);
-                    System.out.println("  [0] Espadachines: " + armyArray[0].size());
-                    System.out.println("  [1] Lanceros:     " + armyArray[1].size());
-                    System.out.println("  [2] Ballesteros:  " + armyArray[2].size());
-                    System.out.println("  [3] Cañones:      " + armyArray[3].size());
-                    System.out.println("  [7] Magos:        " + armyArray[7].size());
-                    System.out.println("  [8] Sacerdotes:   " + armyArray[8].size());
+                    System.out.println("  Espadachines: " + armyArray[0].size());
+                    System.out.println("  Lanceros:     " + armyArray[1].size());
+                    System.out.println("  Ballesteros:  " + armyArray[2].size());
+                    System.out.println("  Cañones:      " + armyArray[3].size());
+                    System.out.println("  Magos:        " + armyArray[7].size());
+                    System.out.println("  Sacerdotes:   " + armyArray[8].size());
                     System.out.println("=============================================");
                     
                 } else if (option == 4) {
