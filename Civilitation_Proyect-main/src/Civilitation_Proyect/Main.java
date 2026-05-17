@@ -86,11 +86,11 @@ public class Main implements Variables {
 
                 if (option == 1) {
                     System.out.println("\n--- MENÚ DE CONSTRUCCIÓN Y TECNOLOGÍA ---");
-                    System.out.println("1. Carpintería    (M:" + WOOD_COST_CARPENTRY + " H:" + IRON_COST_CARPENTRY + " C:" + FOOD_COST_CARPENTRY);
-                    System.out.println("2. Herrería       (M:" + WOOD_COST_SMITHY + " H:" + IRON_COST_SMITHY + " C:" + FOOD_COST_SMITHY + ")");
-                    System.out.println("3. Granja         (M:" + WOOD_COST_FARM + " H:" + IRON_COST_FARM + " C:" + FOOD_COST_FARM + ")");
-                    System.out.println("4. Torre Mágica   (M:" + WOOD_COST_MAGICTOWER + " H:" + IRON_COST_MAGICTOWER + " C:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER);
-                    System.out.println("5. Iglesia        (M:" + WOOD_COST_CHURCH + " H:" + IRON_COST_CHURCH + " C:" + FOOD_COST_CHURCH + ")");
+                    System.out.println("1. Carpintería    (Madera:" + WOOD_COST_CARPENTRY + " Hierro:" + IRON_COST_CARPENTRY + " Comida:" + FOOD_COST_CARPENTRY);
+                    System.out.println("2. Herrería       (Madera:" + WOOD_COST_SMITHY + " Hierro:" + IRON_COST_SMITHY + " Comida:" + FOOD_COST_SMITHY + ")");
+                    System.out.println("3. Granja         (Madera:" + WOOD_COST_FARM + " Hierro:" + IRON_COST_FARM + " Comida:" + FOOD_COST_FARM + ")");
+                    System.out.println("4. Torre Mágica   (Madera:" + WOOD_COST_MAGICTOWER + " Hierro:" + IRON_COST_MAGICTOWER + " Comida:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER);
+                    System.out.println("5. Iglesia        (Madera:" + WOOD_COST_CHURCH + " Hierro:" + IRON_COST_CHURCH + " Comida:" + FOOD_COST_CHURCH + ")");
                     System.out.println("6. Investigar Tecnología de Ataque   (Hierro incremental)");
                     System.out.println("7. Investigar Tecnología de Armadura (Hierro incremental)");
                     System.out.println("0. <-- VOLVER ATRÁS");
@@ -110,11 +110,11 @@ public class Main implements Variables {
 
                 } else if (option == 2) {
                     System.out.println("\n--- RECLUTAR TROPAS ---");
-                    System.out.println("1. Espadachín (Índice 0) -> C:" + FOOD_COST_SWORDSMAN + " M:" + WOOD_COST_SWORDSMAN + " H:" + IRON_COST_SWORDSMAN);
-                    System.out.println("2. Ballestero (Índice 2) -> M:" + WOOD_COST_CROSSBOW + " H:" + IRON_COST_CROSSBOW);
-                    System.out.println("3. Cañón      (Índice 3) -> M:" + WOOD_COST_CANNON + " H:" + IRON_COST_CANNON);
-                    System.out.println("4. Mago       (Índice 7) -> C:" + FOOD_COST_MAGICIAN + " Mana:" + MANA_COST_MAGICIAN + " *Requiere Torre");
-                    System.out.println("5. Sacerdote  (Índice 8) -> C:" + FOOD_COST_PRIEST + " Mana:" + MANA_COST_PRIEST + " *Requiere Iglesia");
+                    System.out.println("1. Espadachín (Índice 0) -> Comida:" + FOOD_COST_SWORDSMAN + " Madera:" + WOOD_COST_SWORDSMAN + " Hierro:" + IRON_COST_SWORDSMAN);
+                    System.out.println("2. Ballestero (Índice 2) -> Madera:" + WOOD_COST_CROSSBOW + " Hierro:" + IRON_COST_CROSSBOW);
+                    System.out.println("3. Cañón      (Índice 3) -> Madera:" + WOOD_COST_CANNON + " Hierro:" + IRON_COST_CANNON);
+                    System.out.println("4. Mago       (Índice 7) -> Comida:" + FOOD_COST_MAGICIAN + " Mana:" + MANA_COST_MAGICIAN + " *Requiere Torre");
+                    System.out.println("5. Sacerdote  (Índice 8) -> Comida:" + FOOD_COST_PRIEST + " Mana:" + MANA_COST_PRIEST + " *Requiere Iglesia");
                     System.out.println("0. <-- VOLVER ATRÁS");
                     System.out.print("\n¿A qué unidad deseas llamar?: ");
                     
