@@ -1,52 +1,24 @@
 package Civilitation_Proyect;
 
+public interface MilitaryUnit {
 
-public abstract class MilitaryUnit implements Variables {
+    // Métodos para el combate
+    int attack();
+    void takeDamage(int receivedDamage);
+    int getActualArmor();
+    void resetArmor();
 
-    private int totalArmor;
-    private int actualArmor;
-    private int baseDamage;
-    private int experience;
+    // Costes de recursos para crear la unidad
+    int getFoodCost();
+    int getWoodCost();
+    int getIronCost();
+    int getManaCost();
 
-    public MilitaryUnit(int armor, int damage) {
-        this.totalArmor = armor;
-        this.actualArmor = armor;
-        this.baseDamage = damage;
-        this.experience = 0; // Todas las unidades empiezan con 0 XP
-    }
+    // Probabilidades de combate y escombros
+    int getChanceGeneratinWaste(); // Mantiene la errata del enunciado
+    int getChanceAttackAgain();
 
-    // --- Métodos abstractos que deben implementar las clases finales ---
-    
-    public abstract int attack();
-    public abstract void takeDamage(int damage);
-    
-    // Métodos de coste (obligatorios para que Civilization pueda restar recursos)
-    public abstract int getWoodCost();
-    public abstract int getFoodCost();
-    public abstract int getIronCost();
-    public abstract int getManaCost();
-
-    // --- Lógica común ---
-
-    public boolean isAlive() {
-        return actualArmor > 0;
-    }
-
-    public void resetArmor() {
-        this.actualArmor = this.totalArmor;
-    }
-
-    // --- Getters y Setters ---
-
-    public int getTotalArmor() { return totalArmor; }
-    public void setTotalArmor(int totalArmor) { this.totalArmor = totalArmor; }
-
-    public int getActualArmor() { return actualArmor; }
-    public void setActualArmor(int actualArmor) { this.actualArmor = actualArmor; }
-
-    public int getBaseDamage() { return baseDamage; }
-    public void setBaseDamage(int baseDamage) { this.baseDamage = baseDamage; }
-
-    public int getExperience() { return experience; }
-    public void setExperience(int experience) { this.experience = experience; }
+    // Gestión de la experiencia de la unidad
+    void setExperience(int n);
+    int getExperience();
 }

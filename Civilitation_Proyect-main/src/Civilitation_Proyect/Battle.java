@@ -1,172 +1,164 @@
 package Civilitation_Proyect;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Battle implements Variables {
+public class Battle {
 
-    private ArrayList<MilitaryUnit>[] playerArmy;
-    private ArrayList<MilitaryUnit>[] enemyArmy;
+    // Ejércitos organizados para el combate
+    private ArrayList<MilitaryUnit> civilizationArmy;
+    private ArrayList<MilitaryUnit> enemyArmy;
+
+    // Almacén para el desarrollo de la batalla en texto (para la interfaz o la web)
     private StringBuilder battleLog;
-    private int initialPlayerUnits;
-    private int initialEnemyUnits;
-    private int wasteWood = 0;
-    private int wasteIron = 0;
+    private Random random;
 
-    public Battle(ArrayList<MilitaryUnit>[] playerArmy, int battleCount) {
-        this.playerArmy = playerArmy;
+    // Residuos generados durante el combate
+    private int wasteWood;
+    private int wasteIron;
+
+    public Battle(ArrayList<MilitaryUnit> playerArmy, ArrayList<MilitaryUnit> rivalArmy) {
+        this.civilizationArmy = new ArrayList<>(playerArmy);
+        this.enemyArmy = new ArrayList<>(rivalArmy);
         this.battleLog = new StringBuilder();
-        this.enemyArmy = generateEnemyArmy(battleCount);
-        this.initialPlayerUnits = countUnits(playerArmy);
-        this.initialEnemyUnits = countUnits(enemyArmy);
+        this.random = new Random();
+        this.wasteWood = 0;
+        this.wasteIron = 0;
     }
 
-    // Cuenta el total de unidades vivas en un ejército
-    private int countUnits(ArrayList<MilitaryUnit>[] army) {
-        int total = 0;
-        for (ArrayList<MilitaryUnit> group : army) {
-            if (group != null) total += group.size();
-        }
-        return total;
-    }
-
-    // Genera el ejército enemigo basado en los recursos iniciales y el incremento por batalla
-    private ArrayList<MilitaryUnit>[] generateEnemyArmy(int battleCount) {
-        ArrayList<MilitaryUnit>[] army = new ArrayList[9];
-        for (int i = 0; i < 9; i++) army[i] = new ArrayList<>();
-
-        double multiplier = Math.pow(1 + (ENEMY_FLEET_INCREASE / 100.0), battleCount);
-        int iron = (int) (IRON_BASE_ENEMY_ARMY * multiplier);
-        int wood = (int) (WOOD_BASE_ENEMY_ARMY * multiplier);
-        int food = (int) (FOOD_BASE_ENEMY_ARMY * multiplier);
-
-        Random r = new Random();
-        // El enemigo solo compra unidades de ataque (índices 0-3: Swordsman, Spearman, Crossbow, Cannon)
-        while (true) {
-            int type = r.nextInt(4); 
-            if (wood >= WOOD_COST_UNITS[type] && iron >= IRON_COST_UNITS[type] && food >= FOOD_COST_UNITS[type]) {
-                wood -= WOOD_COST_UNITS[type];
-                iron -= IRON_COST_UNITS[type];
-                food -= FOOD_COST_UNITS[type];
-                
-                if (type == 0) army[0].add(new Swordsman());
-                else if (type == 1) army[1].add(new Spearman());
-                else if (type == 2) army[2].add(new Crossbow());
-                else if (type == 3) army[3].add(new Cannon());
-            } else {
-                break; 
-            }
-        }
-        return army;
-    }
-
-    // Método principal que ejecuta la batalla
-    public String startBattle() {
+    /**
+     * Desarrolla el combate completo por turnos hasta que un bando sea derrotado.
+     */
+    public void startBattle() {
         battleLog.append("--- INICIO DE LA BATALLA ---\n");
-        
-        // La batalla termina si un bando pierde el 80% de sus tropas (queda el 20%)
-        while (countUnits(playerArmy) > initialPlayerUnits * 0.2 && 
-               countUnits(enemyArmy) > initialEnemyUnits * 0.2) {
-            
-            battleLog.append("\n>> TURNO DEL JUGADOR\n");
-            executeTurn(playerArmy, enemyArmy, "Jugador");
-            
-            if (countUnits(enemyArmy) > initialEnemyUnits * 0.2) {
-                battleLog.append("\n>> TURNO DEL ENEMIGO\n");
-                executeTurn(enemyArmy, playerArmy, "Enemigo");
+        battleLog.append("Unidades de la Civilización: ").append(civilizationArmy.size()).append("\n");
+        battleLog.append("Unidades del Enemigo: ").append(enemyArmy.size()).append("\n\n");
+
+        int turn = 1;
+
+        // El bucle sigue mientras ambos tengan tropas vivas
+        while (!civilizationArmy.isEmpty() && !enemyArmy.isEmpty()) {
+            battleLog.append("=== TURNO ").append(turn).append(" ===\n");
+
+            // 1. ATACA LA CIVILIZACIÓN
+            if (!civilizationArmy.isEmpty() && !enemyArmy.isEmpty()) {
+                executeTurn(civilizationArmy, enemyArmy, "Civilización", "Enemigo", Variables.CHANCE_ATTACK_CIVILIZATION_UNITS);
+            }
+
+            // 2. ATACA EL ENEMIGO
+            if (!civilizationArmy.isEmpty() && !enemyArmy.isEmpty()) {
+                executeTurn(enemyArmy, civilizationArmy, "Enemigo", "Civilización", Variables.CHANCE_ATTACK_ENEMY_UNITS);
+            }
+
+            turn++;
+            // Límite de seguridad para evitar bucles infinitos en pruebas
+            if (turn > 1000) {
+                battleLog.append("La batalla se ha extendido demasiado. Empate técnico.\n");
+                break;
             }
         }
-        return finalizeBattle();
-    }
 
-    private void executeTurn(ArrayList<MilitaryUnit>[] attackers, ArrayList<MilitaryUnit>[] defenders, String name) {
-        for (ArrayList<MilitaryUnit> group : attackers) {
-            for (int i = 0; i < group.size(); i++) {
-                if (countUnits(defenders) <= 0) return;
-                performAttack(group.get(i), defenders, name);
-            }
-        }
-    }
-
-    private void performAttack(MilitaryUnit attacker, ArrayList<MilitaryUnit>[] defenders, String name) {
-        int targetGroupIdx = selectTargetGroup(defenders);
-        if (targetGroupIdx == -1) return;
-
-        ArrayList<MilitaryUnit> targetGroup = defenders[targetGroupIdx];
-        int victimIdx = (int) (Math.random() * targetGroup.size());
-        MilitaryUnit victim = targetGroup.get(victimIdx);
-
-        int damage = attacker.attack();
-        victim.takeDamage(damage);
-        
-        battleLog.append(name).append(" ataca con ").append(attacker.getClass().getSimpleName())
-                 .append(" a ").append(victim.getClass().getSimpleName())
-                 .append(" causando ").append(damage).append(" de daño.\n");
-
-        if (!victim.isAlive()) {
-            battleLog.append("¡Unidad enemiga destruida!\n");
-            calculateWaste(victim);
-            targetGroup.remove(victimIdx);
+        // Determinar ganador
+        battleLog.append("\n--- FIN DE LA BATALLA ---\n");
+        if (civilizationArmy.isEmpty() && enemyArmy.isEmpty()) {
+            battleLog.append("Destrucción mutua. No queda nadie en pie.\n");
+        } else if (civilizationArmy.isEmpty()) {
+            battleLog.append("¡Derrota! El ejército enemigo ha vencido.\n");
         } else {
-            // Probabilidad de ataque extra
-            boolean extraAttack = false;
-            if (attacker instanceof AttackUnit) extraAttack = ((AttackUnit) attacker).chanceAttackAgain();
-            else if (attacker instanceof DefenseUnit) extraAttack = ((DefenseUnit) attacker).chanceAttackAgain();
-
-            if (extraAttack) {
-                battleLog.append("¡ATAQUE EXTRA de ").append(attacker.getClass().getSimpleName()).append("!\n");
-                performAttack(attacker, defenders, name);
+            battleLog.append("¡Victoria! Tu civilización ha ganado el combate.\n");
+            // Aplicar experiencia a los supervivientes
+            for (MilitaryUnit unit : civilizationArmy) {
+                unit.setExperience(unit.getExperience() + 1);
             }
+            battleLog.append("Las unidades supervivientes ganan +1 de experiencia.\n");
         }
     }
 
-    // Selección de objetivo basada en la cantidad de unidades de cada grupo (Probabilidad)
-    private int selectTargetGroup(ArrayList<MilitaryUnit>[] army) {
-        int totalUnits = countUnits(army);
-        if (totalUnits == 0) return -1;
-        int random = (int) (Math.random() * totalUnits);
-        int cumulative = 0;
-        for (int i = 0; i < army.length; i++) {
-            cumulative += army[i].size();
-            if (random < cumulative) return i;
-        }
-        return -1;
-    }
-
-    private void calculateWaste(MilitaryUnit victim) {
-        // Se genera el 70% del coste en recursos si se cumple la probabilidad de waste
-        boolean generates = false;
-        if (victim instanceof AttackUnit) generates = ((AttackUnit) victim).chanceGeneratngWaste();
-        else if (victim instanceof DefenseUnit) generates = ((DefenseUnit) victim).chanceGeneratngWaste();
-
-        if (generates) {
-            wasteWood += (victim.getWoodCost() * PERCENTATGE_WASTE) / 100;
-            wasteIron += (victim.getIronCost() * PERCENTATGE_WASTE) / 100;
-        }
-    }
-
-    private String finalizeBattle() {
-        boolean playerWon = countUnits(playerArmy) > initialPlayerUnits * 0.2;
+    /**
+     * Ejecuta la lógica de ataque de un bando contra otro basándose en las probabilidades fijas.
+     */
+    private void executeTurn(ArrayList<MilitaryUnit> attackers, ArrayList<MilitaryUnit> defenders, 
+                             String attackerName, String defenderName, int[] probabilities) {
         
-        if (playerWon) {
-            battleLog.append("\n¡VICTORIA FINAL!\n");
-            // Supervivientes ganan experiencia y recuperan armadura
-            for (ArrayList<MilitaryUnit> group : playerArmy) {
-                for (MilitaryUnit u : group) {
-                    u.setExperience(u.getExperience() + 1);
-                    u.resetArmor();
+        // Seleccionar atacante aleatorio del bando
+        MilitaryUnit attacker = attackers.get(random.nextInt(attackers.size()));
+        
+        // Calcular si repite ataque por sus probabilidades individuales
+        boolean attackAgain = true;
+        
+        while (attackAgain && !defenders.isEmpty()) {
+            // Seleccionar defensor aleatorio del bando contrario
+            int defenderIdx = random.nextInt(defenders.size());
+            MilitaryUnit defender = defenders.get(defenderIdx);
+
+            int damage = attacker.attack();
+            
+            // Si el atacante es un Sacerdote, su daño es 0 pero podría activar lógica de soporte si se implementa
+            if (damage > 0) {
+                defender.takeDamage(damage);
+                battleLog.append("[").append(attackerName).append("] ")
+                         .append(attacker.getClass().getSimpleName())
+                         .append(" ataca a ").append(defender.getClass().getSimpleName())
+                         .append(" infligiendo ").append(damage).append(" de daño. ")
+                         .append("(Armadura restante: ").append(Math.max(0, defender.getActualArmor())).append(")\n");
+
+                // Comprobar si el defensor ha muerto
+                if (defender.getActualArmor() <= 0) {
+                    battleLog.append("¡¡ ").append(defender.getClass().getSimpleName()).append(" ").append(defenderName).append(" ha sido destruido !!\n");
+                    
+                    // Lógica de cálculo de residuos/escombros
+                    calculateWaste(defender);
+                    
+                    // Se elimina del ejército activo
+                    defenders.remove(defenderIdx);
                 }
             }
-        } else {
-            battleLog.append("\nDERROTA. La civilización ha caído.\n");
+
+            // Comprobar si se repite el tiro en este mismo turno
+            int roll = random.nextInt(100);
+            attackAgain = roll < attacker.getChanceAttackAgain();
+            if (attackAgain && !defenders.isEmpty()) {
+                battleLog.append("¡Habilidad activada! El ").append(attacker.getClass().getSimpleName()).append(" repite ataque de forma consecutiva.\n");
+            }
         }
-        
-        battleLog.append("Recursos recuperados (Waste): Madera: ").append(wasteWood)
-                 .append(", Hierro: ").append(wasteIron).append("\n");
-        
-        return battleLog.toString();
     }
 
-    public int getWasteWood() { return wasteWood; }
-    public int getWasteIron() { return wasteIron; }
+    /**
+     * Calcula los residuos de madera y hierro recolectados al caer una unidad.
+     */
+    private void calculateWaste(MilitaryUnit deadUnit) {
+        int roll = random.nextInt(100);
+        // Usamos el nombre del método que coincide con tu interfaz corregida
+        if (roll < deadUnit.getChanceGeneratinWaste()) {
+            int woodRecovered = (deadUnit.getWoodCost() * Variables.PERCENTATGE_WASTE) / 100;
+            int ironRecovered = (deadUnit.getIronCost() * Variables.PERCENTATGE_WASTE) / 100;
+            
+            this.wasteWood += woodRecovered;
+            this.wasteIron += ironRecovered;
+            
+            battleLog.append("  [ESCOMBROS] Se han generado ").append(woodRecovered)
+                     .append(" de madera y ").append(ironRecovered).append(" de hierro en el campo.\n");
+        }
+    }
+
+    // --- GETTERS ---
+    
+    public String getBattleDevelopment() {
+        return this.battleLog.toString();
+    }
+
+    public int getWasteWood() {
+        return this.wasteWood;
+    }
+
+    public int getWasteIron() {
+        return this.wasteIron;
+    }
+
+    public ArrayList<MilitaryUnit> getCivilizationArmy() {
+        return civilizationArmy;
+    }
+
+    public ArrayList<MilitaryUnit> getEnemyArmy() {
+        return enemyArmy;
+    }
 }

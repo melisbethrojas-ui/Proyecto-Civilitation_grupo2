@@ -1,52 +1,33 @@
 package Civilitation_Proyect;
 
+public class Catapult extends DefenseUnit {
 
-public class Catapult extends AttackUnit {
+    public Catapult(int technologyArmorLevel, int technologyAttackLevel) {
+        super(Variables.ARMOR_CATAPULT, Variables.BASE_DAMAGE_CATAPULT);
+        this.armor += (Variables.ARMOR_CATAPULT * technologyArmorLevel * Variables.PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY) / 100;
+        this.initialArmor = this.armor;
+        this.baseDamage += (Variables.BASE_DAMAGE_CATAPULT * technologyAttackLevel * Variables.PLUS_ATTACK_CATAPULT_BY_TECHNOLOGY) / 100;
+    }
 
     public Catapult() {
-        // Usamos las constantes de Variables para inicializar
-        super(ARMOR_CATAPULT, BASE_DAMAGE_CATAPULT);
+        super(Variables.ARMOR_CATAPULT, Variables.BASE_DAMAGE_CATAPULT);
     }
 
     @Override
     public int attack() {
-        // Daño base + bonus por experiencia
-        return getBaseDamage() + (getExperience() * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+        return this.baseDamage;
     }
 
     @Override
-    public boolean chanceAttackAgain() {
-        // La catapulta suele tener un 50% de ataque extra (CHANCE_ATTACK_AGAIN_CATAPULT = 50)
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_ATTACK_AGAIN_CATAPULT;
-    }
-
+    public int getFoodCost() { return Variables.FOOD_COST_CATAPULT; }
     @Override
-    public boolean chanceGeneratngWaste() {
-        // Probabilidad de generar escombros al morir (65% según Variables)
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_GENERATNG_WASTE_CATAPULT;
-    }
-
-    // Métodos de costes obligatorios
-    
+    public int getWoodCost() { return Variables.WOOD_COST_CATAPULT; }
     @Override
-    public int getWoodCost() {
-        return WOOD_COST_CATAPULT;
-    }
-
+    public int getIronCost() { return Variables.IRON_COST_CATAPULT; }
     @Override
-    public int getFoodCost() {
-        return FOOD_COST_CATAPULT;
-    }
-
+    public int getManaCost() { return Variables.MANA_COST_CATAPULT; }
     @Override
-    public int getIronCost() {
-        return IRON_COST_CATAPULT;
-    }
-
+    public int getChanceGeneratinWaste() { return Variables.CHANCE_GENERATING_WASTE_CATAPULT; }
     @Override
-    public int getManaCost() {
-        return MANA_COST_CATAPULT; // Coste 0
-    }
+    public int getChanceAttackAgain() { return Variables.CHANCE_ATTACK_AGAIN_CATAPULT; }
 }

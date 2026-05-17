@@ -1,52 +1,33 @@
 package Civilitation_Proyect;
 
-
 public class Spearman extends AttackUnit {
 
+    public Spearman(int technologyArmorLevel, int technologyAttackLevel) {
+        super(Variables.ARMOR_SPEARMAN, Variables.BASE_DAMAGE_SPEARMAN);
+        this.armor += (Variables.ARMOR_SPEARMAN * technologyArmorLevel * Variables.PLUS_ARMOR_SPEARMAN_BY_TECHNOLOGY) / 100;
+        this.initialArmor = this.armor;
+        this.baseDamage += (Variables.BASE_DAMAGE_SPEARMAN * technologyAttackLevel * Variables.PLUS_ATTACK_SPEARMAN_BY_TECHNOLOGY) / 100;
+    }
+
     public Spearman() {
-        // Inicializamos con armadura y daño base desde la interfaz Variables
-        super(ARMOR_SPEARMAN, BASE_DAMAGE_SPEARMAN);
+        super(Variables.ARMOR_SPEARMAN, Variables.BASE_DAMAGE_SPEARMAN);
     }
 
     @Override
     public int attack() {
-        // Daño base aumentado por la experiencia de la unidad
-        return getBaseDamage() + (getExperience() * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+        return this.baseDamage;
     }
 
     @Override
-    public boolean chanceAttackAgain() {
-        // Probabilidad de ataque extra (suele ser baja para unidades básicas, ej. 5-10%)
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_ATTACK_AGAIN_SPEARMAN;
-    }
-
+    public int getFoodCost() { return Variables.FOOD_COST_SPEARMAN; }
     @Override
-    public boolean chanceGeneratngWaste() {
-        // Probabilidad de generar residuos al ser derrotado
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_GENERATNG_WASTE_SPEARMAN;
-    }
-
-    // --- Métodos de coste obligatorios (Persona 1) ---
-
+    public int getWoodCost() { return Variables.WOOD_COST_SPEARMAN; }
     @Override
-    public int getWoodCost() {
-        return WOOD_COST_SPEARMAN;
-    }
-
+    public int getIronCost() { return Variables.IRON_COST_SPEARMAN; }
     @Override
-    public int getFoodCost() {
-        return FOOD_COST_SPEARMAN;
-    }
-
+    public int getManaCost() { return Variables.MANA_COST_SPEARMAN; }
     @Override
-    public int getIronCost() {
-        return IRON_COST_SPEARMAN; // Generalmente bajo o 0
-    }
-
+    public int getChanceGeneratinWaste() { return Variables.CHANCE_GENERATING_WASTE_SPEARMAN; }
     @Override
-    public int getManaCost() {
-        return MANA_COST_SPEARMAN; // Siempre 0
-    }
+    public int getChanceAttackAgain() { return Variables.CHANCE_ATTACK_AGAIN_SPEARMAN; }
 }

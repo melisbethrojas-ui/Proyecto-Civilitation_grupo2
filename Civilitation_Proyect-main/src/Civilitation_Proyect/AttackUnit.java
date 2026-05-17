@@ -1,42 +1,51 @@
 package Civilitation_Proyect;
 
-public abstract class AttackUnit extends MilitaryUnit {
-
+public abstract class AttackUnit implements MilitaryUnit {    // Atributos protegidos para que las clases hijas (Swordsman, Spearman...) los hereden
+    protected int armor;
+    protected int initialArmor;
+    protected int baseDamage;
+    protected int experience;
+    protected boolean sanctified;
+    
     public AttackUnit(int armor, int damage) {
-        super(armor, damage);
+        this.armor = armor;
+        this.initialArmor = armor;
+        this.baseDamage = damage;
+        this.experience = 0;
     }
 
-    /**
-     * Lógica de ataque: El daño depende del daño base más la experiencia acumulada.
-     * Según el PDF, cada punto de experiencia suma un bonus fijo.
-     */
+   // Implementación de métodos de la interfaz comunes a los atacantes
     @Override
-    public int attack() {
-        return getBaseDamage() + (getExperience() * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+    public void takeDamage(int receivedDamage) {
+        this.armor -= receivedDamage;
     }
 
-    /**
-     * Las unidades de ataque tienen una probabilidad de volver a atacar.
-     * Este método será implementado en las clases finales (Swordsman, etc.)
-     * usando las constantes de la interfaz Variables.
-     */
-    public abstract boolean chanceAttackAgain();
-
-    /**
-     * Las unidades de ataque tienen una probabilidad de generar residuos al morir.
-     */
-    public abstract boolean chanceGeneratngWaste();
-
-    /**
-     * Método para recibir daño.
-     * Resta el daño recibido de la armadura actual.
-     */
     @Override
-    public void takeDamage(int damage) {
-        int currentArmor = getActualArmor();
-        setActualArmor(currentArmor - damage);
-        if (getActualArmor() < 0) {
-            setActualArmor(0);
-        }
+    public int getActualArmor() {
+        return this.armor;
+    }
+
+    @Override
+    public void resetArmor() {
+        this.armor = this.initialArmor;
+    }
+
+    @Override
+    public void setExperience(int n) {
+        this.experience = n;
+    }
+
+    @Override
+    public int getExperience() {
+        return this.experience;
+    }
+
+    // Getters y Setters específicos que pide el documento
+    public boolean isSanctified() {
+        return sanctified;
+    }
+
+    public void setSanctified(boolean sanctified) {
+        this.sanctified = sanctified;
     }
 }

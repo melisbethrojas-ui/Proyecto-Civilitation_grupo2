@@ -1,52 +1,33 @@
 package Civilitation_Proyect;
 
-
 public class Cannon extends AttackUnit {
 
+    public Cannon(int technologyArmorLevel, int technologyAttackLevel) {
+        super(Variables.ARMOR_CANNON, Variables.BASE_DAMAGE_CANNON);
+        this.armor += (Variables.ARMOR_CANNON * technologyArmorLevel * Variables.PLUS_ARMOR_CANNON_BY_TECHNOLOGY) / 100;
+        this.initialArmor = this.armor;
+        this.baseDamage += (Variables.BASE_DAMAGE_CANNON * technologyAttackLevel * Variables.PLUS_ATTACK_CANNON_BY_TECHNOLOGY) / 100;
+    }
+
     public Cannon() {
-        // Usamos las constantes de la interfaz Variables para armadura y daño base
-        super(ARMOR_CANNON, BASE_DAMAGE_CANNON);
+        super(Variables.ARMOR_CANNON, Variables.BASE_DAMAGE_CANNON);
     }
 
     @Override
     public int attack() {
-        // El daño escala con la experiencia acumulada
-        return getBaseDamage() + (getExperience() * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+        return this.baseDamage;
     }
 
     @Override
-    public boolean chanceAttackAgain() {
-        // El Cañón tiene un 70% de probabilidad de atacar de nuevo (CHANCE_ATTACK_AGAIN_CANNON = 70)
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_ATTACK_AGAIN_CANNON;
-    }
-
+    public int getFoodCost() { return Variables.FOOD_COST_CANNON; }
     @Override
-    public boolean chanceGeneratngWaste() {
-        // Probabilidad de generar escombros al ser destruido (70% según Variables)
-        int operacion = (int) (Math.random() * 100) + 1;
-        return operacion <= CHANCE_GENERATNG_WASTE_CANNON;
-    }
-
-    // Métodos de costo obligatorios vinculados a la interfaz Variables
-
+    public int getWoodCost() { return Variables.WOOD_COST_CANNON; }
     @Override
-    public int getWoodCost() {
-        return WOOD_COST_CANNON;
-    }
-
+    public int getIronCost() { return Variables.IRON_COST_CANNON; }
     @Override
-    public int getFoodCost() {
-        return FOOD_COST_CANNON;
-    }
-
+    public int getManaCost() { return Variables.MANA_COST_CANNON; }
     @Override
-    public int getIronCost() {
-        return IRON_COST_CANNON;
-    }
-
+    public int getChanceGeneratinWaste() { return Variables.CHANCE_GENERATING_WASTE_CANNON; }
     @Override
-    public int getManaCost() {
-        return MANA_COST_CANNON; // El cañón no consume maná (0)
-    }
+    public int getChanceAttackAgain() { return Variables.CHANCE_ATTACK_AGAIN_CANNON; }
 }

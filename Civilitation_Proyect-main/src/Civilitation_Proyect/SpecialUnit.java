@@ -1,37 +1,38 @@
 package Civilitation_Proyect;
 
+public abstract class SpecialUnit implements MilitaryUnit {
 
-public abstract class SpecialUnit extends MilitaryUnit {
+    protected int baseDamage;
+    protected int experience;
 
-    public SpecialUnit(int armor, int damage) {
-        super(armor, damage);
+    public SpecialUnit(int baseDamage) {
+        this.baseDamage = baseDamage;
+        this.experience = 0;
     }
 
-    /**
-     * Implementación del daño recibido.
-     * Al ser unidades de "apoyo" o "mágicas", suelen ser más frágiles.
-     */
+    // Al no tener armadura, estos métodos devuelven 0 o no hacen nada
     @Override
-    public void takeDamage(int damage) {
-        int currentArmor = getActualArmor();
-        setActualArmor(currentArmor - damage);
-        
-        // Evitamos que la armadura sea negativa
-        if (getActualArmor() < 0) {
-            setActualArmor(0);
-        }
+    public void takeDamage(int receivedDamage) {
+        // No tienen armadura que restar
     }
 
-    /**
-     * Las unidades especiales también tienen probabilidad de ataque extra.
-     */
-    public abstract boolean chanceAttackAgain();
+    @Override
+    public int getActualArmor() {
+        return 0; 
+    }
 
-    /**
-     * Las unidades especiales también generan residuos al ser destruidas.
-     */
-    public abstract boolean chanceGeneratngWaste();
-    
-    // Los métodos attack() y los de costes se heredarán 
-    // y se implementarán en las clases finales (Magician/Priest).
+    @Override
+    public void resetArmor() {
+        // No hay armadura que resetear
+    }
+
+    @Override
+    public void setExperience(int n) {
+        this.experience = n;
+    }
+
+    @Override
+    public int getExperience() {
+        return this.experience;
+    }
 }

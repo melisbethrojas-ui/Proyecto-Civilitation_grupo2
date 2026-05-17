@@ -1,41 +1,43 @@
 package Civilitation_Proyect;
 
+public abstract class DefenseUnit implements MilitaryUnit {
 
-public abstract class DefenseUnit extends MilitaryUnit {
+    protected int armor;
+    protected int initialArmor;
+    protected int baseDamage;
+    protected int experience;
+    protected boolean sanctified;
 
-    public DefenseUnit(int armor, int damage) {
-        super(armor, damage);
+    public DefenseUnit(int armor, int baseDamage) {
+        this.armor = armor;
+        this.initialArmor = armor;
+        this.baseDamage = baseDamage;
+        this.experience = 0;
+        this.sanctified = false;
     }
 
-    /**
-     * Lógica de ataque para defensas:
-     * El daño aumenta según la experiencia acumulada por la unidad.
-     */
     @Override
-    public int attack() {
-        return getBaseDamage() + (getExperience() * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT);
+    public void takeDamage(int receivedDamage) {
+        this.armor -= receivedDamage;
     }
 
-    /**
-     * Recibe daño y reduce la armadura actual.
-     */
     @Override
-    public void takeDamage(int damage) {
-        int currentArmor = getActualArmor();
-        setActualArmor(currentArmor - damage);
-        if (getActualArmor() < 0) {
-            setActualArmor(0);
-        }
+    public int getActualArmor() {
+        return this.armor;
     }
 
-    /**
-     * Método abstracto para la probabilidad de volver a atacar.
-     * Se implementará en ArrowTower, Catapult, etc.
-     */
-    public abstract boolean chanceAttackAgain();
+    @Override
+    public void resetArmor() {
+        this.armor = this.initialArmor;
+    }
 
-    /**
-     * Método abstracto para la probabilidad de generar residuos al ser destruida.
-     */
-    public abstract boolean chanceGeneratngWaste();
+    @Override
+    public void setExperience(int n) {
+        this.experience = n;
+    }
+
+    @Override
+    public int getExperience() {
+        return this.experience;
+    }
 }
