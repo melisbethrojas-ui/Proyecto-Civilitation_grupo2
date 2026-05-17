@@ -4,32 +4,39 @@ public class ArrowTower extends DefenseUnit {
 
     // Constructor para tu civilización (aplica tecnologías)
     public ArrowTower(int technologyArmorLevel, int technologyAttackLevel) {
-        super(Variables.ARMOR_ARROWTOWER, Variables.BASE_DAMAGE_ARROWTOWER);
-        this.armor += (Variables.ARMOR_ARROWTOWER * technologyArmorLevel * Variables.PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY) / 100;
+        super(ARMOR_ARROWTOWER, BASE_DAMAGE_ARROWTOWER);
+        this.armor += (ARMOR_ARROWTOWER * technologyArmorLevel * PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY) / 100;
         this.initialArmor = this.armor;
-        this.baseDamage += (Variables.BASE_DAMAGE_ARROWTOWER * technologyAttackLevel * Variables.PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY) / 100;
+        this.baseDamage += (BASE_DAMAGE_ARROWTOWER * technologyAttackLevel * PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY) / 100;
     }
 
     // Constructor para el enemigo (sin tecnologías)
     public ArrowTower() {
-        super(Variables.ARMOR_ARROWTOWER, Variables.BASE_DAMAGE_ARROWTOWER);
+        super(ARMOR_ARROWTOWER, BASE_DAMAGE_ARROWTOWER);
     }
 
     @Override
     public int attack() {
-        return this.baseDamage;
+        int totalDamage = this.baseDamage;
+        // Incremento por experiencia (4% por punto)
+        totalDamage += (this.baseDamage * this.experience * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT) / 100;
+        // Incremento por santificación (7%)
+        if (this.isSanctified()) {
+            totalDamage += (this.baseDamage * PLUS_ATTACK_UNIT_SANCTIFIED) / 100;
+        }
+        return totalDamage;
     }
 
     @Override
-    public int getFoodCost() { return Variables.FOOD_COST_ARROWTOWER; }
+    public int getFoodCost() { return FOOD_COST_ARROWTOWER; }
     @Override
-    public int getWoodCost() { return Variables.WOOD_COST_ARROWTOWER; }
+    public int getWoodCost() { return WOOD_COST_ARROWTOWER; }
     @Override
-    public int getIronCost() { return Variables.IRON_COST_ARROWTOWER; }
+    public int getIronCost() { return IRON_COST_ARROWTOWER; }
     @Override
-    public int getManaCost() { return Variables.MANA_COST_ARROWTOWER; }
+    public int getManaCost() { return MANA_COST_ARROWTOWER; }
     @Override
-    public int getChanceGeneratinWaste() { return Variables.CHANCE_GENERATING_WASTE_ARROWTOWER; }
+    public int getChanceGeneratinWaste() { return CHANCE_GENERATING_WASTE_ARROWTOWER; }
     @Override
-    public int getChanceAttackAgain() { return Variables.CHANCE_ATTACK_AGAIN_ARROWTOWER; }
+    public int getChanceAttackAgain() { return CHANCE_ATTACK_AGAIN_ARROWTOWER; }
 }

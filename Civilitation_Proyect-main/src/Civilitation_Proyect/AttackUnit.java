@@ -1,6 +1,6 @@
 package Civilitation_Proyect;
 
-public abstract class AttackUnit implements MilitaryUnit {    // Atributos protegidos para que las clases hijas (Swordsman, Spearman...) los hereden
+public abstract class AttackUnit implements MilitaryUnit, Variables { // Corregido: Implementa ambas interfaces
     protected int armor;
     protected int initialArmor;
     protected int baseDamage;
@@ -12,9 +12,9 @@ public abstract class AttackUnit implements MilitaryUnit {    // Atributos prote
         this.initialArmor = armor;
         this.baseDamage = damage;
         this.experience = 0;
+        this.sanctified = false; // Inicialización recomendada
     }
 
-   // Implementación de métodos de la interfaz comunes a los atacantes
     @Override
     public void takeDamage(int receivedDamage) {
         this.armor -= receivedDamage;
@@ -40,7 +40,11 @@ public abstract class AttackUnit implements MilitaryUnit {    // Atributos prote
         return this.experience;
     }
 
-    // Getters y Setters específicos que pide el documento
+    // El motor requiere saber si está abstract para delegar a las clases hijas
+    @Override
+    public abstract int attack(); 
+
+    // Getters y Setters específicos del enunciado
     public boolean isSanctified() {
         return sanctified;
     }

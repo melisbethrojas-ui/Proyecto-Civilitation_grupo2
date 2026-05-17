@@ -2,25 +2,36 @@ package Civilitation_Proyect;
 
 public class Priest extends SpecialUnit {
 
+    // Tu constructor con niveles de tecnología
+    public Priest(int technologyArmorLevel, int technologyAttackLevel) {
+        super(0, BASE_DAMAGE_PRIEST); // Corregido: ya no lleva Variables.
+        this.armor = 0;
+        this.initialArmor = 0;
+    }
+
+    // Tu constructor para el enemigo
     public Priest() {
-        super(Variables.BASE_DAMAGE_PRIEST);
+        super(0, BASE_DAMAGE_PRIEST);
+        this.armor = 0;
+        this.initialArmor = 0;
     }
 
     @Override
     public int attack() {
-        return this.baseDamage; // Devolverá 0 ya que no hace daño directo
+        // El sacerdote no genera daño físico directo
+        return 0; 
     }
 
     @Override
-    public int getFoodCost() { return Variables.FOOD_COST_PRIEST; }
+    public int getFoodCost() { return FOOD_COST_PRIEST; }
     @Override
-    public int getWoodCost() { return Variables.WOOD_COST_PRIEST; }
+    public int getWoodCost() { return WOOD_COST_PRIEST; }
     @Override
-    public int getIronCost() { return Variables.IRON_COST_PRIEST; }
+    public int getIronCost() { return IRON_COST_PRIEST; }
     @Override
-    public int getManaCost() { return Variables.MANA_COST_PRIEST; }
+    public int getManaCost() { return MANA_COST_PRIEST; }
     @Override
-    public int getChanceGeneratinWaste() { return Variables.CHANCE_GENERATING_WASTE_PRIEST; }
+    public int getChanceGeneratinWaste() { return CHANCE_GENERATING_WASTE_PRIEST; }
     @Override
-    public int getChanceAttackAgain() { return Variables.CHANCE_ATTACK_AGAIN_PRIEST; }
+    public int getChanceAttackAgain() { return CHANCE_ATTACK_AGAIN_PRIEST; }
 }
