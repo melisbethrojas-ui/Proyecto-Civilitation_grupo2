@@ -24,6 +24,9 @@ public class Battle implements Variables {
     // Contadores de recursos perdidos para decidir el ganador por pérdidas ponderadas
     private int resourcesLostCiv;
     private int resourcesLostEnemy;
+    
+    // Guardamos explícitamente el resultado final para el reporte
+    private String winnerName = "Empate"; 
 
     @SuppressWarnings("unchecked")
     public Battle(ArrayList<MilitaryUnit>[] playerArmy, ArrayList<MilitaryUnit>[] rivalArmy) {
@@ -77,12 +80,13 @@ public class Battle implements Variables {
             }
         }
 
-        // REQUISITO 5: Evaluar ganador según el bando que haya perdido MENOS valor de recursos ponderado
         battleLog.append("\n--- FIN DE LA BATALLA ---\n");
-        battleLog.append("Valor de pérdidas de la Civilización (Recursos): ").append(resourcesLostCiv).append("\n");
-        battleLog.append("Valor de pérdidas del Enemigo (Recursos): ").append(resourcesLostEnemy).append("\n");
+        battleLog.append("Valor ponderado de pérdidas de la Civilización: ").append(resourcesLostCiv).append("\n");
+        battleLog.append("Valor ponderado de pérdidas del Enemigo: ").append(resourcesLostEnemy).append("\n");
 
+        // REQUISITO 5: Evaluar ganador según el bando que haya perdido MENOS valor de recursos ponderado
         if (resourcesLostCiv < resourcesLostEnemy) {
+            this.winnerName = "Civilización";
             battleLog.append("¡VICTORIA! Tu civilización sufrió menos pérdidas económicas y gana la batalla.\n");
             // Aplicar experiencia a los supervivientes que quedan en el array interno
             for (ArrayList<MilitaryUnit> group : civilizationArmy) {
@@ -91,8 +95,10 @@ public class Battle implements Variables {
                 }
             }
         } else if (resourcesLostEnemy < resourcesLostCiv) {
+            this.winnerName = "Enemigo";
             battleLog.append("¡DERROTA! El enemigo causó un daño estratégico devastador y se proclama vencedor.\n");
         } else {
+            this.winnerName = "Empate";
             battleLog.append("¡EMPATE TÉCNICO! Ambas facciones perdieron exactamente el mismo capital militar.\n");
         }
     }
@@ -102,7 +108,7 @@ public class Battle implements Variables {
         
         // REQUISITO 2: Seleccionar el GRUPO ATACANTE usando los porcentajes fijos del PDF
         int attackerGroupIdx = selectGroupBasedOnProbability(attackers, probabilities);
-        if (attackerGroupIdx == -1) return; // No hay unidades atacantes disponibles de ningún tipo con probabilidad
+        if (attackerGroupIdx == -1) return; // No hay unidades atacantes disponibles
 
         MilitaryUnit attacker = attackers[attackerGroupIdx].get(random.nextInt(attackers[attackerGroupIdx].size()));
         boolean attackAgain = true;
@@ -129,12 +135,16 @@ public class Battle implements Variables {
                 if (defender.getActualArmor() <= 0) {
                     battleLog.append("   -> ¡¡ ").append(defender.getClass().getSimpleName()).append(" destruido !!\n");
                     
-                    // Sumar el coste total del elemento a la métrica de pérdidas ponderadas del bando correspondiente
-                    int unitValue = defender.getFoodCost() + defender.getWoodCost() + defender.getIronCost() + defender.getManaCost();
+                    // CORRECCIÓN CRÍTICA: Fórmula matemática exacta del PDF para recursos ponderados:
+                    // Valor = Hierro + (Madera / 5) + (Comida / 10)
+                    int weightedUnitValue = defender.getIronCost() + 
+                                            (defender.getWoodCost() / 5) + 
+                                            (defender.getFoodCost() / 10);
+                    
                     if (defenderName.equals("Civilización")) {
-                        resourcesLostCiv += unitValue;
+                        resourcesLostCiv += weightedUnitValue;
                     } else {
-                        resourcesLostEnemy += unitValue;
+                        resourcesLostEnemy += weightedUnitValue;
                     }
 
                     // Calcular escombros/chatarra
@@ -154,25 +164,21 @@ public class Battle implements Variables {
         }
     }
 
-    // Auxiliar: Busca qué tipo de tropa atacará usando la ruleta de probabilidades fijas
     private int selectGroupBasedOnProbability(ArrayList<MilitaryUnit>[] army, int[] probabilities) {
         int roll = random.nextInt(100);
         int sum = 0;
         for (int i = 0; i < probabilities.length; i++) {
             sum += probabilities[i];
             if (roll < sum) {
-                // Si la ruleta escoge un índice pero no tenemos tropas vivas ahí, saltamos a buscar el primer grupo que sí tenga tropas
                 if (!army[i].isEmpty()) return i;
             }
         }
-        // Fallback: Busca secuencialmente cualquier grupo que no esté vacío
         for (int i = 0; i < army.length; i++) {
             if (!army[i].isEmpty()) return i;
         }
         return -1;
     }
 
-    // REQUISITO 3: Fórmula matemática exacta del PDF para elegir defensor según volumen proporcional
     private int selectDefenderGroupProportionally(ArrayList<MilitaryUnit>[] defenders) {
         int totalAlive = countTotalUnits(defenders);
         if (totalAlive == 0) return -1;
@@ -203,7 +209,6 @@ public class Battle implements Variables {
         }
     }
 
-    // Cuenta de manera global cuántas unidades vivas quedan en las 9 listas
     private int countTotalUnits(ArrayList<MilitaryUnit>[] army) {
         int count = 0;
         for (ArrayList<MilitaryUnit> group : army) {
@@ -212,12 +217,27 @@ public class Battle implements Variables {
         return count;
     }
 
+    // --- REQUISITO DEL ENUNCIADO PARA EL HISTORIAL ---
+    // Devuelve el reporte formateado de la batalla actual indicando el número correlativo que lleva la civilización
+    public String getBattleReport(int battlesCount) {
+        StringBuilder report = new StringBuilder();
+        report.append("=========================================\n");
+        report.append("REPORT DE BATALLA Nº ").append(battlesCount).append("\n");
+        report.append("=========================================\n");
+        report.append("GANADOR: ").append(this.winnerName).append("\n");
+        report.append("Tropas iniciales: Jugador: ").append(initialCivUnits).append(" | Enemigo: ").append(initialEnemyUnits).append("\n");
+        report.append("Tropas restantes: Jugador: ").append(countTotalUnits(civilizationArmy)).append(" | Enemigo: ").append(countTotalUnits(enemyArmy)).append("\n");
+        report.append("Pérdidas ponderadas Jugador: ").append(resourcesLostCiv).append("\n");
+        report.append("Pérdidas ponderadas Enemigo: ").append(resourcesLostEnemy).append("\n");
+        report.append("Escombros del campo de batalla: Madera: ").append(wasteWood).append(" | Hierro: ").append(wasteIron).append("\n");
+        report.append("=========================================\n");
+        return report.toString();
+    }
+
     // --- GETTERS ---
     public String getBattleDevelopment() { return this.battleLog.toString(); }
     public int getWasteWood() { return this.wasteWood; }
     public int getWasteIron() { return this.wasteIron; }
-    
-    // Devolvemos el array final de tropas para reajustar el cuartel en la civilización
     public ArrayList<MilitaryUnit>[] getCivilizationArmy() { return civilizationArmy; }
     public ArrayList<MilitaryUnit>[] getEnemyArmy() { return enemyArmy; }
 }

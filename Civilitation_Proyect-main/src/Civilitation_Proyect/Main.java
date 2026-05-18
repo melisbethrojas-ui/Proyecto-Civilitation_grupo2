@@ -12,6 +12,9 @@ public class Main implements Variables {
     private static int battleCount = 0;
     private static boolean gameOver = false;
 
+    // ALMACÉN DEL HISTORIAL: Guardará las strings de los reportes de las batallas
+    private static ArrayList<String> battleReportsHistory = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("--- BIENVENIDO A CIVILIZATIONS PROJECT ---");
@@ -49,11 +52,16 @@ public class Main implements Variables {
                         // Generamos el ejército enemigo para este nivel
                         ArrayList<MilitaryUnit>[] enemyArmy = generateEnemyArmy(battleCount);
                         
-                        // NOTA: Recuerda que tu clase Battle debe estar adaptada para recibir Array de ArrayLists en el constructor
+                        // REQUISITO: Mostramos los datos de las tropas que nos asaltan de forma automática
+                        viewThreat(enemyArmy);
+                        
                         Battle ambush = new Battle(myCiv.getArmy(), enemyArmy);
                         ambush.startBattle();
                         
                         System.out.println(ambush.getBattleDevelopment());
+
+                        // GUARDAR EN EL HISTORIAL: Registramos el reporte de la emboscada automática
+                        battleReportsHistory.add(ambush.getBattleReport(battleCount + 1));
 
                         if (isArmyEmpty(myCiv.getArmy())) {
                             System.out.println("Tu ejército fue completamente aniquilado en la emboscada...");
@@ -76,7 +84,8 @@ public class Main implements Variables {
         // =====================================================================
         while (!gameOver) {
             System.out.println("\n¿Qué deseas hacer?");
-            System.out.println("1. Gestión de Edificios  2. Reclutar Unidades  3. Ver Estado  4. ¡BATALLA VOLUNTARIA!  5. Salir");
+            System.out.println("1. Gestión de Edificios   2. Reclutar Unidades      3. Ver Estado");
+            System.out.println("4. ¡BATALLA VOLUNTARIA!   5. Historial de Partidas  6. Salir");
             System.out.print("Selecciona una opción: ");
             
             try {
@@ -86,7 +95,7 @@ public class Main implements Variables {
 
                 if (option == 1) {
                     System.out.println("\n--- MENÚ DE CONSTRUCCIÓN Y TECNOLOGÍA ---");
-                    System.out.println("1. Carpintería    (Madera:" + WOOD_COST_CARPENTRY + " Hierro:" + IRON_COST_CARPENTRY + " Comida:" + FOOD_COST_CARPENTRY);
+                    System.out.println("1. Carpintería     (Madera:" + WOOD_COST_CARPENTRY + " Hierro:" + IRON_COST_CARPENTRY + " Comida:" + FOOD_COST_CARPENTRY);
                     System.out.println("2. Herrería       (Madera:" + WOOD_COST_SMITHY + " Hierro:" + IRON_COST_SMITHY + " Comida:" + FOOD_COST_SMITHY + ")");
                     System.out.println("3. Granja         (Madera:" + WOOD_COST_FARM + " Hierro:" + IRON_COST_FARM + " Comida:" + FOOD_COST_FARM + ")");
                     System.out.println("4. Torre Mágica   (Madera:" + WOOD_COST_MAGICTOWER + " Hierro:" + IRON_COST_MAGICTOWER + " Comida:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER);
@@ -123,7 +132,6 @@ public class Main implements Variables {
                         System.out.print("¿Cuántos guerreros necesitas?: ");
                         int qty = sc.nextInt();
                         
-                        // CORRECCIÓN 2: Llamamos pasándole la cantidad directamente al método del lote optimizado
                         if (u == 1) myCiv.recruitSwordsman(qty);
                         else if (u == 2) myCiv.recruitCrossbow(qty); 
                         else if (u == 3) myCiv.recruitCannon(qty);   
@@ -151,7 +159,6 @@ public class Main implements Variables {
                     System.out.println("  Tecnologia de Ataque:   Lvl " + myCiv.getAttackTechnologyLevel());
                     System.out.println("  Tecnologia de Armadura: Lvl " + myCiv.getArmorTechnologyLevel());
 
-                    // CORRECCIÓN 1: Contamos recorriendo de forma correcta los ArrayLists por índice
                     System.out.println("\n--- CUARTEL Y TROPAS DISPONIBLES ---");
                     ArrayList<MilitaryUnit>[] armyArray = myCiv.getArmy();
                     int totalUnits = 0;
@@ -171,18 +178,24 @@ public class Main implements Variables {
                 } else if (option == 4) {
                     System.out.println("\n--- INFORME DE INTELIGENCIA ---");
                     System.out.println("La flota enemiga esperada es de nivel: " + (battleCount + 1));
-                    System.out.print("¿Deseas lanzar un ataque preventivo voluntario? (1: SI / 2: RETIRARSE): ");
+                    
+                    // REQUISITO: Generamos preventivamente el ejército enemigo para poder inspeccionarlo antes del combate
+                    ArrayList<MilitaryUnit>[] enemyArmy = generateEnemyArmy(battleCount);
+                    viewThreat(enemyArmy); // Mostramos el recuento exacto de enemigos en camino
+
+                    System.out.print("\n¿Deseas lanzar un ataque preventivo voluntario? (1: SI / 2: RETIRARSE): ");
                     int decide = sc.nextInt();
 
                     if (decide == 1) {
                         if (isArmyEmpty(myCiv.getArmy())) {
                             System.out.println("No puedes atacar sin soldados.");
                         } else {
-                            ArrayList<MilitaryUnit>[] enemyArmy = generateEnemyArmy(battleCount);
                             Battle battle = new Battle(myCiv.getArmy(), enemyArmy);
-                            
                             battle.startBattle();
                             System.out.println(battle.getBattleDevelopment());
+
+                            // GUARDAR EN EL HISTORIAL: Registramos el reporte de la batalla voluntaria
+                            battleReportsHistory.add(battle.getBattleReport(battleCount + 1));
 
                             if (isArmyEmpty(myCiv.getArmy())) {
                                 System.out.println("Tu civilización ha sido derrotada por completo.");
@@ -196,6 +209,19 @@ public class Main implements Variables {
                     }
 
                 } else if (option == 5) {
+                    // NUEVA OPCIÓN: Muestra los reportes textuales de las últimas 5 batallas ocurridas
+                    System.out.println("\n--- HISTORIAL DE LAS ÚLTIMAS BATALLAS ---");
+                    if (battleReportsHistory.isEmpty()) {
+                        System.out.println("Aún no se ha librado ninguna batalla en este reino.");
+                    } else {
+                        // El PDF pide al menos las últimas 5. Tomamos desde el tamaño actual hacia atrás.
+                        int startIdx = Math.max(0, battleReportsHistory.size() - 5);
+                        for (int i = startIdx; i < battleReportsHistory.size(); i++) {
+                            System.out.println(battleReportsHistory.get(i));
+                        }
+                    }
+
+                } else if (option == 6) {
                     gameOver = true;
                 } else {
                     System.out.println("Opción no disponible.");
@@ -217,6 +243,22 @@ public class Main implements Variables {
         sc.close();
     }
 
+    // NUEVO MÉTODO EXIGIDO: Cuenta los tipos de tropa de la lista del enemigo y los saca formateados por pantalla
+    private static void viewThreat(ArrayList<MilitaryUnit>[] enemyArmy) {
+        int swordsman = enemyArmy[0].size();
+        int spearman = enemyArmy[1].size();
+        int crossbow = enemyArmy[2].size();
+        int cannon = enemyArmy[3].size();
+
+        System.out.println("\n=========================================");
+        System.out.println("NEW THREAT COMING:");
+        System.out.println("Swordsman: " + swordsman);
+        System.out.println("Spearman: " + spearman);
+        System.out.println("Crossbow: " + crossbow);
+        System.out.println("Cannon: " + cannon);
+        System.out.println("=========================================");
+    }
+
     // Auxiliar para comprobar si el array de listas está completamente vacío
     private static boolean isArmyEmpty(ArrayList<MilitaryUnit>[] army) {
         for (ArrayList<MilitaryUnit> list : army) {
@@ -225,7 +267,6 @@ public class Main implements Variables {
         return true;
     }
 
-    // CORRECCIÓN 3: Generador adaptado al Array de ArrayLists con el escalado tecnológico del enemigo
     @SuppressWarnings("unchecked")
     private static ArrayList<MilitaryUnit>[] generateEnemyArmy(int level) {
         ArrayList<MilitaryUnit>[] enemy = new ArrayList[9];
@@ -237,13 +278,11 @@ public class Main implements Variables {
         int virtualIron = (IRON_BASE_ENEMY_ARMY * multiplier) / 100;
         int virtualWood = (WOOD_BASE_ENEMY_ARMY * multiplier) / 100;
         
-        // Reparto proporcional aproximado según los recursos acumulados del bot enemigo
-        // Añadimos unidades pasándole el nivel de tecnología del enemigo (igual al nivel actual de batalla)
         while (virtualIron > 2000 && virtualWood > 5000) {
-            enemy[0].add(new Swordsman(level, level)); // Espadachines (35%)
-            enemy[1].add(new Spearman(level, level)); // Lanceros (25%)
-            enemy[2].add(new Crossbow(level, level));  // Ballesteros (20%)
-            enemy[3].add(new Cannon(level, level));    // Cañones (20%)
+            enemy[0].add(new Swordsman(level, level)); // Espadachines
+            enemy[1].add(new Spearman(level, level));  // Lanceros
+            enemy[2].add(new Crossbow(level, level));  // Ballesteros
+            enemy[3].add(new Cannon(level, level));    // Cañones
             
             virtualIron -= (IRON_COST_SWORDSMAN + IRON_COST_SPEARMAN + IRON_COST_CROSSBOW + IRON_COST_CANNON);
             virtualWood -= (WOOD_COST_SWORDSMAN + WOOD_COST_SPEARMAN + WOOD_COST_CROSSBOW + WOOD_COST_CANNON);

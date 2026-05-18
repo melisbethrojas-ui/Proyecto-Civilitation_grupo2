@@ -1,12 +1,13 @@
 package Civilitation_Proyect;
-
-public abstract class AttackUnit implements MilitaryUnit, Variables { // Corregido: Implementa ambas interfaces
+// Clase abstracta que implementa la interfaz MilitaryUnit y define los atributos y métodos comunes para las unidades de ataque
+public abstract class AttackUnit implements MilitaryUnit, Variables { 
     protected int armor;
     protected int initialArmor;
     protected int baseDamage;
     protected int experience;
     protected boolean sanctified;
-    
+
+    //Contructor
     public AttackUnit(int armor, int damage) {
         this.armor = armor;
         this.initialArmor = armor;
@@ -14,10 +15,13 @@ public abstract class AttackUnit implements MilitaryUnit, Variables { // Corregi
         this.experience = 0;
         this.sanctified = false; // Inicialización recomendada
     }
-
+    // Procesa el daño que recibe la unidad, reduciendo su armadura.
     @Override
     public void takeDamage(int receivedDamage) {
         this.armor -= receivedDamage;
+        if (this.armor < 0) {
+            this.armor = 0;
+        }
     }
 
     @Override

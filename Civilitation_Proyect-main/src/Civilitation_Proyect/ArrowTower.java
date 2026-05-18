@@ -1,8 +1,8 @@
 package Civilitation_Proyect;
 
+// Clase que representa la torre de arqueros, una unidad defensiva que ataca a distancia
 public class ArrowTower extends DefenseUnit {
-
-    // Constructor para tu civilización (aplica tecnologías)
+    // Constructor para el jugador 
     public ArrowTower(int technologyArmorLevel, int technologyAttackLevel) {
         super(ARMOR_ARROWTOWER, BASE_DAMAGE_ARROWTOWER);
         this.armor += (ARMOR_ARROWTOWER * technologyArmorLevel * PLUS_ARMOR_ARROWTOWER_BY_TECHNOLOGY) / 100;
@@ -10,11 +10,12 @@ public class ArrowTower extends DefenseUnit {
         this.baseDamage += (BASE_DAMAGE_ARROWTOWER * technologyAttackLevel * PLUS_ATTACK_ARROWTOWER_BY_TECHNOLOGY) / 100;
     }
 
-    // Constructor para el enemigo (sin tecnologías)
+    // Constructor para el enemigo 
     public ArrowTower() {
         super(ARMOR_ARROWTOWER, BASE_DAMAGE_ARROWTOWER);
     }
 
+    //METODO DE ATAQUE
     @Override
     public int attack() {
         int totalDamage = this.baseDamage;
@@ -27,16 +28,23 @@ public class ArrowTower extends DefenseUnit {
         return totalDamage;
     }
 
+    // GETTERS DE LOS COSTOS Y PROBABILIDADES
     @Override
-    public int getFoodCost() { return FOOD_COST_ARROWTOWER; }
+    public int getFoodCost() { 
+        return FOOD_COST_ARROWTOWER; }
     @Override
-    public int getWoodCost() { return WOOD_COST_ARROWTOWER; }
+    public int getWoodCost() { 
+        return WOOD_COST_ARROWTOWER; }
     @Override
-    public int getIronCost() { return IRON_COST_ARROWTOWER; }
+    public int getIronCost() { 
+        return IRON_COST_ARROWTOWER; }
     @Override
-    public int getManaCost() { return MANA_COST_ARROWTOWER; }
+    public int getManaCost() { 
+        return MANA_COST_ARROWTOWER; }
     @Override
-    public int getChanceGeneratinWaste() { return CHANCE_GENERATING_WASTE_ARROWTOWER; }
+    public int getChanceGeneratinWaste() { 
+        return CHANCE_GENERATING_WASTE_ARROWTOWER; }
     @Override
-    public int getChanceAttackAgain() { return CHANCE_ATTACK_AGAIN_ARROWTOWER; }
+    public int getChanceAttackAgain() { 
+        return CHANCE_ATTACK_AGAIN_ARROWTOWER; }
 }
