@@ -1,35 +1,30 @@
-<div class="portada">
-    <h1>Benvingut a Civilizations Portal</h1>
-    <p class="subtitulo">Gestiona el teu imperi, entrena les teves tropes i conquereix els teus enemics.</p>
-    
-    <div class="galeria-captures">
-        <div class="captura-placeholder">[Captura de Joc: Gameplay]</div>
-        <div class="captura-placeholder">[Captura de Joc: Edificis]</div>
+<div class="hero-section" style="text-align: center; margin-bottom: 80px;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 10px;">L'Alba de la Història</h1>
+    <p style="font-size: 1.2rem; color: var(--bronze); letter-spacing: 5px;">ESCRIU EL TEU LLEGAT EN PEDRA I SANG</p>
+</div>
+
+<div class="last-actions" style="margin-top: 50px;">
+    <h2 style="text-align: center; margin-bottom: 30px;">Cròniques Recents del Front</h2>
+    <div class="card" style="padding: 30px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ORDRE</th>
+                    <th>ESTAT</th>
+                    <th>DATA ESTEL·LAR</th>
+                    <th>DETALLS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each ultimas}}
+                <tr>
+                    <td style="font-family: 'Cinzel'; color: var(--gold);">#{{this.numero_batalla}}</td>
+                    <td><span class="badge {{this.resultado}}" style="padding: 5px 15px; border: 1px solid;">{{this.resultado}}</span></td>
+                    <td style="font-size: 0.9rem; opacity: 0.7;">{{this.fecha_batalla}}</td>
+                    <td><a href="/informe?informe={{this.numero_batalla}}" class="btn-detalles">ARXIU →</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
-
-    <hr>
-
-    <h2>Últimes 2 Batalles Jugades</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Enemic</th>
-                <th>Resultat</th>
-                <th>Data</th>
-                <th>Acció</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each ultimas}}
-            <tr>
-                <td>{{this.id}}</td>
-                <td>{{this.enemigo}}</td>
-                <td><span class="badge {{this.resultado}}">{{this.resultado}}</span></td>
-                <td>{{this.fecha_batalla}}</td>
-                <td><a href="/informe?informe={{this.id}}" class="btn-detalles">Veure Informe</a></td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
 </div>
