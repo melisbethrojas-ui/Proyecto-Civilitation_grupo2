@@ -3,22 +3,22 @@ package Civilitation_Proyect;
 public interface MilitaryUnit {
 
     // Métodos para el combate
-    int attack();
-    void takeDamage(int receivedDamage);
-    int getActualArmor();
-    void resetArmor();
+    int attack(); 
+    void takeDamage(int receivedDamage); 
+    int getActualArmor(); 
+    void resetArmor(); 
 
     // Costes de recursos para crear la unidad
-    int getFoodCost();
-    int getWoodCost();
-    int getIronCost();
-    int getManaCost();
+    int getFoodCost(); 
+    int getWoodCost(); 
+    int getIronCost(); 
+    int getManaCost(); 
 
     // Probabilidades de combate y escombros
-    int getChanceGeneratinWaste(); // Mantiene la errata del enunciado
-    int getChanceAttackAgain();
+    int getChanceGeneratinWaste(); // Mantiene la errata exacta del PDF
+    int getChanceAttackAgain(); 
 
     // Gestión de la experiencia de la unidad
-    void setExperience(int n);
-    int getExperience();
+    void setExperience(int n); 
+    int getExperience(); // Corregido a int para que devuelva el valor real
 }

@@ -2,36 +2,57 @@ package Civilitation_Proyect;
 
 public class Priest extends SpecialUnit {
 
-    // Tu constructor con niveles de tecnología
+    // Constructor para el jugador
     public Priest(int technologyArmorLevel, int technologyAttackLevel) {
-        super(0, BASE_DAMAGE_PRIEST); // Corregido: ya no lleva Variables.
-        this.armor = 0;
-        this.initialArmor = 0;
+        // Le pasamos 0 de armadura y su daño base (0) a la clase madre SpecialUnit
+        super(0, BASE_DAMAGE_PRIEST); 
     }
 
-    // Tu constructor para el enemigo
+    // Constructor para el enemigo
     public Priest() {
         super(0, BASE_DAMAGE_PRIEST);
-        this.armor = 0;
-        this.initialArmor = 0;
     }
 
+    // El sacerdote no genera daño físico directo, pero es obligatorio sobreescribirlo
     @Override
     public int attack() {
-        // El sacerdote no genera daño físico directo
         return 0; 
     }
 
+    // GETTERS DE LOS COSTOS Y PROBABILIDADES
     @Override
-    public int getFoodCost() { return FOOD_COST_PRIEST; }
+    public int getFoodCost() { 
+        return FOOD_COST_PRIEST; 
+    }
+    
     @Override
-    public int getWoodCost() { return WOOD_COST_PRIEST; }
+    public int getWoodCost() { 
+        return WOOD_COST_PRIEST; 
+    }
+    
     @Override
-    public int getIronCost() { return IRON_COST_PRIEST; }
+    public int getIronCost() { 
+        return IRON_COST_PRIEST; 
+    }
+    
     @Override
-    public int getManaCost() { return MANA_COST_PRIEST; }
+    public int getManaCost() { 
+        return MANA_COST_PRIEST; 
+    }
+    
     @Override
-    public int getChanceGeneratinWaste() { return CHANCE_GENERATING_WASTE_PRIEST; }
+    public int getChanceGeneratinWaste() { 
+        return CHANCE_GENERATING_WASTE_PRIEST; 
+    }
+    
     @Override
-    public int getChanceAttackAgain() { return CHANCE_ATTACK_AGAIN_PRIEST; }
+    public int getChanceAttackAgain() { 
+        return CHANCE_ATTACK_AGAIN_PRIEST; 
+    }
+
+    // Método para los reportes escritos de las batallas exigidos en el PDF
+    @Override
+    public String toString() {
+        return "Priest";
+    }
 }

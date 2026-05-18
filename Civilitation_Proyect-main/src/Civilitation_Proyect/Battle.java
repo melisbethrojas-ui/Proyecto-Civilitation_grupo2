@@ -58,17 +58,23 @@ public class Battle implements Variables {
 
         int turn = 1;
 
-        // REQUISITO 4: El bucle se detiene si un bando cae al 20% o menos de sus tropas iniciales
+        // El bucle se detiene si un bando cae al 20% o menos de sus tropas iniciales
         while (countTotalUnits(civilizationArmy) > (initialCivUnits * 0.2) && 
                countTotalUnits(enemyArmy) > (initialEnemyUnits * 0.2)) {
             
             battleLog.append("=== TURNO ").append(turn).append(" ===\n");
+
+            // REQUISITO PDF: Actualizar el estado de santificación de los ejércitos al inicio del turno
+            updateSanctification();
 
             // 1. ATACA LA CIVILIZACIÓN
             executeTurn(civilizationArmy, enemyArmy, "Civilización", "Enemigo", CHANCE_ATTACK_CIVILIZATION_UNITS);
 
             // Verificar si el enemigo se retira/rinde tras el ataque de la civilización
             if (countTotalUnits(enemyArmy) <= (initialEnemyUnits * 0.2)) break;
+
+            // REQUISITO PDF: Volver a validar sacerdotes por si murieron en el contragolpe
+            updateSanctification();
 
             // 2. ATACA EL ENEMIGO
             executeTurn(enemyArmy, civilizationArmy, "Enemigo", "Civilización", CHANCE_ATTACK_ENEMY_UNITS);
@@ -84,11 +90,12 @@ public class Battle implements Variables {
         battleLog.append("Valor ponderado de pérdidas de la Civilización: ").append(resourcesLostCiv).append("\n");
         battleLog.append("Valor ponderado de pérdidas del Enemigo: ").append(resourcesLostEnemy).append("\n");
 
-        // REQUISITO 5: Evaluar ganador según el bando que haya perdido MENOS valor de recursos ponderado
+        // Evaluar ganador según el bando que haya perdido MENOS valor de recursos ponderado
         if (resourcesLostCiv < resourcesLostEnemy) {
             this.winnerName = "Civilización";
             battleLog.append("¡VICTORIA! Tu civilización sufrió menos pérdidas económicas y gana la batalla.\n");
-            // Aplicar experiencia a los supervivientes que quedan en el array interno
+            
+            // Aplicar experiencia a los supervivientes que quedan en el ejército clonado
             for (ArrayList<MilitaryUnit> group : civilizationArmy) {
                 for (MilitaryUnit unit : group) {
                     unit.setExperience(unit.getExperience() + 1);
@@ -106,15 +113,15 @@ public class Battle implements Variables {
     private void executeTurn(ArrayList<MilitaryUnit>[] attackers, ArrayList<MilitaryUnit>[] defenders, 
                              String attackerName, String defenderName, int[] probabilities) {
         
-        // REQUISITO 2: Seleccionar el GRUPO ATACANTE usando los porcentajes fijos del PDF
+        // Seleccionar el GRUPO ATACANTE usando probabilidades fijas
         int attackerGroupIdx = selectGroupBasedOnProbability(attackers, probabilities);
-        if (attackerGroupIdx == -1) return; // No hay unidades atacantes disponibles
+        if (attackerGroupIdx == -1) return; 
 
         MilitaryUnit attacker = attackers[attackerGroupIdx].get(random.nextInt(attackers[attackerGroupIdx].size()));
         boolean attackAgain = true;
 
         while (attackAgain && countTotalUnits(defenders) > 0) {
-            // REQUISITO 3: Seleccionar el GRUPO DEFENSOR proporcionalmente a la cantidad de tropas vivas
+            // Seleccionar el GRUPO DEFENSOR proporcionalmente a las tropas vivas
             int defenderGroupIdx = selectDefenderGroupProportionally(defenders);
             if (defenderGroupIdx == -1) break;
 
@@ -126,40 +133,48 @@ public class Battle implements Variables {
             if (damage > 0) {
                 defender.takeDamage(damage);
                 battleLog.append("[").append(attackerName).append("] ")
-                         .append(attacker.getClass().getSimpleName())
+                         .append(defender.toString()) // Usamos toString() para el nombre de la unidad
                          .append(" inflige ").append(damage).append(" de daño a ")
-                         .append(defender.getClass().getSimpleName()).append(" ").append(defenderName)
-                         .append(" (Armadura actual: ").append(Math.max(0, defender.getActualArmor())).append(")\n");
+                         .append(defender.toString()).append(" ").append(defenderName)
+                         .append(" (Armadura actual: ").append(defender.getActualArmor()).append(")\n");
 
-                // Comprobar si la unidad defensora muere
+                // Comprobar si la unidad defensora "cae en combate"
                 if (defender.getActualArmor() <= 0) {
-                    battleLog.append("   -> ¡¡ ").append(defender.getClass().getSimpleName()).append(" destruido !!\n");
                     
-                    // CORRECCIÓN CRÍTICA: Fórmula matemática exacta del PDF para recursos ponderados:
-                    // Valor = Hierro + (Madera / 5) + (Comida / 10)
-                    int weightedUnitValue = defender.getIronCost() + 
-                                            (defender.getWoodCost() / 5) + 
-                                            (defender.getFoodCost() / 10);
-                    
-                    if (defenderName.equals("Civilización")) {
-                        resourcesLostCiv += weightedUnitValue;
+                    // REQUISITO PDF: Habilidad especial de resurrección del Mago (si hay magos vivos en el bando defensor)
+                    if (hasMagiciansAlive(defenders) && random.nextInt(100) < CHANCE_MAGICIAN_RESSURECT) {
+                        defender.resetArmor(); // Restablece su vida base original
+                        battleLog.append("   [HABILIDAD] ¡Un Magician del bando ").append(defenderName)
+                                 .append(" ha resucitado a un ").append(defender.toString()).append("!\n");
                     } else {
-                        resourcesLostEnemy += weightedUnitValue;
+                        // Si no revive, se procesa su muerte definitiva
+                        battleLog.append("   -> ¡¡ ").append(defender.toString()).append(" destruido !!\n");
+                        
+                        // Fórmula matemática exacta del PDF para recursos ponderados
+                        int weightedUnitValue = defender.getIronCost() + 
+                                                (defender.getWoodCost() / 5) + 
+                                                (defender.getFoodCost() / 10);
+                        
+                        if (defenderName.equals("Civilización")) {
+                            resourcesLostCiv += weightedUnitValue;
+                        } else {
+                            resourcesLostEnemy += weightedUnitValue;
+                        }
+
+                        // Calcular escombros/chatarra (Corregido error tipográfico de la constante)
+                        calculateWaste(defender);
+
+                        // Eliminar físicamente del sub-ejército
+                        defenders[defenderGroupIdx].remove(targetIdx);
                     }
-
-                    // Calcular escombros/chatarra
-                    calculateWaste(defender);
-
-                    // Eliminar físicamente del sub-ejército
-                    defenders[defenderGroupIdx].remove(targetIdx);
                 }
             }
 
-            // Validar repetición de ataque por habilidad de velocidad
+            // Validar repetición de ataque por velocidad
             int roll = random.nextInt(100);
             attackAgain = roll < attacker.getChanceAttackAgain();
             if (attackAgain && countTotalUnits(defenders) > 0) {
-                battleLog.append("   (Habilidad: El ").append(attacker.getClass().getSimpleName()).append(" arremete de nuevo consecutivamente)\n");
+                battleLog.append("   (Habilidad: El ").append(attacker.toString()).append(" arremete de nuevo consecutivamente)\n");
             }
         }
     }
@@ -167,12 +182,15 @@ public class Battle implements Variables {
     private int selectGroupBasedOnProbability(ArrayList<MilitaryUnit>[] army, int[] probabilities) {
         int roll = random.nextInt(100);
         int sum = 0;
+        
+        // Buscamos según el rango del array de probabilidades asignado (evita desbordamientos con el enemigo)
         for (int i = 0; i < probabilities.length; i++) {
             sum += probabilities[i];
             if (roll < sum) {
-                if (!army[i].isEmpty()) return i;
+                if (i < army.length && !army[i].isEmpty()) return i;
             }
         }
+        // Salvaguarda: si cae en un porcentaje vacío, busca la primera categoría con tropas
         for (int i = 0; i < army.length; i++) {
             if (!army[i].isEmpty()) return i;
         }
@@ -195,11 +213,43 @@ public class Battle implements Variables {
         return -1;
     }
 
+    // REQUISITO PDF: Gestión automática y en tiempo real de la bendición sacerdotal
+    private void updateSanctification() {
+        // En la civilización, los sacerdotes se guardan tradicionalmente en el índice 8
+        boolean civHasPriests = (civilizationArmy.length > 8 && !civilizationArmy[8].isEmpty());
+        
+        // Aplicamos santificación a todas las unidades de la civilización según la presencia de Sacerdotes
+        for (ArrayList<MilitaryUnit> group : civilizationArmy) {
+            for (MilitaryUnit unit : group) {
+                if (unit instanceof AttackUnit) {
+                    ((AttackUnit) unit).setSanctified(civHasPriests);
+                } else if (unit instanceof DefenseUnit) {
+                    ((DefenseUnit) unit).setSanctified(civHasPriests);
+                }
+            }
+        }
+        
+        // El ejército enemigo no tiene sacerdotes según el enunciado, por ende siempre se setea en false
+        for (ArrayList<MilitaryUnit> group : enemyArmy) {
+            for (MilitaryUnit unit : group) {
+                if (unit instanceof AttackUnit) {
+                    ((AttackUnit) unit).setSanctified(false);
+                }
+            }
+        }
+    }
+
+    // Verifica si quedan magos activos en el ejército (el mago ocupa el índice 7)
+    private boolean hasMagiciansAlive(ArrayList<MilitaryUnit>[] army) {
+        return army.length > 7 && !army[7].isEmpty();
+    }
+
     private void calculateWaste(MilitaryUnit deadUnit) {
         int roll = random.nextInt(100);
         if (roll < deadUnit.getChanceGeneratinWaste()) {
-            int woodRecovered = (deadUnit.getWoodCost() * PERCENTATGE_WASTE) / 100;
-            int ironRecovered = (deadUnit.getIronCost() * PERCENTATGE_WASTE) / 100;
+            // Corregido: PERCENTAGE_WASTE para que compile con tu interfaz Variables
+            int woodRecovered = (deadUnit.getWoodCost() * PERCENTAGE_WASTE) / 100;
+            int ironRecovered = (deadUnit.getIronCost() * PERCENTAGE_WASTE) / 100;
             
             this.wasteWood += woodRecovered;
             this.wasteIron += ironRecovered;
@@ -217,8 +267,7 @@ public class Battle implements Variables {
         return count;
     }
 
-    // --- REQUISITO DEL ENUNCIADO PARA EL HISTORIAL ---
-    // Devuelve el reporte formateado de la batalla actual indicando el número correlativo que lleva la civilización
+    // Devuelve el reporte formateado de la batalla actual
     public String getBattleReport(int battlesCount) {
         StringBuilder report = new StringBuilder();
         report.append("=========================================\n");

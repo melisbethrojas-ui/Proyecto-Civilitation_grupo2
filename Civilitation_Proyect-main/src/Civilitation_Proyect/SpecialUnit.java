@@ -7,16 +7,21 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables {
     protected int baseDamage;
     protected int experience;
 
-    // Cambiado: Ahora recibe dos parámetros para coincidir con las clases hijas
+    // El constructor recibe los parámetros igual que AttackUnit y DefenseUnit
     public SpecialUnit(int armor, int baseDamage) {
-        this.armor = 0;         // Sigue siendo 0 por regla del PDF
-        this.initialArmor = 0;  // Sigue siendo 0 por regla del PDF
+        // Regla estricta del PDF: Las unidades especiales NO tienen armadura (vida = 0)
+        this.armor = 0;         
+        this.initialArmor = 0;  
         this.baseDamage = baseDamage;
         this.experience = 0;
     }
 
     @Override
-    public void takeDamage(int receivedDamage) { }
+    public void takeDamage(int receivedDamage) { 
+        // Al recibir daño, restamos directamente. Como empiezan en 0, pasará a ser negativo 
+        // y el motor de batalla sabrá que han muerto inmediatamente.
+        this.armor -= receivedDamage; 
+    }
 
     @Override
     public int getActualArmor() {
@@ -25,7 +30,7 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables {
 
     @Override
     public void resetArmor() {
-        this.armor = this.initialArmor; 
+        this.armor = this.initialArmor; // Vuelve a 0
     }
 
     @Override
@@ -38,6 +43,8 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables {
         return this.experience;
     }
 
+    // Obligamos a Magician y Priest a implementar attack() porque sus mecánicas son opuestas:
+    // El mago devuelve daño destructivo y el sacerdote cura/santifica (daño = 0).
     @Override
     public abstract int attack(); 
 }

@@ -1,6 +1,5 @@
 package Civilitation_Proyect;
 
-
 public interface Variables {
     
     // Recursos disponibles para crear la primera flota enemiga
@@ -115,7 +114,7 @@ public interface Variables {
     public final int BASE_DAMAGE_CATAPULT = 250;
     public final int BASE_DAMAGE_ROCKETLAUNCHERTOWER = 2000;
     public final int BASE_DAMAGE_MAGICIAN = 3000;
-    public final int BASE_DAMAGE_PRIEST = 0; // Añadida fija en 0 por lógica
+    public final int BASE_DAMAGE_PRIEST = 0; 
     
     // ARMADURAS BASE DE LAS UNIDADES (Vida)
     public final int ARMOR_SWORDSMAN = 400;
@@ -125,8 +124,8 @@ public interface Variables {
     public final int ARMOR_ARROWTOWER = 200;
     public final int ARMOR_CATAPULT = 1200;
     public final int ARMOR_ROCKETLAUNCHERTOWER = 7000;
-    public final int ARMOR_MAGICIAN = 0; // Modificado a 0 como dice la estructura del PDF
-    public final int ARMOR_PRIEST = 0;    // Modificado a 0 como dice la estructura del PDF
+    public final int ARMOR_MAGICIAN = 0; 
+    public final int ARMOR_PRIEST = 0;    
     
     // MEJORAS POR TECNOLOGÍA (%)
     public final int PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY = 5;
@@ -155,7 +154,7 @@ public interface Variables {
     // HABILIDADES ESPECIALES
     public final int CHANCE_MAGICIAN_RESSURECT = 2;
     
-    // PROBABILIDADES DE GENERAR ESCOMBROS (%) - Ajustado nombre sin la 'i' para concordancia
+    // PROBABILIDADES DE GENERAR ESCOMBROS (%)
     public final int CHANCE_GENERATING_WASTE_SWORDSMAN = 55;
     public final int CHANCE_GENERATING_WASTE_SPEARMAN = 65;
     public final int CHANCE_GENERATING_WASTE_CROSSBOW = 80;
@@ -180,17 +179,17 @@ public interface Variables {
     // PROBABILIDADES SELECCIÓN GRUPO EN COMBATE
     public final int[] CHANCE_ATTACK_CIVILIZATION_UNITS = {4, 9, 13, 37, 4, 9, 14, 10, 0};
     public final int[] CHANCE_ATTACK_ENEMY_UNITS = {10, 20, 30, 40};
-    public final int PERCENTATGE_WASTE = 70;
+    public final int PERCENTAGE_WASTE = 70; // Corregida errata tipográfica
     
-    // COSTES EXTRAS SUBIDAS DE NIVEL EDIFICIOS
-    int NEXT_LEVEL_FOOD_COST_SMITHY = 1000;
-    int NEXT_LEVEL_WOOD_COST_SMITHY = 2000;
-    int NEXT_LEVEL_IRON_COST_SMITHY = 500;
+    // COSTES EXTRAS SUBIDAS DE NIVEL EDIFICIOS (Se añade public final obligatorio)
+    public final int NEXT_LEVEL_FOOD_COST_SMITHY = 1000;
+    public final int NEXT_LEVEL_WOOD_COST_SMITHY = 2000;
+    public final int NEXT_LEVEL_IRON_COST_SMITHY = 500;
     
-    int NEXT_LEVEL_FOOD_COST_MAGICTOWER = 2500;
-    int NEXT_LEVEL_WOOD_COST_MAGICTOWER = 1000;
-    int NEXT_LEVEL_IRON_COST_MAGICTOWER = 250;
-    int NEXT_LEVEL_MANA_COST_MAGICTOWER = 500;
+    public final int NEXT_LEVEL_FOOD_COST_MAGICTOWER = 2500;
+    public final int NEXT_LEVEL_WOOD_COST_MAGICTOWER = 1000;
+    public final int NEXT_LEVEL_IRON_COST_MAGICTOWER = 250;
+    public final int NEXT_LEVEL_MANA_COST_MAGICTOWER = 500;
     
     public final int PERCENTAGE_UPGRADE_TECH_COST = 10;
 }

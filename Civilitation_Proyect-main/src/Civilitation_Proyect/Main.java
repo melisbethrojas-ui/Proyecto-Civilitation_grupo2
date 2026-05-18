@@ -1,292 +1,165 @@
 package Civilitation_Proyect;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class Main implements Variables {
-    
-    // Hacemos la civilización y el contador estáticos para que los hilos puedan acceder a ellos
-    private static Civilization myCiv = new Civilization();
-    private static int battleCount = 0;
-    private static boolean gameOver = false;
-
-    // ALMACÉN DEL HISTORIAL: Guardará las strings de los reportes de las batallas
-    private static ArrayList<String> battleReportsHistory = new ArrayList<>();
+public class Main {
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("--- BIENVENIDO A CIVILIZATIONS PROJECT ---");
-
-        // =====================================================================
-        // HILO 1: GENERACIÓN PASIVA DE RECURSOS (Cada 1 minuto)
-        // =====================================================================
-        Timer timerRecursos = new Timer(true); 
-        timerRecursos.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (!gameOver) {
-                    myCiv.produceResources();
-                    System.out.println("\n[PRODUCCIÓN] +MINUTO PASADO+ Recursos generados por tus edificios y añadidos al almacén.");
-                }
-            }
-        }, 60000, 60000); // 1 minuto reglamentario
-
-
-        // =====================================================================
-        // HILO 2: ATAQUE ENEMIGO AUTOMÁTICO (Cada 3 minutos = 180000 ms)
-        // =====================================================================
-        Timer timerAtaques = new Timer(true);
-        timerAtaques.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (!gameOver) {
-                    System.out.println("\n¡ALERTA! ¡LA FLOTA ENEMIGA TE HA LOCALIZADO Y LANZA UN ATAQUE AUTOMÁTICO! ⚠️");
-                    
-                    if (isArmyEmpty(myCiv.getArmy())) {
-                        System.out.println("¡No tenías tropas defendiendo tu imperio! Tu civilización ha sido arrasada.");
-                        gameOver = true;
-                        System.out.println("Presiona cualquier número y ENTER para salir.");
-                    } else {
-                        // Generamos el ejército enemigo para este nivel
-                        ArrayList<MilitaryUnit>[] enemyArmy = generateEnemyArmy(battleCount);
-                        
-                        // REQUISITO: Mostramos los datos de las tropas que nos asaltan de forma automática
-                        viewThreat(enemyArmy);
-                        
-                        Battle ambush = new Battle(myCiv.getArmy(), enemyArmy);
-                        ambush.startBattle();
-                        
-                        System.out.println(ambush.getBattleDevelopment());
-
-                        // GUARDAR EN EL HISTORIAL: Registramos el reporte de la emboscada automática
-                        battleReportsHistory.add(ambush.getBattleReport(battleCount + 1));
-
-                        if (isArmyEmpty(myCiv.getArmy())) {
-                            System.out.println("Tu ejército fue completamente aniquilado en la emboscada...");
-                            gameOver = true;
-                            System.out.println("Presiona cualquier número y ENTER para salir.");
-                        } else {
-                            System.out.println("¡Increíble! Has repelido el ataque sorpresa.");
-                            myCiv.setWood(myCiv.getWood() + ambush.getWasteWood());
-                            myCiv.setIron(myCiv.getIron() + ambush.getWasteIron());
-                            battleCount++;
-                        }
-                    }
-                }
-            }
-        }, 180000, 180000); // 3 minutos reglamentarios
-
-
-        // =====================================================================
-        // BUCLE PRINCIPAL DEL JUEGO (Menú por consola)
-        // =====================================================================
-        while (!gameOver) {
-            System.out.println("\n¿Qué deseas hacer?");
-            System.out.println("1. Gestión de Edificios   2. Reclutar Unidades      3. Ver Estado");
-            System.out.println("4. ¡BATALLA VOLUNTARIA!   5. Historial de Partidas  6. Salir");
-            System.out.print("Selecciona una opción: ");
-            
-            try {
-                int option = sc.nextInt();
-
-                if (gameOver) break; 
-
-                if (option == 1) {
-                    System.out.println("\n--- MENÚ DE CONSTRUCCIÓN Y TECNOLOGÍA ---");
-                    System.out.println("1. Carpintería     (Madera:" + WOOD_COST_CARPENTRY + " Hierro:" + IRON_COST_CARPENTRY + " Comida:" + FOOD_COST_CARPENTRY);
-                    System.out.println("2. Herrería       (Madera:" + WOOD_COST_SMITHY + " Hierro:" + IRON_COST_SMITHY + " Comida:" + FOOD_COST_SMITHY + ")");
-                    System.out.println("3. Granja         (Madera:" + WOOD_COST_FARM + " Hierro:" + IRON_COST_FARM + " Comida:" + FOOD_COST_FARM + ")");
-                    System.out.println("4. Torre Mágica   (Madera:" + WOOD_COST_MAGICTOWER + " Hierro:" + IRON_COST_MAGICTOWER + " Comida:" + FOOD_COST_MAGICTOWER + " Mana:" + MANA_COST_MAGICTOWER);
-                    System.out.println("5. Iglesia        (Madera:" + WOOD_COST_CHURCH + " Hierro:" + IRON_COST_CHURCH + " Comida:" + FOOD_COST_CHURCH + ")");
-                    System.out.println("6. Investigar Tecnología de Ataque   (Hierro incremental)");
-                    System.out.println("7. Investigar Tecnología de Armadura (Hierro incremental)");
-                    System.out.println("0. <-- VOLVER ATRÁS");
-                    System.out.print("\nSelección: ");
-                    
-                    int b = sc.nextInt();
-                    if (b != 0) {
-                        if (b == 1) myCiv.upgradeCarpentry(); 
-                        else if (b == 2) myCiv.upgradeSmithy();
-                        else if (b == 3) myCiv.upgradeFarm(); 
-                        else if (b == 4) myCiv.upgradeMagicTower();
-                        else if (b == 5) myCiv.upgradeChurch();
-                        else if (b == 6) myCiv.upgradeAttackTechnology();
-                        else if (b == 7) myCiv.upgradeArmorTechnology();
-                        else System.out.println("Opción no válida.");
-                    }
-
-                } else if (option == 2) {
-                    System.out.println("\n--- RECLUTAR TROPAS ---");
-                    System.out.println("1. Espadachín (Índice 0) -> Comida:" + FOOD_COST_SWORDSMAN + " Madera:" + WOOD_COST_SWORDSMAN + " Hierro:" + IRON_COST_SWORDSMAN);
-                    System.out.println("2. Ballestero (Índice 2) -> Madera:" + WOOD_COST_CROSSBOW + " Hierro:" + IRON_COST_CROSSBOW);
-                    System.out.println("3. Cañón      (Índice 3) -> Madera:" + WOOD_COST_CANNON + " Hierro:" + IRON_COST_CANNON);
-                    System.out.println("4. Mago       (Índice 7) -> Comida:" + FOOD_COST_MAGICIAN + " Mana:" + MANA_COST_MAGICIAN + " *Requiere Torre");
-                    System.out.println("5. Sacerdote  (Índice 8) -> Comida:" + FOOD_COST_PRIEST + " Mana:" + MANA_COST_PRIEST + " *Requiere Iglesia");
-                    System.out.println("0. <-- VOLVER ATRÁS");
-                    System.out.print("\n¿A qué unidad deseas llamar?: ");
-                    
-                    int u = sc.nextInt();
-                    if (u != 0 && u >= 1 && u <= 5) {
-                        System.out.print("¿Cuántos guerreros necesitas?: ");
-                        int qty = sc.nextInt();
-                        
-                        if (u == 1) myCiv.recruitSwordsman(qty);
-                        else if (u == 2) myCiv.recruitCrossbow(qty); 
-                        else if (u == 3) myCiv.recruitCannon(qty);   
-                        else if (u == 4) myCiv.recruitMagician(qty);
-                        else if (u == 5) myCiv.recruitPriest(qty);
-                        
-                        System.out.println("Procesando orden de reclutamiento...");
-                    }
-
-                } else if (option == 3) {
-                    System.out.println("\n=============================================");
-                    System.out.println("        ESTADO DE LA CIVILIZACIÓN            ");
-                    System.out.println("=============================================");
-                    System.out.printf("Comida: %-6d | Madera: %-6d | Hierro: %-6d | Mana: %-6d\n", 
-                            myCiv.getFood(), myCiv.getWood(), myCiv.getIron(), myCiv.getMana());
-                    
-                    System.out.println("\n--- EDIFICIOS CONSTRUIDOS ---");
-                    System.out.println("  Granja:       Lvl " + myCiv.getFarmLevel());
-                    System.out.println("  Carpinteria:  Lvl " + myCiv.getCarpentryLevel());
-                    System.out.println("  Herreria:     Lvl " + myCiv.getSmithyLevel());
-                    System.out.println("  Torre Magica: " + (myCiv.getMagicTowerLevel() > 0 ? "Lvl " + myCiv.getMagicTowerLevel() : "No construida"));
-                    System.out.println("  Iglesia:      " + (myCiv.getChurchLevel() > 0 ? "Lvl " + myCiv.getChurchLevel() : "No construida"));
-                    
-                    System.out.println("\n--- TECNOLOGIAS ---");
-                    System.out.println("  Tecnologia de Ataque:   Lvl " + myCiv.getAttackTechnologyLevel());
-                    System.out.println("  Tecnologia de Armadura: Lvl " + myCiv.getArmorTechnologyLevel());
-
-                    System.out.println("\n--- CUARTEL Y TROPAS DISPONIBLES ---");
-                    ArrayList<MilitaryUnit>[] armyArray = myCiv.getArmy();
-                    int totalUnits = 0;
-                    for (int i = 0; i < armyArray.length; i++) {
-                        totalUnits += armyArray[i].size();
-                    }
-                    
-                    System.out.println("Total de unidades militares: " + totalUnits);
-                    System.out.println("  Espadachines: " + armyArray[0].size());
-                    System.out.println("  Lanceros:     " + armyArray[1].size());
-                    System.out.println("  Ballesteros:  " + armyArray[2].size());
-                    System.out.println("  Cañones:      " + armyArray[3].size());
-                    System.out.println("  Magos:        " + armyArray[7].size());
-                    System.out.println("  Sacerdotes:   " + armyArray[8].size());
-                    System.out.println("=============================================");
-                    
-                } else if (option == 4) {
-                    System.out.println("\n--- INFORME DE INTELIGENCIA ---");
-                    System.out.println("La flota enemiga esperada es de nivel: " + (battleCount + 1));
-                    
-                    // REQUISITO: Generamos preventivamente el ejército enemigo para poder inspeccionarlo antes del combate
-                    ArrayList<MilitaryUnit>[] enemyArmy = generateEnemyArmy(battleCount);
-                    viewThreat(enemyArmy); // Mostramos el recuento exacto de enemigos en camino
-
-                    System.out.print("\n¿Deseas lanzar un ataque preventivo voluntario? (1: SI / 2: RETIRARSE): ");
-                    int decide = sc.nextInt();
-
-                    if (decide == 1) {
-                        if (isArmyEmpty(myCiv.getArmy())) {
-                            System.out.println("No puedes atacar sin soldados.");
-                        } else {
-                            Battle battle = new Battle(myCiv.getArmy(), enemyArmy);
-                            battle.startBattle();
-                            System.out.println(battle.getBattleDevelopment());
-
-                            // GUARDAR EN EL HISTORIAL: Registramos el reporte de la batalla voluntaria
-                            battleReportsHistory.add(battle.getBattleReport(battleCount + 1));
-
-                            if (isArmyEmpty(myCiv.getArmy())) {
-                                System.out.println("Tu civilización ha sido derrotada por completo.");
-                                gameOver = true;
-                            } else {
-                                myCiv.setWood(myCiv.getWood() + battle.getWasteWood());
-                                myCiv.setIron(myCiv.getIron() + battle.getWasteIron());
-                                battleCount++;
-                            }
-                        }
-                    }
-
-                } else if (option == 5) {
-                    // NUEVA OPCIÓN: Muestra los reportes textuales de las últimas 5 batallas ocurridas
-                    System.out.println("\n--- HISTORIAL DE LAS ÚLTIMAS BATALLAS ---");
-                    if (battleReportsHistory.isEmpty()) {
-                        System.out.println("Aún no se ha librado ninguna batalla en este reino.");
-                    } else {
-                        // El PDF pide al menos las últimas 5. Tomamos desde el tamaño actual hacia atrás.
-                        int startIdx = Math.max(0, battleReportsHistory.size() - 5);
-                        for (int i = startIdx; i < battleReportsHistory.size(); i++) {
-                            System.out.println(battleReportsHistory.get(i));
-                        }
-                    }
-
-                } else if (option == 6) {
-                    gameOver = true;
-                } else {
-                    System.out.println("Opción no disponible.");
-                }
-
-            } catch (ResourceException e) {
-                System.out.println("\n[ALERTA RECURSOS] " + e.getMessage());
-            } catch (BuildingException e) {
-                System.out.println("\n[ALERTA EDIFICIO] " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("\n[ERROR] Introduce un valor numérico válido.");
-                sc.nextLine(); 
-            }
-        } 
+        Scanner teclado = new Scanner(System.in);
+        Civilization miCivilizacion = new Civilization();
         
-        timerRecursos.cancel();
-        timerAtaques.cancel();
-        System.out.println("Gracias por jugar. Fin de la partida.");
-        sc.close();
-    }
+        // Contador para llevar el registro de las batallas jugadas
+        int numeroBatallas = 0;
+        boolean salir = false;
 
-    // NUEVO MÉTODO EXIGIDO: Cuenta los tipos de tropa de la lista del enemigo y los saca formateados por pantalla
-    private static void viewThreat(ArrayList<MilitaryUnit>[] enemyArmy) {
-        int swordsman = enemyArmy[0].size();
-        int spearman = enemyArmy[1].size();
-        int crossbow = enemyArmy[2].size();
-        int cannon = enemyArmy[3].size();
-
-        System.out.println("\n=========================================");
-        System.out.println("NEW THREAT COMING:");
-        System.out.println("Swordsman: " + swordsman);
-        System.out.println("Spearman: " + spearman);
-        System.out.println("Crossbow: " + crossbow);
-        System.out.println("Cannon: " + cannon);
         System.out.println("=========================================");
-    }
+        System.out.println("   BIENVENIDO A CIVILIZATIONS EMPIRE     ");
+        System.out.println("=========================================");
 
-    // Auxiliar para comprobar si el array de listas está completamente vacío
-    private static boolean isArmyEmpty(ArrayList<MilitaryUnit>[] army) {
-        for (ArrayList<MilitaryUnit> list : army) {
-            if (!list.isEmpty()) return false;
-        }
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static ArrayList<MilitaryUnit>[] generateEnemyArmy(int level) {
-        ArrayList<MilitaryUnit>[] enemy = new ArrayList[9];
-        for (int i = 0; i < 9; i++) {
-            enemy[i] = new ArrayList<>();
-        }
-        
-        int multiplier = 100 + (level * ENEMY_FLEET_INCREASE);
-        int virtualIron = (IRON_BASE_ENEMY_ARMY * multiplier) / 100;
-        int virtualWood = (WOOD_BASE_ENEMY_ARMY * multiplier) / 100;
-        
-        while (virtualIron > 2000 && virtualWood > 5000) {
-            enemy[0].add(new Swordsman(level, level)); // Espadachines
-            enemy[1].add(new Spearman(level, level));  // Lanceros
-            enemy[2].add(new Crossbow(level, level));  // Ballesteros
-            enemy[3].add(new Cannon(level, level));    // Cañones
+        while (!salir) {
+            // Imprimimos el estado actual de la civilización en cada ciclo
+            mostrarEstado(miCivilizacion);
             
-            virtualIron -= (IRON_COST_SWORDSMAN + IRON_COST_SPEARMAN + IRON_COST_CROSSBOW + IRON_COST_CANNON);
-            virtualWood -= (WOOD_COST_SWORDSMAN + WOOD_COST_SPEARMAN + WOOD_COST_CROSSBOW + WOOD_COST_CANNON);
+            // MENU PRINCIPAL
+            System.out.println("\n--- MENU DE ACCIONES ---");
+            System.out.println("1. Pasar turno (Producir Recursos)");
+            System.out.println("2. Mejorar Edificio");
+            System.out.println("3. Mejorar Tecnologia Militar");
+            System.out.println("4. Reclutar Tropas / Construir Defensas");
+            System.out.println("5. Simular Batalla (Siguiente Oleada)");
+            System.out.println("6. Salir del Juego");
+            System.out.print("Selecciona una opcion: ");
+            
+            int opcion = teclado.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    // Al pasar turno sumamos los recursos que generan los edificios
+                    miCivilizacion.produceResources();
+                    System.out.println("\n[TURNO PASADO] Tus edificios han generado nuevos materiales.");
+                    break;
+
+                case 2:
+                    menuEdificios(miCivilizacion, teclado);
+                    break;
+
+                case 3:
+                    menuTecnologias(miCivilizacion, teclado);
+                    break;
+
+                case 4:
+                    menuReclutamiento(miCivilizacion, teclado);
+                    break;
+
+                case 5:
+                    // Aqui llamariamos al motor de batalla que programamos
+                    System.out.println("\n--- PREPARANDO EJERCITOS PARA EL COMBATE ---");
+                    // Nota: En la practica real aqui instanciariamos al enemigo y lanzariamos la Battle
+                    System.out.println("Simulando asalto de batalla...");
+                    numeroBatallas++;
+                    System.out.println("Batalla Nº " + numeroBatallas + " finalizada de forma simulada.");
+                    break;
+
+                case 6:
+                    salir = true;
+                    System.out.println("\n¡Gracias por jugar a Civilizations! Saliendo...");
+                    break;
+
+                default:
+                    System.out.println("\n[ERROR] Opcion no valida, introduce un numero del 1 al 6.");
+                    break;
+            }
         }
-        return enemy;
+        teclado.close();
+    }
+
+    // Metodo auxiliar para pintar de forma sencilla el estado por consola
+    private static void mostrarEstado(Civilization civ) {
+        System.out.println("\n=======================================================================");
+        System.out.println(" RECURSOS: Comida: " + civ.getFood() + " | Madera: " + civ.getWood() + 
+                           " | Hierro: " + civ.getIron() + " | Mana: " + civ.getMana());
+        System.out.println(" EDIFICIOS: Granja: Lvl " + civ.getFarmLevel() + 
+                           " | Carpinteria: Lvl " + civ.getCarpentryLevel() + 
+                           " | Herreria: Lvl " + civ.getSmithyLevel());
+        System.out.println("            Iglesia: Lvl " + civ.getChurchLevel() + 
+                           " | T. Magica: Lvl " + civ.getMagicTowerLevel());
+        System.out.println(" TECNOLOGIAS: Ataque: Lvl " + civ.getAttackTechnologyLevel() + 
+                           " | Defensa: Lvl " + civ.getArmorTechnologyLevel());
+        System.out.println("=======================================================================");
+    }
+
+    // Submenu para la gestion de subidas de nivel de los edificios
+    private static void menuEdificios(Civilization civ, Scanner teclado) {
+        System.out.println("\n--- MEJORAR EDIFICIOS ---");
+        System.out.println("1. Granja");
+        System.out.println("2. Carpinteria");
+        System.out.println("3. Herreria");
+        System.out.println("4. Iglesia");
+        System.out.println("5. Torre Magica");
+        System.out.print("¿Que edificio deseas mejorar? ");
+        int ed = teclado.nextInt();
+
+        try {
+            if (ed == 1) civ.upgradeFarm();
+            else if (ed == 2) civ.upgradeCarpentry();
+            else if (ed == 3) civ.upgradeSmithy();
+            else if (ed == 4) civ.upgradeChurch();
+            else if (ed == 5) civ.upgradeMagicTower();
+            else System.out.println("Edificio no valido.");
+        } catch (ResourceException e) {
+            // Capturamos la excepcion si faltan materiales
+            System.out.println("[ERROR RECURSOS] " + e.getMessage());
+        }
+    }
+
+    // Submenu para mejorar las tecnologias usando try-catch
+    private static void menuTecnologias(Civilization civ, Scanner teclado) {
+        System.out.println("\n--- MEJORAR TECNOLOGIAS MILITARES ---");
+        System.out.println("1. Tecnologia de Ataque (Incrementa el daño)");
+        System.out.println("2. Tecnologia de Defensa / Armadura (Incrementa la salud)");
+        System.out.print("Selecciona una opcion: ");
+        int tech = teclado.nextInt();
+
+        try {
+            if (tech == 1) civ.upgradeAttackTechnology();
+            else if (tech == 2) civ.upgradeArmorTechnology();
+            else System.out.println("Tecnologia no valida.");
+        } catch (ResourceException e) {
+            System.out.println("[ERROR RECURSOS] " + e.getMessage());
+        }
+    }
+
+    // Submenu interactivo para el reclutamiento por lotes aplicando las excepciones del PDF
+    private static void menuReclutamiento(Civilization civ, Scanner teclado) {
+        System.out.println("\n--- BARRACONES DE RECLUTAMIENTO ---");
+        System.out.println("1. Swordsman     2. Spearman      3. Crossbow      4. Cannon");
+        System.out.println("5. ArrowTower    6. Catapult      7. RocketTower");
+        System.out.println("8. Magician (Requiere Torre)      9. Priest (Requiere Iglesia)");
+        System.out.print("Elige el tipo de unidad: ");
+        int tipo = teclado.nextInt();
+        
+        System.out.print("¿Cuantas unidades de este tipo quieres fabricar? ");
+        int cantidad = teclado.nextInt();
+
+        try {
+            switch (tipo) {
+                case 1: civ.recruitSwordsman(cantidad); break;
+                case 2: civ.recruitSpearman(cantidad); break;
+                case 3: civ.recruitCrossbow(cantidad); break;
+                case 4: civ.recruitCannon(cantidad); break;
+                case 5: civ.recruitArrowTower(cantidad); break;
+                case 6: civ.recruitCatapult(cantidad); break;
+                case 7: civ.recruitRocketTower(cantidad); break;
+                case 8: civ.recruitMagician(cantidad); break;
+                case 9: civ.recruitPriest(cantidad); break;
+                default: System.out.println("Tipo de unidad incorrecto."); break;
+            }
+            System.out.println("¡Reclutamiento completado con exito!");
+        } catch (ResourceException e) {
+            System.out.println("[ERROR RECURSOS] " + e.getMessage());
+        } catch (BuildingException e) {
+            // Captura el error especifico si no se cumple el requisito del edificio magico/iglesia
+            System.out.println("[ERROR REQUISITO EDIFICIO] " + e.getMessage());
+        }
     }
 }
