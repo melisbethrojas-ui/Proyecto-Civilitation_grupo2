@@ -1,50 +1,65 @@
-<h1>Panel de Control de la Civilización</h1>
+<h1 style="text-align: center; margin-bottom: 40px;">PANEL DE CONTROL DE LA CIVILIZACIÓN</h1>
 
-<div class="grid-container">
-    <section class="card">
-        <h2>Recursos Actuales</h2>
-        <ul>
-            <li><strong>Comida:</strong> {{civi.comida}}</li>
-            <li><strong>Madera:</strong> {{civi.madera}}</li>
-            <li><strong>Hierro:</strong> {{civi.hierro}}</li>
-            <li><strong>Maná:</strong> {{civi.mana}}</li>
-        </ul>
+<div class="grid-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+    
+    <section class="card glass">
+        <h2 class="gold-text">RECURSOS ACTUALES</h2>
+        <div class="resource-list" style="margin-top: 20px;">
+            <div class="res-item" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="/img/comida.png" style="width: 30px;"> 
+                <span><strong>Comida:</strong> {{civi.comida}}</span>
+            </div>
+            <div class="res-item" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="/img/madera.png" style="width: 30px;"> 
+                <span><strong>Madera:</strong> {{civi.madera}}</span>
+            </div>
+            <div class="res-item" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="/img/hierro.png" style="width: 30px;"> 
+                <span><strong>Hierro:</strong> {{civi.hierro}}</span>
+            </div>
+            <div class="res-item" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img src="/img/mana.png" style="width: 30px;"> 
+                <span><strong>Maná:</strong> {{civi.mana}}</span>
+            </div>
+        </div>
     </section>
 
-    <section class="card">
-        <h2>Tecnologías</h2>
-        <ul>
-            <li><strong>Ataque:</strong> Nivel {{civi.tech_ataque}}</li>
-            <li><strong>Defensa:</strong> Nivel {{civi.tech_defensa}}</li>
-        </ul>
+    <section class="card glass">
+        <h2 class="gold-text">TECNOLOGÍAS</h2>
+        <p><strong>Ataque:</strong> Nivel {{civi.tech_ataque}}</p>
+        <p><strong>Defensa:</strong> Nivel {{civi.tech_defensa}}</p>
     </section>
 
-    <section class="card">
-        <h2>Edificios Construidos</h2>
-        <ul>
-            <li><strong>Granjas:</strong> {{civi.granjas}}</li>
-            <li><strong>Carpinterías:</strong> {{civi.carpinterias}}</li>
-            <li><strong>Herrerías:</strong> {{civi.herrerias}}</li>
-            <li><strong>Torres Mágicas:</strong> {{civi.torres_magicas}}</li>
-            <li><strong>Iglesias:</strong> {{civi.iglesias}}</li>
+    <section class="card glass">
+        <h2 class="gold-text">EDIFICIOS CONSTRUIDOS</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li>Granjas: {{civi.granjas}}</li>
+            <li>Carpinterías: {{civi.carpinterias}}</li>
+            <li>Herrerías: {{civi.herrerias}}</li>
+            <li>Torres Mágicas: {{civi.torres_magicas}}</li>
+            <li>Iglesias: {{civi.iglesias}}</li>
         </ul>
     </section>
 </div>
 
-<h2>Estado del Ejército</h2>
-<table class="data-table">
-    <thead>
-        <tr>
-            <th>Tipo de Unidad</th>
-            <th>Cantidad Disponible</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each ejercito}}
-        <tr>
-            <td><strong>{{this.tipo_unidad}}</strong></td>
-            <td>{{this.cantidad}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<h2 style="margin-top: 50px;">ESTADO DEL EJÉRCITO</h2>
+<div class="card glass">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>TIPO DE UNIDAD</th>
+                <th>CANTIDAD DISPONIBLE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each ejercito}}
+            <tr>
+                <td style="color: var(--gold-bright);"><strong>{{this.tipo_unidad}}</strong></td>
+                <td>{{this.cantidad}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<p style="margin-top: 20px;"><a href="/">Volver a la portada</a></p>
