@@ -160,14 +160,41 @@ public class Main {
     // ============================================================
     private static void menuEdificiosYTecnologias(Civilization civ, Scanner teclado) {
         System.out.println("\n--- EDIFICIOS Y TECNOLOGÍAS ---");
-        System.out.println("1. Granja");
-        System.out.println("2. Carpintería");
-        System.out.println("3. Herrería");
-        System.out.println("4. Iglesia");
-        System.out.println("5. Torre Mágica");
-        System.out.println("6. Mejora Tecnología Ataque");
-        System.out.println("7. Mejora Tecnología Defensa");
-        System.out.print("Selecciona una opción: ");
+
+        System.out.println("1. Granja (Coste: " 
+                + Variables.FOOD_COST_FARM + " comida, "
+                + Variables.WOOD_COST_FARM + " madera, "
+                + Variables.IRON_COST_FARM + " hierro)");
+
+        System.out.println("2. Carpintería (Coste: "
+                + Variables.FOOD_COST_CARPENTRY + " comida, "
+                + Variables.WOOD_COST_CARPENTRY + " madera, "
+                + Variables.IRON_COST_CARPENTRY + " hierro)");
+
+        System.out.println("3. Herrería (Coste base: "
+                + Variables.FOOD_COST_SMITHY + " comida, "
+                + Variables.WOOD_COST_SMITHY + " madera, "
+                + Variables.IRON_COST_SMITHY + " hierro"
+                + " + coste extra por nivel)");
+
+        System.out.println("4. Iglesia (Coste: "
+                + Variables.FOOD_COST_CHURCH + " comida, "
+                + Variables.WOOD_COST_CHURCH + " madera, "
+                + Variables.IRON_COST_CHURCH + " hierro)");
+
+        System.out.println("5. Torre Mágica (Coste base: "
+                + Variables.FOOD_COST_MAGICTOWER + " comida, "
+                + Variables.WOOD_COST_MAGICTOWER + " madera, "
+                + Variables.IRON_COST_MAGICTOWER + " hierro, "
+                + Variables.MANA_COST_MAGICTOWER + " mana"
+                + " + coste extra por nivel)");
+
+        System.out.println("6. Mejora Tecnología Ataque (Coste base: "
+                + Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST + " hierro)");
+
+        System.out.println("7. Mejora Tecnología Defensa (Coste base: "
+                + Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + " hierro)");
+
 
         int op = leerNumero(teclado);
 
@@ -192,9 +219,36 @@ public class Main {
     // ============================================================
     private static void menuReclutamiento(Civilization civ, Scanner teclado) {
         System.out.println("\n--- RECLUTAR UNIDADES ---");
-        System.out.println("1. Swordsman     2. Spearman      3. Crossbow      4. Cannon");
-        System.out.println("5. ArrowTower    6. Catapult      7. RocketTower");
-        System.out.println("8. Magician      9. Priest");
+        System.out.println("1. Swordsman     (Coste: " + Variables.FOOD_COST_SWORDSMAN + " comida, " +
+                                                Variables.WOOD_COST_SWORDSMAN + " madera, " +
+                                                Variables.IRON_COST_SWORDSMAN + " hierro)");
+        System.out.println("2. Spearman      (Coste: " + Variables.FOOD_COST_SPEARMAN + " comida, " +
+                                                Variables.WOOD_COST_SPEARMAN + " madera, " +
+                                                Variables.IRON_COST_SPEARMAN + " hierro)");
+        System.out.println("3. Crossbow      (Coste: " + Variables.FOOD_COST_CROSSBOW + " comida, " +
+                                                Variables.WOOD_COST_CROSSBOW + " madera, " +
+                                                Variables.IRON_COST_CROSSBOW + " hierro)");
+        System.out.println("4. Cannon        (Coste: " + Variables.FOOD_COST_CANNON + " comida, " +
+                                                Variables.WOOD_COST_CANNON + " madera, " +
+                                                Variables.IRON_COST_CANNON + " hierro)");
+        System.out.println("5. ArrowTower    (Coste: " + Variables.FOOD_COST_ARROWTOWER + " comida, " +
+                                                Variables.WOOD_COST_ARROWTOWER + " madera, " +
+                                                Variables.IRON_COST_ARROWTOWER + " hierro)");
+        System.out.println("6. Catapult      (Coste: " + Variables.FOOD_COST_CATAPULT + " comida, " +
+                                                Variables.WOOD_COST_CATAPULT + " madera, " +
+                                                Variables.IRON_COST_CATAPULT + " hierro)");
+        System.out.println("7. RocketTower   (Coste: " + Variables.FOOD_COST_ROCKETLAUNCHERTOWER + " comida, " +
+                                                Variables.WOOD_COST_ROCKETLAUNCHERTOWER + " madera, " +
+                                                Variables.IRON_COST_ROCKETLAUNCHERTOWER + " hierro)");
+        System.out.println("8. Magician      (Coste: " + Variables.FOOD_COST_MAGICIAN + " comida, " +
+                                                Variables.WOOD_COST_MAGICIAN + " madera, " +
+                                                Variables.IRON_COST_MAGICIAN + " hierro + " +
+                                                Variables.MANA_COST_MAGICIAN + " mana)");
+        System.out.println("9. Priest        (Coste: " + Variables.FOOD_COST_PRIEST + " comida, " +
+                                                Variables.WOOD_COST_PRIEST + " madera, " +
+                                                Variables.IRON_COST_PRIEST + " hierro + " +
+                                                Variables.MANA_COST_PRIEST + " mana)");
+                                    
         System.out.print("Elige el tipo de unidad: ");
 
         int tipo = leerNumero(teclado);
