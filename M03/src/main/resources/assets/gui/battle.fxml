@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.project.BattleController"
+            styleClass="root">
+
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20;" styleClass="card">
+            <Button text="← Volver" onAction="#goBack" styleClass="button"/>
+            <Label text="Simulación de Batalla"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;"
+                   styleClass="subtitle"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;" styleClass="card">
+            <Button text="Simular Batalla" onAction="#simulateBattle"
+                    style="-fx-font-size: 18px; -fx-pref-width: 200px;"
+                    styleClass="button"/>
+
+            <Label text="Resultado:" style="-fx-font-size: 18px;" styleClass="subtitle"/>
+            <Label fx:id="resultLabel" style="-fx-font-size: 16px;" styleClass="label"/>
+
+            <Label text="Desarrollo de la batalla:" style="-fx-font-size: 18px;" styleClass="subtitle"/>
+
+            <ScrollPane fitToWidth="true" prefHeight="300" styleClass="scroll-pane">
+                <TextArea fx:id="logArea" editable="false" wrapText="true"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>
