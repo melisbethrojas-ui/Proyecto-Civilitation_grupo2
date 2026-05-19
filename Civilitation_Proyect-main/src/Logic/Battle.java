@@ -130,7 +130,44 @@ public class Battle implements Variables {
         System.out.println("Valor de pérdidas del Enemigo: " + resourcesLostEnemy);
         System.out.println("Residuos rescatados del campo: Madera: " + wasteWood + " | Hierro: " + wasteIron);
         System.out.println("=======================================================================");
-    }
+
+        // =====================================================================
+        // GUARDADO AUTOMÁTICO EN LA BASE DE DATOS (PERSONA 2)
+        // =====================================================================
+        try {
+            // 1. Abrimos la conexión con la base de datos
+            java.sql.Connection conexion = java.sql.DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/civilizations_db", "root", ""
+            );
+
+            // 2. Preparamos la plantilla SQL basándonos en la tabla 'batallas'
+            String sql = "INSERT INTO batallas (numero_batalla, resultado, residuos_madera, residuos_hierro, "
+                       + "coste_comida_perdido_civi, coste_madera_perdido_civi, coste_hierro_perdido_civi, "
+                       + "coste_comida_perdido_enem, coste_madera_perdido_enem, coste_hierro_perdido_enem, "
+                       + "desarrollo_paso_a_paso) VALUES (1, ?, ?, ?, ?, 0, 0, ?, 0, 0, ?)";
+
+            java.sql.PreparedStatement ps = conexion.prepareStatement(sql);
+            
+            // 3. Mapeamos tus variables en las columnas correspondientes
+            ps.setString(1, this.winnerName);              // Quién gana
+            ps.setInt(2, this.wasteWood);                 // Escombros de madera
+            ps.setInt(3, this.wasteIron);                 // Escombros de hierro
+            ps.setInt(4, this.resourcesLostCiv);          // Pérdidas de la civilización
+            ps.setInt(5, this.resourcesLostEnemy);        // Pérdidas del enemigo
+            ps.setString(6, this.getBattleDevelopment());   // El diario paso a paso en texto
+
+            // 4. Se ejecuta en MySQL y cerramos flujos de datos de forma segura
+            ps.executeUpdate();
+            ps.close();
+            conexion.close();
+            
+            System.out.println("[MySQL] ¡Historial de batalla guardado automáticamente con éxito!");
+
+        } catch (java.sql.SQLException e) {
+            System.err.println("[Error MySQL] No se pudo guardar el historial: " + e.getMessage());
+        }
+        
+    } // Cierre correcto del método startBattle()
 
     // =====================================================================
     // GESTIÓN DE TURNOS Y HABILIDADES ESPECIALES
@@ -155,7 +192,7 @@ public class Battle implements Variables {
             
             if (damage > 0) {
                 defender.takeDamage(damage);
-                battleLog.append("[").append(attackerName).append("] Escombro/Ataque inflige ").append(damage).append(" de daño.\n");
+                battleLog.append("[").append(attackerName).append("] Unidad ataca e inflige ").append(damage).append(" de daño.\n");
 
                 // Comprobar si la unidad defensora muere
                 if (defender.getActualArmor() <= 0) {
@@ -192,7 +229,6 @@ public class Battle implements Variables {
     // =====================================================================
     // AUXILIARES MATEMÁTICOS Y PROBABILIDADES
     // =====================================================================
-    // Selección de grupo atacante por probabilidad
     private int selectGroupBasedOnProbability(ArrayList<MilitaryUnit>[] army, int[] probabilities) {
         int roll = random.nextInt(100);
         int sum = 0;
@@ -208,7 +244,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-    // Selección proporcional del grupo defensor
+
     private int selectDefenderGroupProportionally(ArrayList<MilitaryUnit>[] defenders) {
         int totalAlive = countTotalUnits(defenders);
         if (totalAlive == 0) return -1;
@@ -222,7 +258,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-    // Actualización del estado de santificación
+
     private void updateSanctification() {
         boolean civHasPriests = (civilizationArmy.length > 8 && !civilizationArmy[8].isEmpty());
         
@@ -239,11 +275,11 @@ public class Battle implements Variables {
             }
         }
     }
-    // Comprobación de magos vivos
+
     private boolean hasMagiciansAlive(ArrayList<MilitaryUnit>[] army) {
         return army.length > 7 && !army[7].isEmpty();
     }
-    // Cálculo de residuos generados
+
     private void calculateWaste(MilitaryUnit deadUnit) {
         int roll = random.nextInt(100);
         if (roll < deadUnit.getChanceGeneratinWaste()) {
@@ -254,7 +290,7 @@ public class Battle implements Variables {
             this.wasteIron += ironRecovered;
         }
     }
-    // Conteo total de unidades vivas
+
     private int countTotalUnits(ArrayList<MilitaryUnit>[] army) {
         int count = 0;
         for (ArrayList<MilitaryUnit> group : army) {

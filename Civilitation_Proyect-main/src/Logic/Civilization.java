@@ -410,4 +410,30 @@ public class Civilization implements Variables {
         return army; }
     public void setArmy(ArrayList<MilitaryUnit>[] army) { 
         this.army = army; }
+
+
+        // =========================================================================
+    // SETTERS REQUERIDOS PARA LA PERSISTENCIA 
+    // =========================================================================
+    public void setFarmLevel(int farmLevel) { 
+        this.farmLevel = farmLevel; 
+    }
+    public void setSmithyLevel(int smithyLevel) { 
+        this.smithyLevel = smithyLevel; 
+    }
+    public void setCarpentryLevel(int carpentryLevel) { 
+        this.carpentryLevel = carpentryLevel; 
+    }
+    public void setChurchLevel(int churchLevel) { 
+        this.churchLevel = churchLevel; 
+    }
+    public void setMagicTowerLevel(int magicTowerLevel) { 
+        this.magicTowerLevel = magicTowerLevel; 
+    }
+    public void setArmorTechnologyLevel(int armorTechnologyLevel) { 
+        this.armorTechnologyLevel = armorTechnologyLevel; 
+    }
+    public void setAttackTechnologyLevel(int attackTechnologyLevel) { 
+        this.attackTechnologyLevel = attackTechnologyLevel; 
+    }
 }
