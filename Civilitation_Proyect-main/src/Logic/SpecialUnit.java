@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 public abstract class SpecialUnit implements MilitaryUnit, Variables {
 

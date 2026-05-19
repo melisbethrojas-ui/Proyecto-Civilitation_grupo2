@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 // Clase que representa la torre de arqueros, una unidad defensiva que ataca a distancia
 public class ArrowTower extends DefenseUnit {

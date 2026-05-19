@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 import java.util.ArrayList;
 

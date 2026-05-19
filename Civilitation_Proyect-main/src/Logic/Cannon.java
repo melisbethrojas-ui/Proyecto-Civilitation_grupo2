@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 public class Cannon extends AttackUnit {
 

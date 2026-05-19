@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 public class Magician extends SpecialUnit {
 

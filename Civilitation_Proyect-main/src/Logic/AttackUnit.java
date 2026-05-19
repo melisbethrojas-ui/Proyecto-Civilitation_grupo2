@@ -1,4 +1,4 @@
-package Civilitation_Proyect;
+package Logic;
 
 // Clase abstracta que implementa la interfaz MilitaryUnit 
 // y define los atributos y métodos comunes para las unidades de ataque
