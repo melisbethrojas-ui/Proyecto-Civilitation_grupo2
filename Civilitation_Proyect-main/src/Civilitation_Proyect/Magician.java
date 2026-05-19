@@ -58,7 +58,7 @@ public class Magician extends SpecialUnit {
         return CHANCE_ATTACK_AGAIN_MAGICIAN; 
     }
 
-    // Método para los reportes escritos de las batallas exigidos en el PDF
+    // Método para los reportes escritos de las batallas 
     @Override
     public String toString() {
         return "Magician";

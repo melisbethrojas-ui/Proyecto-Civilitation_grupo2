@@ -1,6 +1,8 @@
 package Civilitation_Proyect;
 
-// Clase abstracta que implementa la interfaz MilitaryUnit y define los atributos y métodos comunes para las unidades de ataque
+// Clase abstracta que implementa la interfaz MilitaryUnit 
+// y define los atributos y métodos comunes para las unidades de ataque
+
 public abstract class AttackUnit implements MilitaryUnit, Variables { 
     protected int armor;
     protected int initialArmor;
@@ -8,7 +10,7 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
     protected int experience;
     protected boolean sanctified;
 
-    // Constructor que recibe las estadísticas ya mejoradas por la tecnología de la civilización
+    // Constructor
     public AttackUnit(int armor, int damage) {
         this.armor = armor;
         this.initialArmor = armor;
@@ -17,15 +19,15 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
         this.sanctified = false; 
     }
 
-    // Calcula el daño total de la unidad aplicando los bonos de experiencia y santificación
+    // Cálculo del ataque
     @Override
     public int attack() {
         int damage = this.baseDamage;
         
-        // Bono por experiencia: (experiencia * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT * baseDamage / 100)
+        // Bono por experiencia
         damage = damage + (this.experience * PLUS_ATTACK_UNIT_PER_EXPERIENCE_POINT * this.baseDamage / 100);
         
-        // Bono por estar santificado: (PLUS_ATTACK_UNIT_SANCTIFIED * baseDamage / 100)
+        // Bono por estar santificado
         if (this.sanctified) {
             damage = damage + (PLUS_ATTACK_UNIT_SANCTIFIED * this.baseDamage / 100);
         }
@@ -33,12 +35,12 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
         return damage;
     }
 
-    // Procesa el daño que recibe la unidad, reduciendo su armadura (permite números negativos según el PDF)
+    // Procesar daño recibido
     @Override
     public void takeDamage(int receivedDamage) {
         this.armor -= receivedDamage;
     }
-
+    //Gestion de armadura
     @Override
     public int getActualArmor() {
         return this.armor;
@@ -53,7 +55,7 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
             this.armor = this.initialArmor;
         }
     }
-
+     //Gestion de experiencia
     @Override
     public void setExperience(int n) {
         this.experience = n;
@@ -64,6 +66,7 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
         return this.experience;
     }
 
+    //Estado santificado
     public boolean isSanctified() {
         return this.sanctified;
     }
@@ -78,7 +81,7 @@ public abstract class AttackUnit implements MilitaryUnit, Variables {
         }
     }
 
-    // Getters públicos necesarios para que la clase Battle y el motor hagan cálculos
+        // Getters públicos para Battle
     public int getInitialArmor() {
         return this.initialArmor;
     }

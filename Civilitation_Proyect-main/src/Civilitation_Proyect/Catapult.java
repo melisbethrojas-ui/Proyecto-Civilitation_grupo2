@@ -2,7 +2,7 @@ package Civilitation_Proyect;
 
 public class Catapult extends DefenseUnit {
 
-    // Constructor para el jugador que calcula la tecnología directamente en el 'super'
+    // Constructor para el jugador que calcula la tecnología directamente 
     public Catapult(int technologyArmorLevel, int technologyAttackLevel) {
         super(
             ARMOR_CATAPULT + (ARMOR_CATAPULT * technologyArmorLevel * PLUS_ARMOR_CATAPULT_BY_TECHNOLOGY) / 100,
@@ -14,9 +14,6 @@ public class Catapult extends DefenseUnit {
     public Catapult() {
         super(ARMOR_CATAPULT, BASE_DAMAGE_CATAPULT);
     }
-
-    // El método attack() YA NO HACE FALTA AQUÍ.
-    // Se hereda automáticamente de DefenseUnit con la fórmula matemática correcta.
 
     // GETTERS DE LOS COSTOS Y PROBABILIDADES
     @Override
@@ -39,6 +36,7 @@ public class Catapult extends DefenseUnit {
         return MANA_COST_CATAPULT; 
     }
     
+    // Getters de probabilidades
     @Override
     public int getChanceGeneratinWaste() { 
         return CHANCE_GENERATING_WASTE_CATAPULT; 
@@ -49,7 +47,7 @@ public class Catapult extends DefenseUnit {
         return CHANCE_ATTACK_AGAIN_CATAPULT; 
     }
 
-    // Método para los reportes escritos de las batallas exigidos en el PDF
+    // Método para los reportes escritos de las batallas
     @Override
     public String toString() {
         return "Catapult";

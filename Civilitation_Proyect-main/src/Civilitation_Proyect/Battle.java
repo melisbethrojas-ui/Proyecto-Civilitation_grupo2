@@ -27,7 +27,8 @@ public class Battle implements Variables {
     
     // Guardamos explícitamente el resultado final para el reporte
     private String winnerName = "Empate"; 
-
+    
+    //Constructor
     @SuppressWarnings("unchecked")
     public Battle(ArrayList<MilitaryUnit>[] playerArmy, ArrayList<MilitaryUnit>[] rivalArmy) {
         // Clonamos la estructura de los arrays para no mutar el cuartel real de forma directa
@@ -51,7 +52,7 @@ public class Battle implements Variables {
     }
 
     // =====================================================================
-    // LÓGICA PRINCIPAL DEL COMBATE (Tu diseño visual limpio)
+    // LÓGICA PRINCIPAL DEL COMBATE
     // =====================================================================
     public void startBattle() {
         System.out.println("\n=======================================================================");
@@ -191,6 +192,7 @@ public class Battle implements Variables {
     // =====================================================================
     // AUXILIARES MATEMÁTICOS Y PROBABILIDADES
     // =====================================================================
+    // Selección de grupo atacante por probabilidad
     private int selectGroupBasedOnProbability(ArrayList<MilitaryUnit>[] army, int[] probabilities) {
         int roll = random.nextInt(100);
         int sum = 0;
@@ -206,7 +208,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-
+    // Selección proporcional del grupo defensor
     private int selectDefenderGroupProportionally(ArrayList<MilitaryUnit>[] defenders) {
         int totalAlive = countTotalUnits(defenders);
         if (totalAlive == 0) return -1;
@@ -220,7 +222,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-
+    // Actualización del estado de santificación
     private void updateSanctification() {
         boolean civHasPriests = (civilizationArmy.length > 8 && !civilizationArmy[8].isEmpty());
         
@@ -237,11 +239,11 @@ public class Battle implements Variables {
             }
         }
     }
-
+    // Comprobación de magos vivos
     private boolean hasMagiciansAlive(ArrayList<MilitaryUnit>[] army) {
         return army.length > 7 && !army[7].isEmpty();
     }
-
+    // Cálculo de residuos generados
     private void calculateWaste(MilitaryUnit deadUnit) {
         int roll = random.nextInt(100);
         if (roll < deadUnit.getChanceGeneratinWaste()) {
@@ -252,7 +254,7 @@ public class Battle implements Variables {
             this.wasteIron += ironRecovered;
         }
     }
-
+    // Conteo total de unidades vivas
     private int countTotalUnits(ArrayList<MilitaryUnit>[] army) {
         int count = 0;
         for (ArrayList<MilitaryUnit> group : army) {
@@ -280,9 +282,14 @@ public class Battle implements Variables {
     }
 
     // --- GETTERS ---
-    public String getBattleDevelopment() { return this.battleLog.toString(); }
-    public int getWasteWood() { return this.wasteWood; }
-    public int getWasteIron() { return this.wasteIron; }
-    public ArrayList<MilitaryUnit>[] getCivilizationArmy() { return civilizationArmy; }
-    public ArrayList<MilitaryUnit>[] getEnemyArmy() { return enemyArmy; }
+    public String getBattleDevelopment() { 
+        return this.battleLog.toString(); }
+    public int getWasteWood() { 
+        return this.wasteWood; }
+    public int getWasteIron() { 
+        return this.wasteIron; }
+    public ArrayList<MilitaryUnit>[] getCivilizationArmy() { 
+        return civilizationArmy; }
+    public ArrayList<MilitaryUnit>[] getEnemyArmy() { 
+         return enemyArmy; }
 }

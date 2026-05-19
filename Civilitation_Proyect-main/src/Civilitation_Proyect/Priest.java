@@ -13,7 +13,7 @@ public class Priest extends SpecialUnit {
         super(0, BASE_DAMAGE_PRIEST);
     }
 
-    // El sacerdote no genera daño físico directo, pero es obligatorio sobreescribirlo
+    // El sacerdote no genera daño físico directo
     @Override
     public int attack() {
         return 0; 
@@ -50,7 +50,7 @@ public class Priest extends SpecialUnit {
         return CHANCE_ATTACK_AGAIN_PRIEST; 
     }
 
-    // Método para los reportes escritos de las batallas exigidos en el PDF
+    // Método para los reportes escritos de las batallas 
     @Override
     public String toString() {
         return "Priest";

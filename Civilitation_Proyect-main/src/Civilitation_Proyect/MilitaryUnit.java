@@ -15,10 +15,10 @@ public interface MilitaryUnit {
     int getManaCost(); 
 
     // Probabilidades de combate y escombros
-    int getChanceGeneratinWaste(); // Mantiene la errata exacta del PDF
+    int getChanceGeneratinWaste();
     int getChanceAttackAgain(); 
 
     // Gestión de la experiencia de la unidad
     void setExperience(int n); 
-    int getExperience(); // Corregido a int para que devuelva el valor real
+    int getExperience(); 
 }

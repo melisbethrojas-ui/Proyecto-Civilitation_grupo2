@@ -2,7 +2,7 @@ package Civilitation_Proyect;
 
 public class Swordsman extends AttackUnit {
 
-    // Constructor principal que calcula la tecnología directamente en el 'super'
+    // Constructor principal que calcula la tecnología 
     public Swordsman(int technologyArmorLevel, int technologyAttackLevel) {
         super(
             ARMOR_SWORDSMAN + (ARMOR_SWORDSMAN * technologyArmorLevel * PLUS_ARMOR_SWORDSMAN_BY_TECHNOLOGY) / 100,
@@ -10,13 +10,10 @@ public class Swordsman extends AttackUnit {
         );
     }
 
-    // Constructor sin tecnología (por si creas enemigos base o unidades de prueba)
+    // Constructor sin tecnología 
     public Swordsman() {
         super(ARMOR_SWORDSMAN, BASE_DAMAGE_SWORDSMAN);
     }
-
-    // El método attack() YA NO HACE FALTA AQUÍ. 
-    // Automáticamente se hereda de AttackUnit con la misma fórmula exacta que tenías.
 
     // Métodos obligatorios de la interfaz que devuelven los costes y probabilidades
     @Override
@@ -49,7 +46,7 @@ public class Swordsman extends AttackUnit {
         return CHANCE_ATTACK_AGAIN_SWORDSMAN; 
     }
 
-    // Método para los reportes escritos de las batallas exigidos en el PDF
+    // Método para los reportes escritos de las batallas 
     @Override
     public String toString() {
         return "Swordsman";

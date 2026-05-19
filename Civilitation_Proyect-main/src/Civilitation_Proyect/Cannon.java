@@ -10,15 +10,13 @@ public class Cannon extends AttackUnit {
         );
     }
 
-    // Constructor sin tecnología (para enemigos base o pruebas)
+    // Constructor sin tecnología 
     public Cannon() {
         super(ARMOR_CANNON, BASE_DAMAGE_CANNON);
     }
 
-    // El método attack() YA NO HACE FALTA AQUÍ.
-    // Se hereda automáticamente de AttackUnit con la fórmula correcta.
-
-    // Métodos obligatorios que devuelven los costes y probabilidades específicos del Cannon
+    // Getters de costos
+    // Métodos que devuelven los costes y probabilidades específicos del Cannon
     @Override
     public int getFoodCost() { 
         return FOOD_COST_CANNON; 
@@ -38,7 +36,7 @@ public class Cannon extends AttackUnit {
     public int getManaCost() { 
         return MANA_COST_CANNON; 
     }
-    
+     // Getters de probabilidades
     @Override
     public int getChanceGeneratinWaste() { 
         return CHANCE_GENERATING_WASTE_CANNON; 
@@ -49,7 +47,7 @@ public class Cannon extends AttackUnit {
         return CHANCE_ATTACK_AGAIN_CANNON; 
     }
 
-    // Método para los reportes escritos de las batallas (exigido en el PDF)
+    // Método para los reportes escritos de las batallas 
     @Override
     public String toString() {
         return "Cannon";

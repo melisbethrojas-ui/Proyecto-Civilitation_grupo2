@@ -2,12 +2,14 @@ package Civilitation_Proyect;
 
 public abstract class DefenseUnit implements MilitaryUnit, Variables {
 
+    // Atributos principales
     protected int armor;
     protected int initialArmor;
     protected int baseDamage;
     protected int experience;
     protected boolean sanctified;
 
+    // Constructor
     public DefenseUnit(int armor, int baseDamage) {
         this.armor = armor;
         this.initialArmor = armor;
@@ -16,21 +18,25 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables {
         this.sanctified = false;
     }
 
+    // Gestión del daño recibido
     @Override
     public void takeDamage(int receivedDamage) {
         this.armor -= receivedDamage;
     }
 
+    // Armadura actual
     @Override
     public int getActualArmor() {
         return this.armor;
     }
 
+    // Reinicio de armadura
     @Override
     public void resetArmor() {
         this.armor = this.initialArmor;
     }
 
+    // Gestión de experiencia
     @Override
     public void setExperience(int n) {
         this.experience = n;
@@ -41,7 +47,7 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables {
         return this.experience;
     }
 
-    // CENTRALIZACIÓN: Mismo método attack() matemático heredable para todas las defensas
+    // Cálculo del ataque
     @Override
     public int attack() {
         int totalDamage = this.baseDamage;
@@ -56,12 +62,12 @@ public abstract class DefenseUnit implements MilitaryUnit, Variables {
         
         return totalDamage;
     }
-
+        // Estado de santificación
     public boolean isSanctified() {
         return sanctified;
     }
 
-    // Modificamos el setter de santificación para que aplique/retire el beneficio en la armadura automáticamente
+    // Aplicación o retirada de santificación
     public void setSanctified(boolean sanctified) {
         if (sanctified && !this.sanctified) {
             // Aplica el aumento del 7% a la armadura actual e inicial al ser santificada

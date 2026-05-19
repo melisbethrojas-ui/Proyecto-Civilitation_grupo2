@@ -9,7 +9,7 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables {
 
     // El constructor recibe los parámetros igual que AttackUnit y DefenseUnit
     public SpecialUnit(int armor, int baseDamage) {
-        // Regla estricta del PDF: Las unidades especiales NO tienen armadura (vida = 0)
+        // Las unidades especiales NO tienen armadura (vida = 0)
         this.armor = 0;         
         this.initialArmor = 0;  
         this.baseDamage = baseDamage;
@@ -18,7 +18,7 @@ public abstract class SpecialUnit implements MilitaryUnit, Variables {
 
     @Override
     public void takeDamage(int receivedDamage) { 
-        // Al recibir daño, restamos directamente. Como empiezan en 0, pasará a ser negativo 
+        // Al recibir daño, se resta directamente. Como empiezan en 0, pasará a ser negativo 
         // y el motor de batalla sabrá que han muerto inmediatamente.
         this.armor -= receivedDamage; 
     }

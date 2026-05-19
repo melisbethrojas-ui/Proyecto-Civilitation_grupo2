@@ -2,7 +2,7 @@ package Civilitation_Proyect;
 
 public class RocketLauncherTower extends DefenseUnit {
 
-    // Constructor para el jugador que calcula la tecnología directamente en el 'super'
+    // Constructor para el jugador que calcula la tecnología 
     public RocketLauncherTower(int technologyArmorLevel, int technologyAttackLevel) {
         super(
             ARMOR_ROCKETLAUNCHERTOWER + (ARMOR_ROCKETLAUNCHERTOWER * technologyArmorLevel * PLUS_ARMOR_ROCKETLAUNCHERTOWER_BY_TECHNOLOGY) / 100,
@@ -10,14 +10,10 @@ public class RocketLauncherTower extends DefenseUnit {
         );
     }
 
-    // Constructor para el enemigo (sin tecnología añadida)
+    // Constructor para el enemigo 
     public RocketLauncherTower() {
         super(ARMOR_ROCKETLAUNCHERTOWER, BASE_DAMAGE_ROCKETLAUNCHERTOWER);
     }
-
-    // El método attack() YA NO HACE FALTA AQUÍ.
-    // Se hereda automáticamente de DefenseUnit con la fórmula matemática correcta.
-
     // GETTERS DE LOS COSTOS Y PROBABILIDADES
     @Override
     public int getFoodCost() { 
@@ -49,8 +45,7 @@ public class RocketLauncherTower extends DefenseUnit {
         return CHANCE_ATTACK_AGAIN_ROCKETLAUNCHERTOWER; 
     }
 
-    // Método para los reportes escritos de las batallas exigidos en el PDF
-    @Override
+    // Método para los reportes escritos de las batallas 
     public String toString() {
         return "RocketLauncherTower";
     }

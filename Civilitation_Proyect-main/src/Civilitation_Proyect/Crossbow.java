@@ -2,7 +2,7 @@ package Civilitation_Proyect;
 
 public class Crossbow extends AttackUnit {
 
-    // Constructor principal que calcula la tecnología directamente en el 'super'
+    // Constructor con tecnología
     public Crossbow(int technologyArmorLevel, int technologyAttackLevel) {
         super(
             ARMOR_CROSSBOW + (ARMOR_CROSSBOW * technologyArmorLevel * PLUS_ARMOR_CROSSBOW_BY_TECHNOLOGY) / 100,
@@ -10,15 +10,12 @@ public class Crossbow extends AttackUnit {
         );
     }
 
-    // Constructor sin tecnología (para enemigos base o pruebas)
+    // Constructor sin tecnología
     public Crossbow() {
         super(ARMOR_CROSSBOW, BASE_DAMAGE_CROSSBOW);
     }
 
-    // El método attack() YA NO HACE FALTA AQUÍ.
-    // Se hereda automáticamente de AttackUnit con la fórmula correcta.
-
-    // Métodos obligatorios que devuelven los costes y probabilidades específicos del Crossbow
+    // Getters de costos
     @Override
     public int getFoodCost() { 
         return FOOD_COST_CROSSBOW; 
@@ -38,7 +35,8 @@ public class Crossbow extends AttackUnit {
     public int getManaCost() { 
         return MANA_COST_CROSSBOW; 
     }
-    
+
+    // Getters de probabilidades
     @Override
     public int getChanceGeneratinWaste() { 
         return CHANCE_GENERATING_WASTE_CROSSBOW; 
@@ -49,7 +47,7 @@ public class Crossbow extends AttackUnit {
         return CHANCE_ATTACK_AGAIN_CROSSBOW; 
     }
 
-    // Método para los reportes escritos de las batallas (exigido en el PDF)
+    // Método toString
     @Override
     public String toString() {
         return "Crossbow";
