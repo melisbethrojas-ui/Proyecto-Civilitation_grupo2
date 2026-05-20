@@ -1,0 +1,46 @@
+<div class="hero-section" style="text-align: center; margin-bottom: 50px;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 10px;">EL ALBA DE LA HISTORIA</h1>
+    <p style="font-size: 1.2rem; color: var(--bronze); letter-spacing: 5px;">ESCRIBE TU LEGADO EN PIEDRA Y SANGRE</p>
+</div>
+
+<section class="game-info glass" style="margin-bottom: 50px;">
+    <h2 class="gold-text">GESTIÓN, ESTRATEGIA Y CONQUISTA</h2>
+    <p>Bienvenido a <strong>Civilizations</strong>. Toma el control de una civilización emergente, gestiona tus recursos con sabiduría y expande tus fronteras. En este simulador deberás equilibrar la producción de tu imperio con la fuerza bruta de tus legiones para dominar el mundo conocido.</p>
+    
+    <div class="screenshots-gallery" style="display: flex; gap: 20px; margin-top: 30px; justify-content: center;">
+        <div class="screen-card" style="border: 1px solid var(--gold); padding: 5px; background: #000;">
+            <img src="/img/screen1.jpg" alt="Mapa del Juego" style="width: 100%; max-width: 400px; display: block;">
+            <p style="font-family: 'Cinzel'; font-size: 0.8rem; text-align: center; margin-top: 5px;">Interfaz de Gestión</p>
+        </div>
+        <div class="screen-card" style="border: 0.5px solid var(--gold); padding: 5px; background: #000;">
+            <img src="/img/screen2.jpeg" alt="Batalla" style="width: 100%; max-width: 400px; display: block;">
+            <p style="font-family: 'Cinzel'; font-size: 0.8rem; text-align: center; margin-top: 5px;">Campo de Batalla</p>
+        </div>
+    </div>
+</section>
+
+<div class="last-actions">
+    <h2 style="text-align: center; margin-bottom: 30px;">CRÓNICAS RECIENTES DEL FRENTE</h2>
+    <div class="card glass">
+        <table>
+            <thead>
+                <tr>
+                    <th>ORDEN</th>
+                    <th>ESTADO</th>
+                    <th>FECHA ESTELAR</th>
+                    <th>DETALLES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each ultimas}}
+                <tr>
+                    <td style="font-family: 'Cinzel'; color: var(--gold);">#{{this.numero_batalla}}</td>
+                    <td><span class="badge {{this.resultado}}">{{this.resultado}}</span></td>
+                    <td style="font-size: 0.9rem; opacity: 0.7;">{{this.fecha_batalla}}</td>
+                    <td><a href="/informe?informe={{this.numero_batalla}}" class="btn-detalles">ARCHIVO →</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
