@@ -1,16 +1,6 @@
 package Save_Load;
 
-import Logic.ArrowTower;
-import Logic.Cannon;
-import Logic.Catapult;
-import Logic.Civilization;
-import Logic.Crossbow;
-import Logic.Magician;
-import Logic.MilitaryUnit;
-import Logic.Priest;
-import Logic.RocketLauncherTower;
-import Logic.Spearman;
-import Logic.Swordsman;
+import Logic.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
