@@ -21,14 +21,21 @@ public class Battle implements Variables {
     private int wasteWood;
     private int wasteIron;
 
-    // Contadores de recursos perdidos para decidir el ganador
+    // Contadores de recursos perdidos para decidir el ganador (ponderados)
     private int resourcesLostCiv;
     private int resourcesLostEnemy;
     
     // Guardamos explícitamente el resultado final para el reporte
     private String winnerName = "Empate"; 
     
-    //Constructor
+    // NUEVAS ESTRUCTURAS SOLICITADAS
+    // [0] = Civilización, [1] = Enemigo | [0-8] = Tipos de unidad
+    private int[][] initialArmies;
+    
+    // [0] = Civilización, [1] = Enemigo | [0] = Comida, [1] = Madera, [2] = Hierro, [3] = Ponderado
+    private int[][] resourcesLooses;
+
+    // Constructor
     @SuppressWarnings("unchecked")
     public Battle(ArrayList<MilitaryUnit>[] playerArmy, ArrayList<MilitaryUnit>[] rivalArmy) {
         // Clonamos la estructura de los arrays para no mutar el cuartel real de forma directa
@@ -49,19 +56,125 @@ public class Battle implements Variables {
 
         this.initialCivUnits = countTotalUnits(this.civilizationArmy);
         this.initialEnemyUnits = countTotalUnits(this.enemyArmy);
+
+        // Inicialización de las nuevas matrices e históricos iniciales
+        this.initialArmies = new int[2][9];
+        this.resourcesLooses = new int[2][4];
+        initInitialArmies();
+    }
+
+    // =====================================================================
+    // MÉTODOS COMPLEMENTARIOS SOLICITADOS
+    // =====================================================================
+    
+    /**
+     * Registra la cantidad inicial de cada tipo de unidad en la matriz para ambos bandos.
+     */
+    public void initInitialArmies() {
+        for (int i = 0; i < 9; i++) {
+            this.initialArmies[0][i] = this.civilizationArmy[i].size();
+            this.initialArmies[1][i] = this.enemyArmy[i].size();
+        }
+    }
+
+    /**
+     * Actualiza la matriz resourcesLooses sumando los costes reales de la unidad caída
+     * y recalculando el valor ponderado acumulado.
+     */
+    public void updateResourcesLooses(String side, MilitaryUnit deadUnit) {
+        int index = side.equals("Civilización") ? 0 : 1;
+        
+        // Sumar pérdidas netas por tipo de recurso
+        this.resourcesLooses[index][0] += deadUnit.getFoodCost();
+        this.resourcesLooses[index][1] += deadUnit.getWoodCost();
+        this.resourcesLooses[index][2] += deadUnit.getIronCost();
+        
+        // Calcular y acumular el valor ponderado
+        int weightedUnitValue = deadUnit.getIronCost() + (deadUnit.getWoodCost() / 5) + (deadUnit.getFoodCost() / 10);
+        this.resourcesLooses[index][3] += weightedUnitValue;
+
+        // Mantener la sincronización con las variables originales de la clase
+        if (index == 0) {
+            this.resourcesLostCiv = this.resourcesLooses[0][3];
+        } else {
+            this.resourcesLostEnemy = this.resourcesLooses[1][3];
+        }
+    }
+
+    /**
+     * Devuelve el coste acumulado en recursos de un bando específico sumando comida, madera e hierro.
+     */
+    public int fleetResourceCost(String side) {
+        int index = side.equals("Civilización") ? 0 : 1;
+        return this.resourcesLooses[index][0] + this.resourcesLooses[index][1] + this.resourcesLooses[index][2];
+    }
+
+    /**
+     * Devuelve el recuento original total de unidades de un bando desde la matriz inicial.
+     */
+    public int initialFleetNumber(String side) {
+        int index = side.equals("Civilización") ? 0 : 1;
+        int total = 0;
+        for (int i = 0; i < 9; i++) {
+            total += this.initialArmies[index][i];
+        }
+        return total;
+    }
+
+    /**
+     * Calcula el porcentaje de tropas que le quedan a un bando en base a su estado inicial.
+     */
+    public double remainderPercentageFleet(ArrayList<MilitaryUnit>[] army, String side) {
+        int initial = initialFleetNumber(side);
+        if (initial == 0) return 0.0;
+        return ((double) countTotalUnits(army) / initial) * 100.0;
+    }
+
+    /**
+     * Helper para duplicar logs y asegurar que todo termine EXACTAMENTE igual en consola y en battleLog.
+     */
+    private void logMessage(String message) {
+        System.out.println(message);
+        this.battleLog.append(message).append("\n");
     }
 
     // =====================================================================
     // LÓGICA PRINCIPAL DEL COMBATE
     // =====================================================================
     public void startBattle() {
-        System.out.println("\n=======================================================================");
-        System.out.println("                  ¡COMIENZA LA BATALLA EN EL IMPERIO!                  ");
-        System.out.println("=======================================================================");
-        System.out.println("Unidades iniciales Civilización: " + initialCivUnits);
-        System.out.println("Unidades iniciales Enemigo: " + initialEnemyUnits);
-        
-        battleLog.append("--- INICIO DE LA BATALLA ---\n");
+        // GESTIÓN DE VICTORIA/DERROTA AUTOMÁTICA SI UN EJÉRCITO EMPIEZA CON 0 UNIDADES
+        if (initialCivUnits == 0 || initialEnemyUnits == 0) {
+            logMessage("\n=======================================================================");
+            logMessage("             ¡ALERTA: CONDICIONES DE COMBATE INVÁLIDAS!                ");
+            logMessage("=======================================================================");
+            
+            if (initialCivUnits == 0 && initialEnemyUnits == 0) {
+                this.winnerName = "Empate";
+                logMessage("[INFO] Ambos ejércitos se presentaron al campo sin unidades. Batalla cancelada en empate.");
+            } else if (initialCivUnits == 0) {
+                this.winnerName = "Enemigo";
+                logMessage("[INFO] Tu civilización no dispone de tropas. ¡Victoria automática para el Enemigo!");
+            } else {
+                this.winnerName = "Civilización";
+                logMessage("[INFO] El ejército enemigo no dispone de tropas. ¡Victoria automática para la Civilización!");
+                // Aplicar experiencia a los supervivientes por la victoria directa
+                for (ArrayList<MilitaryUnit> group : civilizationArmy) {
+                    for (MilitaryUnit unit : group) {
+                        unit.setExperience(unit.getExperience() + 1);
+                    }
+                }
+            }
+            finalizarYGuardarBD();
+            return;
+        }
+
+        // DESARROLLO ESTÁNDAR DE LA BATALLA
+        logMessage("\n=======================================================================");
+        logMessage("                  ¡COMIENZA LA BATALLA EN EL IMPERIO!                  ");
+        logMessage("=======================================================================");
+        logMessage("Unidades iniciales Civilización: " + initialCivUnits);
+        logMessage("Unidades iniciales Enemigo: " + initialEnemyUnits);
+        logMessage("--- INICIO DE LA BATALLA ---");
 
         int turn = 1;
 
@@ -69,9 +182,10 @@ public class Battle implements Variables {
         while (countTotalUnits(civilizationArmy) > (initialCivUnits * 0.2) && 
                countTotalUnits(enemyArmy) > (initialEnemyUnits * 0.2)) {
             
-            System.out.println("\n--- ASALTO Nº " + turn + " ---");
-            System.out.println("Tropas Aliadas: " + countTotalUnits(civilizationArmy) + " | Enemigos restantes: " + countTotalUnits(enemyArmy));
-            battleLog.append("=== TURNO ").append(turn).append(" ===\n");
+            logMessage("\n--- ASALTO Nº " + turn + " ---");
+            logMessage("Tropas Aliadas: " + countTotalUnits(civilizationArmy) + " (" + String.format("%.2f", remainderPercentageFleet(civilizationArmy, "Civilización")) + "%)" +
+                       " | Enemigos restantes: " + countTotalUnits(enemyArmy) + " (" + String.format("%.2f", remainderPercentageFleet(enemyArmy, "Enemigo")) + "%)");
+            logMessage("=== TURNO " + turn + " ===");
 
             // Actualizar el estado de santificación de los ejércitos al inicio del turno
             updateSanctification();
@@ -81,7 +195,7 @@ public class Battle implements Variables {
 
             // Verificar si el enemigo se retira/rinde tras el ataque de la civilización
             if (countTotalUnits(enemyArmy) <= (initialEnemyUnits * 0.2)) {
-                System.out.println("[INFO] El ejército enemigo cae por debajo del 20% y se bate en retirada.");
+                logMessage("[INFO] El ejército enemigo cae por debajo del 20% y se bate en retirada.");
                 break;
             }
 
@@ -91,9 +205,15 @@ public class Battle implements Variables {
             // 2. ATACA EL ENEMIGO
             executeTurn(enemyArmy, civilizationArmy, "Enemigo", "Civilización", CHANCE_ATTACK_ENEMY_UNITS);
 
+            // Verificar si la civilización se retira tras el ataque enemigo
+            if (countTotalUnits(civilizationArmy) <= (initialCivUnits * 0.2)) {
+                logMessage("[INFO] Tu ejército civilizado cae por debajo del 20% y se bate en retirada.");
+                break;
+            }
+
             turn++;
             if (turn > 500) {
-                System.out.println("[ALERTA] La batalla se ha estancado tras 500 asaltos.");
+                logMessage("[ALERTA] La batalla se ha estancado tras 500 asaltos.");
                 break;
             }
         }
@@ -101,14 +221,14 @@ public class Battle implements Variables {
         // =====================================================================
         // FIN DE LA BATALLA E INFORME DE RESULTADOS
         // =====================================================================
-        System.out.println("\n=======================================================================");
-        System.out.println("                       FIN DE LA SIMULACIÓN                            ");
-        System.out.println("=======================================================================");
+        logMessage("\n=======================================================================");
+        logMessage("                       FIN DE LA SIMULACIÓN                            ");
+        logMessage("=======================================================================");
 
-        // Evaluar ganador según pérdidas económicas ponderadas
-        if (resourcesLostCiv < resourcesLostEnemy) {
+        // Evaluar ganador según pérdidas económicas ponderadas (índice 3 de la matriz)
+        if (resourcesLooses[0][3] < resourcesLooses[1][3]) {
             this.winnerName = "Civilización";
-            System.out.println(" ¡VICTORIA! Tu civilización sufrió menos pérdidas económicas y gana la batalla.");
+            logMessage(" ¡VICTORIA! Tu civilización sufrió menos pérdidas económicas y gana la batalla.");
             
             // Aplicar experiencia a los supervivientes
             for (ArrayList<MilitaryUnit> group : civilizationArmy) {
@@ -116,20 +236,67 @@ public class Battle implements Variables {
                     unit.setExperience(unit.getExperience() + 1);
                 }
             }
-        } else if (resourcesLostEnemy < resourcesLostCiv) {
+        } else if (resourcesLooses[1][3] < resourcesLooses[0][3]) {
             this.winnerName = "Enemigo";
-            System.out.println(" 💀 DERROTA... El enemigo causó un daño estratégico devastador.");
+            logMessage(" 💀 DERROTA... El enemigo causó un daño estratégico devastador.");
         } else {
             this.winnerName = "Empate";
-            System.out.println(" ⚔️ ¡EMPATE TÉCNICO! Ambas facciones perdieron exactamente el mismo capital.");
+            logMessage(" ⚔️ ¡EMPATE TÉCNICO! Ambas facciones perdieron exactamente el mismo capital.");
         }
 
-        // Imprimir el resumen numérico simplificado que no marea al usuario
-        System.out.println("\n--- INFORME DE DAÑOS Y ESCOMBROS ---");
-        System.out.println("Valor de pérdidas de tu Civilización: " + resourcesLostCiv);
-        System.out.println("Valor de pérdidas del Enemigo: " + resourcesLostEnemy);
-        System.out.println("Residuos rescatados del campo: Madera: " + wasteWood + " | Hierro: " + wasteIron);
-        System.out.println("=======================================================================");
+        // Imprimir el resumen numérico con el desglose exacto de todos los recursos
+        logMessage("\n--- INFORME DE DAÑOS Y ESCOMBROS ---");
+        logMessage("Valor de pérdidas ponderadas de tu Civilización: " + resourcesLooses[0][3]);
+        logMessage("   -> Desglose real: Comida: " + resourcesLooses[0][0] + " | Madera: " + resourcesLooses[0][1] + " | Hierro: " + resourcesLooses[0][2]);
+        logMessage("Valor de pérdidas ponderadas del Enemigo: " + resourcesLooses[1][3]);
+        logMessage("   -> Desglose real: Comida: " + resourcesLooses[1][0] + " | Madera: " + resourcesLooses[1][1] + " | Hierro: " + resourcesLooses[1][2]);
+        logMessage("Residuos rescatados del campo: Madera: " + wasteWood + " | Hierro: " + wasteIron);
+        logMessage("=======================================================================");
+
+        finalizarYGuardarBD();
+    }
+
+    /**
+     * Centraliza la persistencia e historial en la Base de Datos para evitar duplicar código.
+     */
+    private void finalizarYGuardarBD() {
+        try {
+            java.sql.Connection conexion = java.sql.DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/civilizations_db", "root", ""
+            );
+
+            String sql = "INSERT INTO batallas (numero_batalla, resultado, residuos_madera, residuos_hierro, "
+                       + "coste_comida_perdido_civi, coste_madera_perdido_civi, coste_hierro_perdido_civi, "
+                       + "coste_comida_perdido_enem, coste_madera_perdido_enem, coste_hierro_perdido_enem, "
+                       + "desarrollo_paso_a_paso) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            java.sql.PreparedStatement ps = conexion.prepareStatement(sql);
+            
+            ps.setString(1, this.winnerName);
+            ps.setInt(2, this.wasteWood);
+            ps.setInt(3, this.wasteIron);
+            
+            // Pérdidas desglosadas reales de la Civilización
+            ps.setInt(4, this.resourcesLooses[0][0]);
+            ps.setInt(5, this.resourcesLooses[0][1]);
+            ps.setInt(6, this.resourcesLooses[0][2]);
+            
+            // Pérdidas desglosadas reales del Enemigo
+            ps.setInt(7, this.resourcesLooses[1][0]);
+            ps.setInt(8, this.resourcesLooses[1][1]);
+            ps.setInt(9, this.resourcesLooses[1][2]);
+            
+            ps.setString(10, this.getBattleDevelopment());
+
+            ps.executeUpdate();
+            ps.close();
+            conexion.close();
+            
+            System.out.println("[MySQL] ¡Historial de batalla guardado automáticamente con éxito!");
+
+        } catch (java.sql.SQLException e) {
+            System.err.println("[Error MySQL] No se pudo guardar el historial: " + e.getMessage());
+        }
     }
 
     // =====================================================================
@@ -155,7 +322,7 @@ public class Battle implements Variables {
             
             if (damage > 0) {
                 defender.takeDamage(damage);
-                battleLog.append("[").append(attackerName).append("] Escombro/Ataque inflige ").append(damage).append(" de daño.\n");
+                logMessage("[" + attackerName + "] " + attacker.getClass().getSimpleName() + " ataca a " + defender.getClass().getSimpleName() + " e inflige " + damage + " de daño.");
 
                 // Comprobar si la unidad defensora muere
                 if (defender.getActualArmor() <= 0) {
@@ -163,16 +330,11 @@ public class Battle implements Variables {
                     // Habilidad de resurrección del Mago
                     if (hasMagiciansAlive(defenders) && random.nextInt(100) < CHANCE_MAGICIAN_RESSURECT) {
                         defender.resetArmor(); 
-                        System.out.println("   [HABILIDAD] ¡Un Mago del bando " + defenderName + " ha resucitado a su compañero!");
+                        logMessage("   [HABILIDAD] ¡Un Mago del bando " + defenderName + " ha resucitado a su compañero " + defender.getClass().getSimpleName() + "!");
                     } else {
-                        // Cálculo de pérdidas ponderadas
-                        int weightedUnitValue = defender.getIronCost() + (defender.getWoodCost() / 5) + (defender.getFoodCost() / 10);
-                        
-                        if (defenderName.equals("Civilización")) {
-                            resourcesLostCiv += weightedUnitValue;
-                        } else {
-                            resourcesLostEnemy += weightedUnitValue;
-                        }
+                        // Registro exacto de bajas y recursos desglosados mediante la nueva matriz
+                        logMessage("   [BAJA] " + defender.getClass().getSimpleName() + " del bando " + defenderName + " ha sido eliminado.");
+                        updateResourcesLooses(defenderName, defender);
 
                         // Calcular residuos generados
                         calculateWaste(defender);
@@ -186,13 +348,15 @@ public class Battle implements Variables {
             // Validar repetición de ataque por velocidad (Ataques sucesivos)
             int roll = random.nextInt(100);
             attackAgain = roll < attacker.getChanceAttackAgain();
+            if (attackAgain && countTotalUnits(defenders) > 0) {
+                logMessage("   [HABILIDAD] ¡Velocidad de ataque activada! " + attacker.getClass().getSimpleName() + " encadena otro golpe.");
+            }
         }
     }
 
     // =====================================================================
     // AUXILIARES MATEMÁTICOS Y PROBABILIDADES
     // =====================================================================
-    // Selección de grupo atacante por probabilidad
     private int selectGroupBasedOnProbability(ArrayList<MilitaryUnit>[] army, int[] probabilities) {
         int roll = random.nextInt(100);
         int sum = 0;
@@ -208,7 +372,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-    // Selección proporcional del grupo defensor
+
     private int selectDefenderGroupProportionally(ArrayList<MilitaryUnit>[] defenders) {
         int totalAlive = countTotalUnits(defenders);
         if (totalAlive == 0) return -1;
@@ -222,7 +386,7 @@ public class Battle implements Variables {
         }
         return -1;
     }
-    // Actualización del estado de santificación
+
     private void updateSanctification() {
         boolean civHasPriests = (civilizationArmy.length > 8 && !civilizationArmy[8].isEmpty());
         
@@ -239,11 +403,11 @@ public class Battle implements Variables {
             }
         }
     }
-    // Comprobación de magos vivos
+
     private boolean hasMagiciansAlive(ArrayList<MilitaryUnit>[] army) {
         return army.length > 7 && !army[7].isEmpty();
     }
-    // Cálculo de residuos generados
+
     private void calculateWaste(MilitaryUnit deadUnit) {
         int roll = random.nextInt(100);
         if (roll < deadUnit.getChanceGeneratinWaste()) {
@@ -252,9 +416,10 @@ public class Battle implements Variables {
             
             this.wasteWood += woodRecovered;
             this.wasteIron += ironRecovered;
+            logMessage("   [ESCOMBROS] Se han recuperado del cadáver: Madera: " + woodRecovered + " | Hierro: " + ironRecovered);
         }
     }
-    // Conteo total de unidades vivas
+
     private int countTotalUnits(ArrayList<MilitaryUnit>[] army) {
         int count = 0;
         for (ArrayList<MilitaryUnit> group : army) {
@@ -272,10 +437,12 @@ public class Battle implements Variables {
         report.append("REPORT DE BATALLA Nº ").append(battlesCount).append("\n");
         report.append("=========================================\n");
         report.append("GANADOR: ").append(this.winnerName).append("\n");
-        report.append("Tropas iniciales: Jugador: ").append(initialCivUnits).append(" | Enemigo: ").append(initialEnemyUnits).append("\n");
+        report.append("Tropas iniciales: Jugador: ").append(initialFleetNumber("Civilización")).append(" | Enemigo: ").append(initialFleetNumber("Enemigo")).append("\n");
         report.append("Tropas restantes: Jugador: ").append(countTotalUnits(civilizationArmy)).append(" | Enemigo: ").append(countTotalUnits(enemyArmy)).append("\n");
-        report.append("Pérdidas ponderadas Jugador: ").append(resourcesLostCiv).append("\n");
-        report.append("Pérdidas ponderadas Enemigo: ").append(resourcesLostEnemy).append("\n");
+        report.append("Pérdidas Netas Jugador - Comida: ").append(resourcesLooses[0][0]).append(" | Madera: ").append(resourcesLooses[0][1]).append(" | Hierro: ").append(resourcesLooses[0][2]).append("\n");
+        report.append("Pérdidas Ponderadas Jugador: ").append(resourcesLooses[0][3]).append("\n");
+        report.append("Pérdidas Netas Enemigo - Comida: ").append(resourcesLooses[1][0]).append(" | Madera: ").append(resourcesLooses[1][1]).append(" | Hierro: ").append(resourcesLooses[1][2]).append("\n");
+        report.append("Pérdidas Ponderadas Enemigo: ").append(resourcesLooses[1][3]).append("\n");
         report.append("Escombros del campo de batalla: Madera: ").append(wasteWood).append(" | Hierro: ").append(wasteIron).append("\n");
         report.append("=========================================\n");
         return report.toString();
@@ -283,13 +450,18 @@ public class Battle implements Variables {
 
     // --- GETTERS ---
     public String getBattleDevelopment() { 
-        return this.battleLog.toString(); }
+        return this.battleLog.toString(); 
+    }
     public int getWasteWood() { 
-        return this.wasteWood; }
+        return this.wasteWood; 
+    }
     public int getWasteIron() { 
-        return this.wasteIron; }
+        return this.wasteIron; 
+    }
     public ArrayList<MilitaryUnit>[] getCivilizationArmy() { 
-        return civilizationArmy; }
+        return civilizationArmy; 
+    }
     public ArrayList<MilitaryUnit>[] getEnemyArmy() { 
-         return enemyArmy; }
+         return enemyArmy; 
+    }
 }

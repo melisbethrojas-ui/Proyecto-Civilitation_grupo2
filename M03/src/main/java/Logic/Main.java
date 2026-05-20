@@ -13,10 +13,10 @@ public class Main {
     private static int enemyWood = 15000;
     private static int enemyIron = 15000;
 
-    // Ejército enemigo (solo 4 tipos: Swordsman, Spearman, Crossbow, Cannon)
+    // Ejército enemigo
     private static ArrayList<MilitaryUnit>[] enemyArmy = new ArrayList[4];
 
-    // Reportes de batalla (últimas 5)
+    // Reportes de batalla
     private static ArrayList<String> battleReports = new ArrayList<>();
 
     // Civilización del jugador
@@ -38,7 +38,7 @@ public class Main {
         TimerTask produccionTask = new TimerTask() {
             @Override
             public void run() {
-                civ.produceResources();
+                civ.generateResources();
                 System.out.println("\n[+] Se han generado recursos automáticamente.");
             }
         };
@@ -143,15 +143,15 @@ public class Main {
     // ============================================================
     private static void mostrarEstado(Civilization civ) {
         System.out.println("\n=======================================================================");
-        System.out.println(" RECURSOS: Comida: " + civ.getFood() + " | Madera: " + civ.getWood() +
-                " | Hierro: " + civ.getIron() + " | Mana: " + civ.getMana());
-        System.out.println(" EDIFICIOS: Granja: Lvl " + civ.getFarmLevel() +
-                " | Carpinteria: Lvl " + civ.getCarpentryLevel() +
-                " | Herreria: Lvl " + civ.getSmithyLevel());
-        System.out.println("            Iglesia: Lvl " + civ.getChurchLevel() +
-                " | T. Magica: Lvl " + civ.getMagicTowerLevel());
-        System.out.println(" TECNOLOGIAS: Ataque: Lvl " + civ.getAttackTechnologyLevel() +
-                " | Defensa: Lvl " + civ.getArmorTechnologyLevel());
+        System.out.println(" RECURSOS: Comida: " + civ.food + " | Madera: " + civ.wood +
+                " | Hierro: " + civ.iron + " | Mana: " + civ.mana);
+        System.out.println(" EDIFICIOS: Granja: " + civ.farm +
+                " | Carpinteria: " + civ.carpentry +
+                " | Herreria: " + civ.smithy);
+        System.out.println("            Iglesia: " + civ.church +
+                " | T. Magica: " + civ.magicTower);
+        System.out.println(" TECNOLOGIAS: Ataque: " + civ.getTechnologyAttack() +
+                " | Defensa: " + civ.getTechnologyDefense());
         System.out.println("=======================================================================");
     }
 
@@ -161,52 +161,25 @@ public class Main {
     private static void menuEdificiosYTecnologias(Civilization civ, Scanner teclado) {
         System.out.println("\n--- EDIFICIOS Y TECNOLOGÍAS ---");
 
-        System.out.println("1. Granja (Coste: " 
-                + Variables.FOOD_COST_FARM + " comida, "
-                + Variables.WOOD_COST_FARM + " madera, "
-                + Variables.IRON_COST_FARM + " hierro)");
-
-        System.out.println("2. Carpintería (Coste: "
-                + Variables.FOOD_COST_CARPENTRY + " comida, "
-                + Variables.WOOD_COST_CARPENTRY + " madera, "
-                + Variables.IRON_COST_CARPENTRY + " hierro)");
-
-        System.out.println("3. Herrería (Coste base: "
-                + Variables.FOOD_COST_SMITHY + " comida, "
-                + Variables.WOOD_COST_SMITHY + " madera, "
-                + Variables.IRON_COST_SMITHY + " hierro"
-                + " + coste extra por nivel)");
-
-        System.out.println("4. Iglesia (Coste: "
-                + Variables.FOOD_COST_CHURCH + " comida, "
-                + Variables.WOOD_COST_CHURCH + " madera, "
-                + Variables.IRON_COST_CHURCH + " hierro)");
-
-        System.out.println("5. Torre Mágica (Coste base: "
-                + Variables.FOOD_COST_MAGICTOWER + " comida, "
-                + Variables.WOOD_COST_MAGICTOWER + " madera, "
-                + Variables.IRON_COST_MAGICTOWER + " hierro, "
-                + Variables.MANA_COST_MAGICTOWER + " mana"
-                + " + coste extra por nivel)");
-
-        System.out.println("6. Mejora Tecnología Ataque (Coste base: "
-                + Variables.UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST + " hierro)");
-
-        System.out.println("7. Mejora Tecnología Defensa (Coste base: "
-                + Variables.UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST + " hierro)");
-
+        System.out.println("1. Construir Granja");
+        System.out.println("2. Construir Carpintería");
+        System.out.println("3. Construir Herrería");
+        System.out.println("4. Construir Iglesia");
+        System.out.println("5. Construir Torre Mágica");
+        System.out.println("6. Mejorar Tecnología Ataque");
+        System.out.println("7. Mejorar Tecnología Defensa");
 
         int op = leerNumero(teclado);
 
         try {
             switch (op) {
-                case 1 -> civ.upgradeFarm();
-                case 2 -> civ.upgradeCarpentry();
-                case 3 -> civ.upgradeSmithy();
-                case 4 -> civ.upgradeChurch();
-                case 5 -> civ.upgradeMagicTower();
-                case 6 -> civ.upgradeAttackTechnology();
-                case 7 -> civ.upgradeArmorTechnology();
+                case 1 -> civ.newFarm();
+                case 2 -> civ.newCarpentry();
+                case 3 -> civ.newSmithy();
+                case 4 -> civ.newChurch();
+                case 5 -> civ.newMagicTower();
+                case 6 -> civ.upgradeTechnologyAttack();
+                case 7 -> civ.upgradeTechnologyDefense();
                 default -> System.out.println("Opción no válida.");
             }
         } catch (ResourceException e) {
@@ -219,38 +192,17 @@ public class Main {
     // ============================================================
     private static void menuReclutamiento(Civilization civ, Scanner teclado) {
         System.out.println("\n--- RECLUTAR UNIDADES ---");
-        System.out.println("1. Swordsman     (Coste: " + Variables.FOOD_COST_SWORDSMAN + " comida, " +
-                                                Variables.WOOD_COST_SWORDSMAN + " madera, " +
-                                                Variables.IRON_COST_SWORDSMAN + " hierro)");
-        System.out.println("2. Spearman      (Coste: " + Variables.FOOD_COST_SPEARMAN + " comida, " +
-                                                Variables.WOOD_COST_SPEARMAN + " madera, " +
-                                                Variables.IRON_COST_SPEARMAN + " hierro)");
-        System.out.println("3. Crossbow      (Coste: " + Variables.FOOD_COST_CROSSBOW + " comida, " +
-                                                Variables.WOOD_COST_CROSSBOW + " madera, " +
-                                                Variables.IRON_COST_CROSSBOW + " hierro)");
-        System.out.println("4. Cannon        (Coste: " + Variables.FOOD_COST_CANNON + " comida, " +
-                                                Variables.WOOD_COST_CANNON + " madera, " +
-                                                Variables.IRON_COST_CANNON + " hierro)");
-        System.out.println("5. ArrowTower    (Coste: " + Variables.FOOD_COST_ARROWTOWER + " comida, " +
-                                                Variables.WOOD_COST_ARROWTOWER + " madera, " +
-                                                Variables.IRON_COST_ARROWTOWER + " hierro)");
-        System.out.println("6. Catapult      (Coste: " + Variables.FOOD_COST_CATAPULT + " comida, " +
-                                                Variables.WOOD_COST_CATAPULT + " madera, " +
-                                                Variables.IRON_COST_CATAPULT + " hierro)");
-        System.out.println("7. RocketTower   (Coste: " + Variables.FOOD_COST_ROCKETLAUNCHERTOWER + " comida, " +
-                                                Variables.WOOD_COST_ROCKETLAUNCHERTOWER + " madera, " +
-                                                Variables.IRON_COST_ROCKETLAUNCHERTOWER + " hierro)");
-        System.out.println("8. Magician      (Coste: " + Variables.FOOD_COST_MAGICIAN + " comida, " +
-                                                Variables.WOOD_COST_MAGICIAN + " madera, " +
-                                                Variables.IRON_COST_MAGICIAN + " hierro + " +
-                                                Variables.MANA_COST_MAGICIAN + " mana)");
-        System.out.println("9. Priest        (Coste: " + Variables.FOOD_COST_PRIEST + " comida, " +
-                                                Variables.WOOD_COST_PRIEST + " madera, " +
-                                                Variables.IRON_COST_PRIEST + " hierro + " +
-                                                Variables.MANA_COST_PRIEST + " mana)");
-                                    
-        System.out.print("Elige el tipo de unidad: ");
+        System.out.println("1. Swordsman");
+        System.out.println("2. Spearman");
+        System.out.println("3. Crossbow");
+        System.out.println("4. Cannon");
+        System.out.println("5. ArrowTower");
+        System.out.println("6. Catapult");
+        System.out.println("7. RocketTower");
+        System.out.println("8. Magician");
+        System.out.println("9. Priest");
 
+        System.out.print("Elige el tipo de unidad: ");
         int tipo = leerNumero(teclado);
 
         System.out.print("¿Cuántas unidades quieres fabricar?: ");
@@ -258,15 +210,15 @@ public class Main {
 
         try {
             switch (tipo) {
-                case 1 -> civ.recruitSwordsman(cantidad);
-                case 2 -> civ.recruitSpearman(cantidad);
-                case 3 -> civ.recruitCrossbow(cantidad);
-                case 4 -> civ.recruitCannon(cantidad);
-                case 5 -> civ.recruitArrowTower(cantidad);
-                case 6 -> civ.recruitCatapult(cantidad);
-                case 7 -> civ.recruitRocketTower(cantidad);
-                case 8 -> civ.recruitMagician(cantidad);
-                case 9 -> civ.recruitPriest(cantidad);
+                case 1 -> civ.newSwordsman(cantidad);
+                case 2 -> civ.newSpearman(cantidad);
+                case 3 -> civ.newCrossbow(cantidad);
+                case 4 -> civ.newCannon(cantidad);
+                case 5 -> civ.newArrowTower(cantidad);
+                case 6 -> civ.newCatapult(cantidad);
+                case 7 -> civ.newRocketLauncher(cantidad);
+                case 8 -> civ.newMagician(cantidad);
+                case 9 -> civ.newPriest(cantidad);
                 default -> System.out.println("Tipo de unidad incorrecto.");
             }
             System.out.println("¡Reclutamiento completado!");
@@ -283,7 +235,7 @@ public class Main {
     private static void mostrarEjercito(Civilization civ) {
         System.out.println("\n================ EJÉRCITO PROPIO ================");
 
-        ArrayList<MilitaryUnit>[] army = civ.getArmy();
+        ArrayList<MilitaryUnit>[] army = civ.army;
 
         System.out.println("1. Swordsman: " + army[0].size());
         System.out.println("2. Spearman: " + army[1].size());
@@ -302,70 +254,40 @@ public class Main {
     // ENEMIGO: CREACIÓN Y VISUALIZACIÓN
     // ============================================================
     private static void createEnemyArmy() {
-        // Limpiamos ejército anterior
         for (int i = 0; i < enemyArmy.length; i++) {
             enemyArmy[i].clear();
         }
 
         Random rand = new Random();
 
-        // Costes aproximados (ajusta si tus constantes son distintas)
-        int foodSword = 100;
-        int woodSword = 50;
-        int ironSword = 50;
-
-        int foodSpear = 120;
-        int woodSpear = 60;
-        int ironSpear = 60;
-
-        int foodCross = 150;
-        int woodCross = 80;
-        int ironCross = 80;
-
-        int foodCannon = 200;
-        int woodCannon = 120;
-        int ironCannon = 150;
-
         while (true) {
-            // Comprobamos si al menos podemos crear un Swordsman
-            if (enemyFood < foodSword || enemyWood < woodSword || enemyIron < ironSword) {
-                break;
-            }
+            if (enemyFood < 100 || enemyWood < 50 || enemyIron < 50) break;
 
-            int prob = rand.nextInt(100); // 0-99
+            int prob = rand.nextInt(100);
 
-            if (prob < 35) { // Swordsman 35%
-                if (enemyFood >= foodSword && enemyWood >= woodSword && enemyIron >= ironSword) {
-                    enemyFood -= foodSword;
-                    enemyWood -= woodSword;
-                    enemyIron -= ironSword;
-                    enemyArmy[0].add(new Swordsman(0, 0));
-                }
-            } else if (prob < 60) { // Spearman 25%
-                if (enemyFood >= foodSpear && enemyWood >= woodSpear && enemyIron >= ironSpear) {
-                    enemyFood -= foodSpear;
-                    enemyWood -= woodSpear;
-                    enemyIron -= ironSpear;
-                    enemyArmy[1].add(new Spearman(0, 0));
-                }
-            } else if (prob < 80) { // Crossbow 20%
-                if (enemyFood >= foodCross && enemyWood >= woodCross && enemyIron >= ironCross) {
-                    enemyFood -= foodCross;
-                    enemyWood -= woodCross;
-                    enemyIron -= ironCross;
-                    enemyArmy[2].add(new Crossbow(0, 0));
-                }
-            } else { // Cannon 20%
-                if (enemyFood >= foodCannon && enemyWood >= woodCannon && enemyIron >= ironCannon) {
-                    enemyFood -= foodCannon;
-                    enemyWood -= woodCannon;
-                    enemyIron -= ironCannon;
-                    enemyArmy[3].add(new Cannon(0, 0));
-                }
+            if (prob < 35) {
+                enemyFood -= 100;
+                enemyWood -= 50;
+                enemyIron -= 50;
+                enemyArmy[0].add(new Swordsman(0, 0));
+            } else if (prob < 60) {
+                enemyFood -= 120;
+                enemyWood -= 60;
+                enemyIron -= 60;
+                enemyArmy[1].add(new Spearman(0, 0));
+            } else if (prob < 80) {
+                enemyFood -= 150;
+                enemyWood -= 80;
+                enemyIron -= 80;
+                enemyArmy[2].add(new Crossbow(0, 0));
+            } else {
+                enemyFood -= 200;
+                enemyWood -= 120;
+                enemyIron -= 150;
+                enemyArmy[3].add(new Cannon(0, 0));
             }
         }
 
-        // Aumentamos recursos del enemigo para la próxima vez (más fuerte cada vez)
         enemyFood += 3000;
         enemyWood += 3000;
         enemyIron += 3000;
@@ -401,7 +323,7 @@ public class Main {
             return;
         }
 
-        ArrayList<MilitaryUnit>[] playerArmy = civ.getArmy();
+        ArrayList<MilitaryUnit>[] playerArmy = civ.army;
 
         int playerUnits = 0;
         int enemyUnits = 0;
@@ -416,19 +338,16 @@ public class Main {
         if (playerUnits == 0) {
             System.out.println("\n[DERROTA] No tienes ejército. El enemigo arrasa tu civilización.");
             addBattleReport("Derrota: sin ejército. Enemigo tenía " + enemyUnits + " unidades.");
-            // Limpiamos enemigo
             for (ArrayList<MilitaryUnit> list : enemyArmy) list.clear();
             return;
         }
 
-        // Sistema de batalla muy simple: comparamos número de unidades
         System.out.println("\n*** COMIENZA LA BATALLA ***");
         System.out.println("Tus unidades: " + playerUnits + " | Unidades enemigas: " + enemyUnits);
 
         if (playerUnits >= enemyUnits) {
             System.out.println("[VICTORIA] Has ganado la batalla.");
             addBattleReport("Victoria: " + playerUnits + " vs " + enemyUnits + " unidades.");
-            // Perdemos algunas unidades (simulación simple)
             int perdidas = enemyUnits / 2;
             eliminarUnidades(playerArmy, perdidas);
         } else {
@@ -438,7 +357,6 @@ public class Main {
             eliminarUnidades(playerArmy, perdidas);
         }
 
-        // El enemigo siempre se limpia tras la batalla
         for (ArrayList<MilitaryUnit> list : enemyArmy) {
             list.clear();
         }

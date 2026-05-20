@@ -4,410 +4,373 @@ import java.util.ArrayList;
 
 public class Civilization implements Variables {
 
-    // Recursos civilizacion
-    private int food;
-    private int wood;
-    private int iron;
-    private int mana;
+    // Tecnologías
+    private int technologyDefense;
+    private int technologyAttack;
 
-    // Almacenes maximos permitidos
-    private int maxFood;
-    private int maxWood;
-    private int maxIron;
-    private int maxMana;
+    // Recursos
+    public int wood;
+    public int iron;
+    public int food;
+    public int mana;
 
-    // Niveles de los edificios
-    private int farmLevel;
-    private int smithyLevel;
-    private int carpentryLevel;
-    private int churchLevel;
-    private int magicTowerLevel;
+    // Edificios (CANTIDAD)
+    public int magicTower;
+    public int church;
+    public int farm;
+    public int smithy;
+    public int carpentry;
 
-    // Niveles de las tecnologias militares
-    private int armorTechnologyLevel;
-    private int attackTechnologyLevel;
+    // Batallas realizadas
+    public int battles;
 
-    // El ejercito dividido en las 9 categorias
-    private ArrayList<MilitaryUnit>[] army;
+    // Ejército dividido en 9 categorías
+    public ArrayList<MilitaryUnit>[] army;
 
-    // Constructor con los valores iniciales 
+    // Constructor
     public Civilization() {
-        this.food = 15000;  
-        this.wood = 25000;
-        this.iron = 25000;
-        this.mana = 2000;
+        technologyDefense = 0;
+        technologyAttack = 0;
 
-        this.maxFood = 100000;
-        this.maxWood = 100000;
-        this.maxIron = 100000;
-        this.maxMana = 50000;
+        wood = 0;
+        iron = 0;
+        food = 0;
+        mana = 0;
 
-        this.farmLevel = 1;
-        this.smithyLevel = 1;
-        this.carpentryLevel = 1;
-        this.churchLevel = 0;
-        this.magicTowerLevel = 0;
+        magicTower = 0;
+        church = 0;
+        farm = 0;
+        smithy = 0;
+        carpentry = 0;
 
-        this.armorTechnologyLevel = 0;
-        this.attackTechnologyLevel = 0;
+        battles = 0;
 
-        // Inicia el array de listas
-        this.army = new ArrayList[9];
-        for (int i = 0; i < 9; i++) {
-            this.army[i] = new ArrayList<MilitaryUnit>();
+        army = new ArrayList[9];
+        for (int i = 0; i < army.length; i++) {
+            army[i] = new ArrayList<>();
         }
     }
 
-    // Metodo para saber si nos alcanzan los recursos
-    private boolean hasEnoughResources(int foodCost, int woodCost, int ironCost, int manaCost) {
-        return this.food >= foodCost && this.wood >= woodCost && this.iron >= ironCost && this.mana >= manaCost;
+    public int getTechnologyDefense() {
+        return technologyDefense;
     }
 
-    // Metodo auxiliar para restar los costes de golpe
-    private void subtractResources(int foodCost, int woodCost, int ironCost, int manaCost) {
-        this.food -= foodCost;
-        this.wood -= woodCost;
-        this.iron -= ironCost;
-        this.mana -= manaCost;
+    public int getTechnologyAttack() {
+        return technologyAttack;
     }
 
-    // Metodos para subir de nivel los edificios
-    // Mejora de edificios (Granja)
-    public void upgradeFarm() throws ResourceException {
-        if (!hasEnoughResources(FOOD_COST_FARM, WOOD_COST_FARM, IRON_COST_FARM, 0)) {
-            throw new ResourceException("No hay recursos suficientes para mejorar la Granja.");
+    public void setArmorTechnologyLevel(int level) {
+        this.technologyDefense = level;
+    }
+
+    public void setAttackTechnologyLevel(int level) {
+        this.technologyAttack = level;
+    }
+
+    // ============================================================
+    // NUEVOS MÉTODOS DE CONEXIÓN CON LA GUI (TECNOLOGÍAS)
+    // ============================================================
+
+    /**
+     * Comprueba si la tecnología de ataque ha alcanzado su nivel máximo o si está investigada.
+     * Si en tu juego no hay nivel máximo por encima de 0, devuelve si el nivel es mayor que 0.
+     */
+    public boolean isAttackTechResearched() {
+        return this.technologyAttack > 0;
+    }
+
+    /**
+     * Comprueba si la tecnología de defensa ha alcanzado su nivel máximo o si está investigada.
+     */
+    public boolean isDefenseTechResearched() {
+        return this.technologyDefense > 0;
+    }
+
+    /**
+     * Calcula dinámicamente el coste de hierro necesario para la siguiente mejora de ataque.
+     */
+    public int getAttackTechCost() {
+        return UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST +
+               (this.technologyAttack * UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST);
+    }
+
+    /**
+     * Calcula dinámicamente el coste de hierro necesario para la siguiente mejora de defensa.
+     */
+    public int getDefenseTechCost() {
+        return UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST +
+               (this.technologyDefense * UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST);
+    }
+
+    /**
+     * Evalúa si la civilización tiene el hierro suficiente para pagar la mejora de ataque.
+     */
+    public boolean canResearchAttackTech() {
+        return this.iron >= getAttackTechCost();
+    }
+
+    /**
+     * Evalúa si la civilización tiene el hierro suficiente para pagar la mejora de defensa.
+     */
+    public boolean canResearchDefenseTech() {
+        return this.iron >= getDefenseTechCost();
+    }
+
+    /**
+     * Intenta investigar la tecnología de ataque. Reutiliza el método original 
+     * arrojando excepciones si la GUI requiere controlar el error de recursos.
+     */
+    public void researchAttackTech() throws ResourceException {
+        upgradeTechnologyAttack();
+    }
+
+    /**
+     * Intenta investigar la tecnología de defensa. Reutiliza el método original 
+     * arrojando excepciones si la GUI requiere controlar el error de recursos.
+     */
+    public void researchDefenseTech() throws ResourceException {
+        upgradeTechnologyDefense();
+    }
+
+    // ============================================================
+    // MÉTODOS PARA CREAR EDIFICIOS
+    // ============================================================
+
+    public void newFarm() throws ResourceException {
+        if (food < FOOD_COST_FARM || wood < WOOD_COST_FARM || iron < IRON_COST_FARM) {
+            throw new ResourceException("No hay recursos suficientes para construir una granja.");
         }
-        subtractResources(FOOD_COST_FARM, WOOD_COST_FARM, IRON_COST_FARM, 0);
-        this.farmLevel++;
-        System.out.println("Granja mejorada al nivel: " + this.farmLevel);
+        food -= FOOD_COST_FARM;
+        wood -= WOOD_COST_FARM;
+        iron -= IRON_COST_FARM;
+        farm++;
     }
-    // Mejora de edificios(Carpinteria)
-    public void upgradeCarpentry() throws ResourceException {
-        if (!hasEnoughResources(FOOD_COST_CARPENTRY, WOOD_COST_CARPENTRY, IRON_COST_CARPENTRY, 0)) {
-            throw new ResourceException("No hay recursos suficientes para mejorar la Carpinteria.");
+
+    public void newCarpentry() throws ResourceException {
+        if (food < FOOD_COST_CARPENTRY || wood < WOOD_COST_CARPENTRY || iron < IRON_COST_CARPENTRY) {
+            throw new ResourceException("No hay recursos suficientes para construir una carpintería.");
         }
-        subtractResources(FOOD_COST_CARPENTRY, WOOD_COST_CARPENTRY, IRON_COST_CARPENTRY, 0);
-        this.carpentryLevel++;
-        System.out.println("Carpinteria mejorada al nivel: " + this.carpentryLevel);
+        food -= FOOD_COST_CARPENTRY;
+        wood -= WOOD_COST_CARPENTRY;
+        iron -= IRON_COST_CARPENTRY;
+        carpentry++;
     }
-    // Mejora de edificios(Herreria)
-    public void upgradeSmithy() throws ResourceException {
-        // Añadimos los costes extras segun el nivel
-        int extraFood = (this.smithyLevel - 1) * NEXT_LEVEL_FOOD_COST_SMITHY;
-        int extraWood = (this.smithyLevel - 1) * NEXT_LEVEL_WOOD_COST_SMITHY;
-        int extraIron = (this.smithyLevel - 1) * NEXT_LEVEL_IRON_COST_SMITHY;
 
-        int totalFood = FOOD_COST_SMITHY + extraFood;
-        int totalWood = WOOD_COST_SMITHY + extraWood;
-        int totalIron = IRON_COST_SMITHY + extraIron;
-
-        if (!hasEnoughResources(totalFood, totalWood, totalIron, 0)) {
-            throw new ResourceException("No hay recursos suficientes para mejorar la Herreria.");
+    public void newSmithy() throws ResourceException {
+        if (food < FOOD_COST_SMITHY || wood < WOOD_COST_SMITHY || iron < IRON_COST_SMITHY) {
+            throw new ResourceException("No hay recursos suficientes para construir una herrería.");
         }
-        subtractResources(totalFood, totalWood, totalIron, 0);
-        this.smithyLevel++;
-        System.out.println("Herreria mejorada al nivel: " + this.smithyLevel);
+        food -= FOOD_COST_SMITHY;
+        wood -= WOOD_COST_SMITHY;
+        iron -= IRON_COST_SMITHY;
+        smithy++;
     }
 
-    // Mejora de edificios(Torre de Magos)
-    public void upgradeMagicTower() throws ResourceException {
-        // Costes incrementales especificos para la Torre de Magos
-        int extraFood = (this.magicTowerLevel * NEXT_LEVEL_FOOD_COST_MAGICTOWER);
-        int extraWood = (this.magicTowerLevel * NEXT_LEVEL_WOOD_COST_MAGICTOWER);
-        int extraIron = (this.magicTowerLevel * NEXT_LEVEL_IRON_COST_MAGICTOWER);
-        int extraMana = (this.magicTowerLevel * NEXT_LEVEL_MANA_COST_MAGICTOWER);
-
-        int totalFood = FOOD_COST_MAGICTOWER + extraFood;
-        int totalWood = WOOD_COST_MAGICTOWER + extraWood;
-        int totalIron = IRON_COST_MAGICTOWER + extraIron;
-        int totalMana = MANA_COST_MAGICTOWER + extraMana;
-
-        if (!hasEnoughResources(totalFood, totalWood, totalIron, totalMana)) {
-            throw new ResourceException("No hay recursos suficientes para mejorar la Torre Magica.");
+    public void newMagicTower() throws ResourceException {
+        if (food < FOOD_COST_MAGICTOWER || wood < WOOD_COST_MAGICTOWER || iron < IRON_COST_MAGICTOWER) {
+            throw new ResourceException("No hay recursos suficientes para construir una torre mágica.");
         }
-        subtractResources(totalFood, totalWood, totalIron, totalMana);
-        this.magicTowerLevel++;
-        System.out.println("Torre Magica mejorada al nivel: " + this.magicTowerLevel);
+        food -= FOOD_COST_MAGICTOWER;
+        wood -= WOOD_COST_MAGICTOWER;
+        iron -= IRON_COST_MAGICTOWER;
+        magicTower++;
     }
-    // Mejora de edificios(Iglesia)
-    public void upgradeChurch() throws ResourceException {
-        if (!hasEnoughResources(FOOD_COST_CHURCH, WOOD_COST_CHURCH, IRON_COST_CHURCH, 0)) {
-            throw new ResourceException("No hay recursos suficientes para mejorar la Iglesia.");
+
+    public void newChurch() throws ResourceException {
+        if (food < FOOD_COST_CHURCH || wood < WOOD_COST_CHURCH || iron < IRON_COST_CHURCH) {
+            throw new ResourceException("No hay recursos suficientes para construir una iglesia.");
         }
-        subtractResources(FOOD_COST_CHURCH, WOOD_COST_CHURCH, IRON_COST_CHURCH, 0);
-        this.churchLevel++;
-        System.out.println("Iglesia mejorada al nivel: " + this.churchLevel);
+        food -= FOOD_COST_CHURCH;
+        wood -= WOOD_COST_CHURCH;
+        iron -= IRON_COST_CHURCH;
+        church++;
     }
 
-    // Metodos para mejorar las tecnologias 
-    // Mejora de edificios(Technologia de Armadura)
-    public void upgradeArmorTechnology() throws ResourceException {
-        int multiplier = 100 + (this.armorTechnologyLevel * PERCENTAGE_UPGRADE_TECH_COST);
-        int currentIronCost = (UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST * multiplier) / 100;
+    // ============================================================
+    // MEJORAS DE TECNOLOGÍA
+    // ============================================================
 
-        if (this.iron < currentIronCost) {
-            throw new ResourceException("No tienes suficiente hierro para mejorar la Tecnologia de Defensa.");
+    public void upgradeTechnologyDefense() throws ResourceException {
+        int ironCost = getDefenseTechCost();
+
+        if (iron < ironCost) {
+            throw new ResourceException("No hay suficiente hierro para mejorar la tecnología de defensa.");
         }
-        this.iron -= currentIronCost;
-        this.armorTechnologyLevel++;
-        System.out.println("Tecnologia de Armadura mejorada al nivel " + this.armorTechnologyLevel);
-    }
-    // Mejora de edificios(Technologia de Ataque)
-    public void upgradeAttackTechnology() throws ResourceException {
-        int multiplier = 100 + (this.attackTechnologyLevel * PERCENTAGE_UPGRADE_TECH_COST);
-        int currentIronCost = (UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST * multiplier) / 100;
 
-        if (this.iron < currentIronCost) {
-            throw new ResourceException("No tienes suficiente hierro para mejorar la Tecnologia de Ataque.");
+        iron -= ironCost;
+        technologyDefense++;
+    }
+
+    public void upgradeTechnologyAttack() throws ResourceException {
+        int ironCost = getAttackTechCost();
+
+        if (iron < ironCost) {
+            throw new ResourceException("No hay suficiente hierro para mejorar la tecnología de ataque.");
         }
-        this.iron -= currentIronCost;
-        this.attackTechnologyLevel++;
-        System.out.println("Tecnologia de Ataque mejorada al nivel " + this.attackTechnologyLevel);
+
+        iron -= ironCost;
+        technologyAttack++;
     }
 
-    // Produccion automatica por turno generada por los edificios
-     // Producción automática por turno
-    public void produceResources() {
-        int comidaGenerada = CIVILIZATION_FOOD_GENERATED + (this.farmLevel * CIVILIZATION_FOOD_GENERATED_PER_FARM);
-        int maderaGenerada = CIVILIZATION_WOOD_GENERATED + (this.carpentryLevel * CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY);
-        int hierroGenerada = CIVILIZATION_IRON_GENERATED + (this.smithyLevel * CIVILIZATION_IRON_GENERATED_PER_SMITHY);
-        int manaGenerado = (this.magicTowerLevel * CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER);
+    // ============================================================
+    // PRODUCCIÓN DE RECURSOS
+    // ============================================================
 
-        setFood(this.food + comidaGenerada);
-        setWood(this.wood + maderaGenerada);
-        setIron(this.iron + hierroGenerada);
-        setMana(this.mana + manaGenerado);
+    public void generateResources() {
+        food += CIVILIZATION_FOOD_GENERATED + (farm * CIVILIZATION_FOOD_GENERATED_PER_FARM);
+        wood += CIVILIZATION_WOOD_GENERATED + (carpentry * CIVILIZATION_WOOD_GENERATED_PER_CARPENTRY);
+        iron += CIVILIZATION_IRON_GENERATED + (smithy * CIVILIZATION_IRON_GENERATED_PER_SMITHY);
+        mana += magicTower * CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER;
     }
 
-    // Metodos de reclutamiento por lotes
-    // Reclutamiento de unidades(Swordsman)
-    public void recruitSwordsman(int amount) throws ResourceException {
+    // ============================================================
+    // CREACIÓN DE UNIDADES
+    // ============================================================
+
+    private boolean canCreate(int foodCost, int woodCost, int ironCost, int manaCost) {
+        return food >= foodCost && wood >= woodCost && iron >= ironCost && mana >= manaCost;
+    }
+
+    private void pay(int foodCost, int woodCost, int ironCost, int manaCost) {
+        food -= foodCost;
+        wood -= woodCost;
+        iron -= ironCost;
+        mana -= manaCost;
+    }
+
+    // --- Swordsman ---
+    public void newSwordsman(int n) throws ResourceException {
         int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, MANA_COST_SWORDSMAN)) {
-                subtractResources(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, MANA_COST_SWORDSMAN);
-                this.army[0].add(new Swordsman(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, 0)) break;
+            pay(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, 0);
+            army[0].add(new Swordsman(technologyDefense, technologyAttack));
+            created++;
         }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Swordsman pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Swordsman.");
-        }
-    }
-    // Reclutamiento de unidades(Spearman)
-    public void recruitSpearman(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, MANA_COST_SPEARMAN)) {
-                subtractResources(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, MANA_COST_SPEARMAN);
-                this.army[1].add(new Spearman(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Spearman pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Spearman.");
-        }
-    }
-    // Reclutamiento de unidades(Crossbow)
-    public void recruitCrossbow(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_CROSSBOW, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, MANA_COST_CROSSBOW)) {
-                subtractResources(FOOD_COST_CROSSBOW, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, MANA_COST_CROSSBOW);
-                this.army[2].add(new Crossbow(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Crossbow pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Crossbow.");
-        }
-    }
-    // Reclutamiento de unidades(Cannon)
-    public void recruitCannon(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_CANNON, WOOD_COST_CANNON, IRON_COST_CANNON, MANA_COST_CANNON)) {
-                subtractResources(FOOD_COST_CANNON, WOOD_COST_CANNON, IRON_COST_CANNON, MANA_COST_CANNON);
-                this.army[3].add(new Cannon(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Cannon pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Cannon.");
-        }
-    }
-    // Reclutamiento de unidades(ArrowTower)
-    public void recruitArrowTower(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_ARROWTOWER, WOOD_COST_ARROWTOWER, IRON_COST_ARROWTOWER, MANA_COST_ARROWTOWER)) {
-                subtractResources(FOOD_COST_ARROWTOWER, WOOD_COST_ARROWTOWER, IRON_COST_ARROWTOWER, MANA_COST_ARROWTOWER);
-                this.army[4].add(new ArrowTower(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron crear " + created + " de las " + amount + " ArrowTower pedidas.");
-            throw new ResourceException("Recursos insuficientes para completar la construccion de ArrowTower.");
-        }
-    }
-    // Reclutamiento de unidades(Catapult)
-    public void recruitCatapult(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_CATAPULT, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, MANA_COST_CATAPULT)) {
-                subtractResources(FOOD_COST_CATAPULT, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, MANA_COST_CATAPULT);
-                this.army[5].add(new Catapult(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron crear " + created + " de las " + amount + " Catapult pedidas.");
-            throw new ResourceException("Recursos insuficientes para completar la construccion de Catapult.");
-        }
-    }
-    // Reclutamiento de unidades(RocketLauncherTower)
-    public void recruitRocketTower(int amount) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_ROCKETLAUNCHERTOWER, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, MANA_COST_ROCKETLAUNCHERTOWER)) {
-                subtractResources(FOOD_COST_ROCKETLAUNCHERTOWER, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, MANA_COST_ROCKETLAUNCHERTOWER);
-                this.army[6].add(new RocketLauncherTower(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron crear " + created + " de las " + amount + " RocketLauncherTower pedidas.");
-            throw new ResourceException("Recursos insuficientes para completar la construccion de RocketLauncherTower.");
-        }
-    }
-    // Reclutamiento de unidades(Magician)
-    public void recruitMagician(int amount) throws ResourceException, BuildingException {
-        if (this.magicTowerLevel < 1) {
-            throw new BuildingException("Necesitas construir la Torre de Magos para reclutar un Mago.");
-        }
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN)) {
-                subtractResources(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN);
-                this.army[7].add(new Magician(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Magician pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Magician.");
-        }
-    }
-    // Reclutamiento de unidades(Priest)
-    public void recruitPriest(int amount) throws ResourceException, BuildingException {
-        if (this.churchLevel < 1) {
-            throw new BuildingException("Necesitas construir la Iglesia para reclutar un Sacerdote.");
-        }
-        int created = 0;
-        for (int i = 0; i < amount; i++) {
-            if (hasEnoughResources(FOOD_COST_PRIEST, WOOD_COST_PRIEST, IRON_COST_PRIEST, MANA_COST_PRIEST)) {
-                subtractResources(FOOD_COST_PRIEST, WOOD_COST_PRIEST, IRON_COST_PRIEST, MANA_COST_PRIEST);
-                this.army[8].add(new Priest(this.armorTechnologyLevel, this.attackTechnologyLevel));
-                created++;
-            } else {
-                break;
-            }
-        }
-        if (created < amount) {
-            System.out.println("Aviso: Solo se pudieron reclutar " + created + " de los " + amount + " Priest pedidos.");
-            throw new ResourceException("Recursos insuficientes para completar todo el reclutamiento de Priest.");
-        }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Swordsman.");
     }
 
-    // Getters y Setters tradicionales controlando topes maximos
-    
-    public int getFood() { 
-        return food; 
-    }
-    
-    public void setFood(int food) { 
-        if (food > maxFood) {
-            this.food = maxFood;
-        } else {
-            this.food = food;
+    // --- Spearman ---
+    public void newSpearman(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, 0)) break;
+            pay(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, 0);
+            army[1].add(new Spearman(technologyDefense, technologyAttack));
+            created++;
         }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Spearman.");
     }
 
-    public int getWood() { 
-        return wood; 
-    }
-    
-    public void setWood(int wood) { 
-        if (wood > maxWood) {
-            this.wood = maxWood;
-        } else {
-            this.wood = wood;
+    // --- Crossbow ---
+    public void newCrossbow(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(0, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, 0)) break;
+            pay(0, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, 0);
+            army[2].add(new Crossbow(technologyDefense, technologyAttack));
+            created++;
         }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Crossbow.");
     }
 
-    public int getIron() { 
-        return iron; 
-    }
-    
-    public void setIron(int iron) { 
-        if (iron > maxIron) {
-            this.iron = maxIron;
-        } else {
-            this.iron = iron;
+    // --- Cannon ---
+    public void newCannon(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(0, WOOD_COST_CANNON, IRON_COST_CANNON, 0)) break;
+            pay(0, WOOD_COST_CANNON, IRON_COST_CANNON, 0);
+            army[3].add(new Cannon(technologyDefense, technologyAttack));
+            created++;
         }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Cannon.");
     }
 
-    public int getMana() { 
-        return mana; 
-    }
-    
-    public void setMana(int mana) { 
-        if (mana > maxMana) {
-            this.mana = maxMana;
-        } else {
-            this.mana = mana;
+    // --- Arrow Tower ---
+    public void newArrowTower(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(0, WOOD_COST_ARROWTOWER, 0, 0)) break;
+            pay(0, WOOD_COST_ARROWTOWER, 0, 0);
+            army[4].add(new ArrowTower(technologyDefense, technologyAttack));
+            created++;
         }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Arrow Tower.");
     }
 
-    public int getArmorTechnologyLevel() { 
-        return armorTechnologyLevel; }
-    public int getAttackTechnologyLevel() { 
-        return attackTechnologyLevel; }
+    // --- Catapult ---
+    public void newCatapult(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(0, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, 0)) break;
+            pay(0, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, 0);
+            army[5].add(new Catapult(technologyDefense, technologyAttack));
+            created++;
+        }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Catapult.");
+    }
 
-    public int getFarmLevel() { 
-        return farmLevel; }
-    public int getSmithyLevel() { 
-        return smithyLevel; }
-    public int getCarpentryLevel() { 
-        return carpentryLevel; }
-    public int getChurchLevel() { 
-        return churchLevel; }
-    public int getMagicTowerLevel() { 
-        return magicTowerLevel; }
+    // --- Rocket Launcher ---
+    public void newRocketLauncher(int n) throws ResourceException {
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(0, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, 0)) break;
+            pay(0, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, 0);
+            army[6].add(new RocketLauncherTower(technologyDefense, technologyAttack));
+            created++;
+        }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Rocket Launcher.");
+    }
 
-    public ArrayList<MilitaryUnit>[] getArmy() { 
-        return army; }
-    public void setArmy(ArrayList<MilitaryUnit>[] army) { 
-        this.army = army; }
+    // --- Magician ---
+    public void newMagician(int n) throws ResourceException, BuildingException {
+        if (magicTower < 1) throw new BuildingException("Necesitas una torre mágica para crear magos.");
+
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN)) break;
+            pay(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN);
+            army[7].add(new Magician(technologyDefense, technologyAttack));
+            created++;
+        }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Magician.");
+    }
+
+    // --- Priest ---
+    public void newPriest(int n) throws ResourceException, BuildingException {
+        if (church < 1) throw new BuildingException("Necesitas una iglesia para crear sacerdotes.");
+
+        int created = 0;
+        for (int i = 0; i < n; i++) {
+            if (!canCreate(FOOD_COST_PRIEST, 0, 0, MANA_COST_PRIEST)) break;
+            pay(FOOD_COST_PRIEST, 0, 0, MANA_COST_PRIEST);
+            army[8].add(new Priest(technologyDefense, technologyAttack));
+            created++;
+        }
+        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Priest.");
+    }
+
+    // ============================================================
+    // PRINT STATS
+    // ============================================================
+
+    public void printStats() {
+        System.out.println("\n=== CIVILIZATION STATS ===");
+        System.out.println("TECHNOLOGY");
+        System.out.println("Attack: " + technologyAttack);
+        System.out.println("Defense: " + technologyDefense);
+
+        System.out.println("\nBUILDINGS");
+        System.out.println("Farm: " + farm);
+        System.out.println("Smithy: " + smithy);
+        System.out.println("Carpentry: " + carpentry);
+        System.out.println("Magic Tower: " + magicTower);
+        System.out.println("Church: " + church);
+
+        System.out.println("\nRESOURCES");
+        System.out.println("Food: " + food);
+        System.out.println("Wood: " + wood);
+        System.out.println("Iron: " + iron);
+        System.out.println("Mana: " + mana);
+    }
 }
