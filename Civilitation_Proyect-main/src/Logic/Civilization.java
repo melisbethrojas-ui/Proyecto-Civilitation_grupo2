@@ -52,19 +52,84 @@ public class Civilization implements Variables {
     }
 
     public int getTechnologyDefense() {
-    return technologyDefense;
-}
+        return technologyDefense;
+    }
 
     public int getTechnologyAttack() {
         return technologyAttack;
     }
 
     public void setArmorTechnologyLevel(int level) {
-    this.technologyDefense = level;
+        this.technologyDefense = level;
     }
 
     public void setAttackTechnologyLevel(int level) {
         this.technologyAttack = level;
+    }
+
+    // ============================================================
+    // NUEVOS MÉTODOS DE CONEXIÓN CON LA GUI (TECNOLOGÍAS)
+    // ============================================================
+
+    /**
+     * Comprueba si la tecnología de ataque ha alcanzado su nivel máximo o si está investigada.
+     * Si en tu juego no hay nivel máximo por encima de 0, devuelve si el nivel es mayor que 0.
+     */
+    public boolean isAttackTechResearched() {
+        return this.technologyAttack > 0;
+    }
+
+    /**
+     * Comprueba si la tecnología de defensa ha alcanzado su nivel máximo o si está investigada.
+     */
+    public boolean isDefenseTechResearched() {
+        return this.technologyDefense > 0;
+    }
+
+    /**
+     * Calcula dinámicamente el coste de hierro necesario para la siguiente mejora de ataque.
+     */
+    public int getAttackTechCost() {
+        return UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST +
+               (this.technologyAttack * UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST);
+    }
+
+    /**
+     * Calcula dinámicamente el coste de hierro necesario para la siguiente mejora de defensa.
+     */
+    public int getDefenseTechCost() {
+        return UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST +
+               (this.technologyDefense * UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST);
+    }
+
+    /**
+     * Evalúa si la civilización tiene el hierro suficiente para pagar la mejora de ataque.
+     */
+    public boolean canResearchAttackTech() {
+        return this.iron >= getAttackTechCost();
+    }
+
+    /**
+     * Evalúa si la civilización tiene el hierro suficiente para pagar la mejora de defensa.
+     */
+    public boolean canResearchDefenseTech() {
+        return this.iron >= getDefenseTechCost();
+    }
+
+    /**
+     * Intenta investigar la tecnología de ataque. Reutiliza el método original 
+     * arrojando excepciones si la GUI requiere controlar el error de recursos.
+     */
+    public void researchAttackTech() throws ResourceException {
+        upgradeTechnologyAttack();
+    }
+
+    /**
+     * Intenta investigar la tecnología de defensa. Reutiliza el método original 
+     * arrojando excepciones si la GUI requiere controlar el error de recursos.
+     */
+    public void researchDefenseTech() throws ResourceException {
+        upgradeTechnologyDefense();
     }
 
     // ============================================================
@@ -126,8 +191,7 @@ public class Civilization implements Variables {
     // ============================================================
 
     public void upgradeTechnologyDefense() throws ResourceException {
-        int ironCost = UPGRADE_BASE_DEFENSE_TECHNOLOGY_IRON_COST +
-                       (technologyDefense * UPGRADE_PLUS_DEFENSE_TECHNOLOGY_IRON_COST);
+        int ironCost = getDefenseTechCost();
 
         if (iron < ironCost) {
             throw new ResourceException("No hay suficiente hierro para mejorar la tecnología de defensa.");
@@ -138,8 +202,7 @@ public class Civilization implements Variables {
     }
 
     public void upgradeTechnologyAttack() throws ResourceException {
-        int ironCost = UPGRADE_BASE_ATTACK_TECHNOLOGY_IRON_COST +
-                       (technologyAttack * UPGRADE_PLUS_ATTACK_TECHNOLOGY_IRON_COST);
+        int ironCost = getAttackTechCost();
 
         if (iron < ironCost) {
             throw new ResourceException("No hay suficiente hierro para mejorar la tecnología de ataque.");
