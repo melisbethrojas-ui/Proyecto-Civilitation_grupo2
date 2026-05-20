@@ -1,10 +1,12 @@
 package Logic;
 
+import Save_Load.PersistenciaMySQL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class Main {
 
@@ -19,11 +21,13 @@ public class Main {
     // Reportes de batalla
     private static ArrayList<String> battleReports = new ArrayList<>();
 
-    // Civilización del jugador
-    private static Civilization civ = new Civilization();
+    private static PersistenciaMySQL db = new PersistenciaMySQL();
+    public static Civilization civ = null;
+
 
     public static void main(String[] args) {
-
+        System.out.println("[SISTEMA] Iniciando Civilizations...");
+        
         Scanner teclado = new Scanner(System.in);
 
         // Inicializar ejército enemigo
@@ -31,15 +35,30 @@ public class Main {
             enemyArmy[i] = new ArrayList<>();
         }
 
-        // Timer para recursos y enemigo/batalla
+        // =========================================================================
+        // CAMBIO DE ORDEN TÉCNICO: PRIMERO SE CARGAN LOS DATOS DE MYSQL
+        // =========================================================================
+        civ = db.load();
+
+        if (civ == null) {
+            System.out.println("[INFO] No hay partida guardada. Creando una nueva...");
+            civ = new Civilization();
+        }
+
+        // =========================================================================
+        // TIMERS (ENCENDIDOS DE FORMA SEGURA DESPUÉS DE LA CARGA)
+        // =========================================================================
         Timer timer = new Timer();
 
         // Producción automática de recursos cada 1 minuto
         TimerTask produccionTask = new TimerTask() {
             @Override
             public void run() {
-                civ.generateResources();
-                System.out.println("\n[+] Se han generado recursos automáticamente.");
+                // Validación preventiva añadida para asegurar la comunicación asíncrona
+                if (civ != null) {
+                    civ.generateResources();
+                    System.out.println("\n[+] Se han generado recursos automáticamente.");
+                }
             }
         };
         timer.schedule(produccionTask, 0, 60000);
@@ -48,13 +67,17 @@ public class Main {
         TimerTask enemyTask = new TimerTask() {
             @Override
             public void run() {
-                System.out.println("\n⚠ ¡Un ejército enemigo se aproxima!");
-                createEnemyArmy();
-                viewThreat();
-                startBattle();
+                // Validación preventiva para que no batalle si la memoria del hilo principal está ocupada
+                if (civ != null) {
+                    System.out.println("\n⚠ ¡Un ejército enemigo se aproxima!");
+                    createEnemyArmy();
+                    viewThreat();
+                    startBattle();
+                }
             }
         };
         timer.schedule(enemyTask, 180000, 180000);
+
 
         boolean salir = false;
 
@@ -72,7 +95,7 @@ public class Main {
             System.out.println("5. Ver ejército enemigo (si existe)");
             System.out.println("6. Ver reportes de batalla");
             System.out.println("7. Batalla manual ahora");
-            System.out.println("8. Salir");
+            System.out.println("8. Guardar y Salir");
             System.out.print("Selecciona una opción: ");
 
             int opcion = leerNumero(teclado);
@@ -100,7 +123,7 @@ public class Main {
                     break;
 
                 case 6:
-                    mostrarReportesBatalla();
+                    mostrarReportesBatballa();
                     break;
 
                 case 7:
@@ -114,7 +137,11 @@ public class Main {
                 case 8:
                     salir = true;
                     timer.cancel();
-                    System.out.println("\n¡Gracias por jugar a Civilizations! Saliendo...");
+
+                    System.out.println("\n[GUARDANDO PARTIDA]...");
+                    db.save(civ);
+
+                    System.out.println("¡Gracias por jugar a Civilizations! Saliendo...");
                     break;
 
                 default:
@@ -381,7 +408,7 @@ public class Main {
         battleReports.add(report);
     }
 
-    private static void mostrarReportesBatalla() {
+    private static void mostrarReportesBatballa() {
         System.out.println("\n===== REPORTES DE BATALLA (últimas 5) =====");
         if (battleReports.isEmpty()) {
             System.out.println("No hay batallas registradas todavía.");

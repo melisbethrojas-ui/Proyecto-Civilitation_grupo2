@@ -11,7 +11,6 @@ import Logic.Priest;
 import Logic.RocketLauncherTower;
 import Logic.Spearman;
 import Logic.Swordsman;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,9 +20,9 @@ import java.util.ArrayList;
 
 public class PersistenciaMySQL {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/civilizations_db";
+    private static final String URL = "jdbc:mysql://192.168.17.234:3306/civilizations_db";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
     private Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
