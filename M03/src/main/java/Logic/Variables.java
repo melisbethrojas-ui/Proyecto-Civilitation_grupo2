@@ -10,7 +10,7 @@ public interface Variables {
     // Porcentaje de incremento de recursos en oleadas enemigas
     public final int ENEMY_FLEET_INCREASE = 6;
     
-    // Recursos generados por minuto base
+    // Recursos generados por minuto base y el enicio
     public final int CIVILIZATION_IRON_GENERATED = 1500;
     public final int CIVILIZATION_WOOD_GENERATED = 5000;
     public final int CIVILIZATION_FOOD_GENERATED = 8000;
