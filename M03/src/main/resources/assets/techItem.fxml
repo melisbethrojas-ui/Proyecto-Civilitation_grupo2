@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.project.TechItemController"
+      spacing="20"
+      alignment="CENTER_LEFT"
+      styleClass="item-card">
+
+    <!-- ICONO -->
+    <ImageView fx:id="icon"
+               fitWidth="64"
+               fitHeight="64"
+               preserveRatio="true"
+               styleClass="unit-image"/>
+
+    <!-- INFO -->
+    <VBox spacing="6">
+
+        <Label fx:id="nameLabel"
+               styleClass="item-label"/>
+
+        <Label fx:id="statusLabel"
+               styleClass="item-info"/>
+
+        <Label fx:id="costLabel"
+               styleClass="item-info"/>
+
+    </VBox>
+
+    <!-- BOTÓN -->
+    <VBox alignment="CENTER_RIGHT">
+        <Button fx:id="actionButton"
+                text="Investigar"
+                onAction="#onAction"
+                styleClass="button"/>
+    </VBox>
+
+</HBox>

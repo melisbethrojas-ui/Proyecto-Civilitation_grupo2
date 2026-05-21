@@ -1,0 +1,58 @@
+<div class="battle-report-container">
+    <header class="report-header {{batalla.resultado}}">
+        <h1 class="cinzel-font">Informe de Campaña #{{batalla.numero_batalla}}</h1>
+        <div class="status-banner">
+            <span class="outcome-text">{{batalla.resultado}}</span>
+            <span class="battle-date">{{batalla.fecha_batalla}}</span>
+        </div>
+    </header>
+
+    <div class="grid-report">
+        <section class="report-card glass">
+            <h3 class="gold-text"><i class="icon-chest"></i>Residuos recuperados</h3>
+            <div class="resource-row">
+                <div class="res-item">
+                    <img src="/img/madera.png" alt="Madera" class="res-icon">
+                    <span><strong>Madera:</strong> {{batalla.residuos_madera}}</span>
+                </div>
+                <div class="res-item">
+                    <img src="/img/hierro.png" alt="Hierro" class="res-icon">
+                    <span><strong>Hierro:</strong> {{batalla.residuos_hierro}}</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="report-card glass">
+            <h3 class="gold-text">Resumen de bajas</h3>
+            <div class="losses-container">
+                <div class="loss-group">
+                    <h4>La teva Legió</h4>
+                    <ul>
+                        <li><img src="/img/comida.png" class="tiny-icon"> {{batalla.coste_comida_perdido_civi}}</li>
+                        <li><img src="/img/madera.png" class="tiny-icon"> {{batalla.coste_madera_perdido_civi}}</li>
+                        <li><img src="/img/hierro.png" class="tiny-icon"> {{batalla.coste_hierro_perdido_civi}}</li>
+                    </ul>
+                </div>
+                <div class="loss-group enemy">
+                    <h4>Forces de l'Enemic</h4>
+                    <ul>
+                        <li><img src="/img/comida.png" class="tiny-icon"> {{batalla.coste_comida_perdido_enem}}</li>
+                        <li><img src="/img/madera.png" class="tiny-icon"> {{batalla.coste_madera_perdido_enem}}</li>
+                        <li><img src="/img/hierro.png" class="tiny-icon"> {{batalla.coste_hierro_perdido_enem}}</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="battle-log-section glass">
+        <h3 class="gold-text">Desarrollo táctico</h3>
+        <div class="log-scroll">
+            <pre>{{batalla.desarrollo_paso_a_paso}}</pre>
+        </div>
+    </section>
+
+    <div class="actions" style="margin-top: 30px; text-align: center;">
+        <a href="/batallas" class="btn-informe">← Volver al listado de batallas</a>
+    </div>
+</div>

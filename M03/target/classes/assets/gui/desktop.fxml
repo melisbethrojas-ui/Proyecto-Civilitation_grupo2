@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.project.DesktopController"
+            styleClass="page-container">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="18"
+              alignment="CENTER"
+              styleClass="top-bar">
+            <Label text="CIVILIZATIONS"
+                   styleClass="app-title"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+
+        <VBox spacing="28" alignment="CENTER">
+
+            <!-- HERO -->
+            <VBox spacing="8" alignment="CENTER">
+                <Label text="EL ALBA DE LA HISTORIA"
+                       styleClass="hero-title"/>
+
+                <Label text="Escribe tu legado en piedra y sangre."
+                       styleClass="hero-subtitle"/>
+            </VBox>
+
+            <!-- MENÚ PRINCIPAL (horizontal) -->
+            <HBox spacing="20" alignment="CENTER" style="-fx-padding: 10;">
+                <Button text="Unidades" onAction="#openUnits" styleClass="menu-button"/>
+                <Button text="Edificios" onAction="#openBuildings" styleClass="menu-button"/>
+                <Button text="Batalla" onAction="#openBattle" styleClass="menu-button"/>
+                <Button text="Estadísticas" onAction="#openStats" styleClass="menu-button"/>
+                <Button text="Recursos" onAction="#openResources" styleClass="menu-button"/>
+                <Button text="Tecnologías" onAction="#openTech" styleClass="menu-button"/>
+            </HBox>
+
+            <!-- PANEL DE RECURSOS Y STATS -->
+            <VBox spacing="18"
+                  alignment="CENTER"
+                  styleClass="card"
+                  style="-fx-padding: 28;">
+
+                <!-- Recursos -->
+                <HBox spacing="28" alignment="CENTER">
+                    <Label text="Food:" styleClass="item-label"/>
+                    <Label fx:id="foodLabel" styleClass="item-info"/>
+
+                    <Label text="Wood:" styleClass="item-label"/>
+                    <Label fx:id="woodLabel" styleClass="item-info"/>
+
+                    <Label text="Iron:" styleClass="item-label"/>
+                    <Label fx:id="ironLabel" styleClass="item-info"/>
+
+                    <Label text="Mana:" styleClass="item-label"/>
+                    <Label fx:id="manaLabel" styleClass="item-info"/>
+                </HBox>
+
+                <!-- Tecnologías -->
+                <HBox spacing="28" alignment="CENTER">
+                    <Label fx:id="attackTechLabel" styleClass="item-info"/>
+                    <Label fx:id="defenseTechLabel" styleClass="item-info"/>
+                </HBox>
+
+                <!-- Unidades -->
+                <HBox spacing="28" alignment="CENTER">
+                    <Label fx:id="totalUnitsLabel" styleClass="item-info"/>
+                </HBox>
+
+                <!-- Amenazas -->
+                <HBox spacing="28" alignment="CENTER">
+                    <Label fx:id="threatLabel" styleClass="hud-value"/>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>

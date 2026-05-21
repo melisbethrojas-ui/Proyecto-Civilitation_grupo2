@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.project.TechController"
+            styleClass="page-container">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="18"
+              alignment="CENTER_LEFT"
+              styleClass="top-bar">
+
+            <Button text="← Volver"
+                    onAction="#goBack"
+                    styleClass="menu-button"/>
+
+            <VBox spacing="4">
+                <Label text="TECNOLOGÍAS"
+                       styleClass="hero-title"/>
+
+                <Label text="Mejora el ataque y la defensa de tu civilización"
+                       styleClass="hero-subtitle"/>
+            </VBox>
+
+        </HBox>
+    </top>
+
+    <!-- CENTER -->
+    <center>
+
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    styleClass="scroll-pane">
+
+            <content>
+
+                <VBox fx:id="techList"
+                      spacing="16"
+                      styleClass="card"
+                      style="-fx-padding: 24"/>
+
+            </content>
+
+        </ScrollPane>
+
+    </center>
+
+</BorderPane>

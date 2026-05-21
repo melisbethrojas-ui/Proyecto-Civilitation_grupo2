@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.project.BattleUnitItemController"
+      spacing="15"
+      alignment="CENTER_LEFT"
+      style="-fx-padding: 10;"
+      styleClass="item-card">
+
+    <ImageView fx:id="icon" fitWidth="48" fitHeight="48"/>
+
+    <VBox spacing="3">
+        <Label fx:id="nameLabel" styleClass="item-label"/>
+
+        <Label fx:id="initialLabel" styleClass="item-info"/>
+        <Label fx:id="remainingLabel" styleClass="item-info"/>
+        <Label fx:id="lossesLabel" styleClass="danger-text"/>
+
+        <Label fx:id="statsLabel" styleClass="item-info"/>
+    </VBox>
+
+</HBox>
