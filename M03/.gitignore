@@ -1,6 +1,5 @@
 bin/
 *.class
-.vscode/
+.vscode/.settings.json
 .project
 .classpath
-.settings/

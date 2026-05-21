@@ -223,9 +223,9 @@ public class Civilization implements Variables {
         mana += magicTower * CIVILIZATION_MANA_GENERATED_PER_MAGIC_TOWER;
     }
 
-    // ============================================================
+    // =========================================================================
     // CREACIÓN DE UNIDADES
-    // ============================================================
+    // =========================================================================
 
     private boolean canCreate(int foodCost, int woodCost, int ironCost, int manaCost) {
         return food >= foodCost && wood >= woodCost && iron >= ironCost && mana >= manaCost;
@@ -240,116 +240,156 @@ public class Civilization implements Variables {
 
     // --- Swordsman ---
     public void newSwordsman(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, 0)) break;
-            pay(FOOD_COST_SWORDSMAN, WOOD_COST_SWORDSMAN, IRON_COST_SWORDSMAN, 0);
-            army[0].add(new Swordsman(technologyDefense, technologyAttack));
-            created++;
+        int totalFood = FOOD_COST_SWORDSMAN * n;
+        int totalWood = WOOD_COST_SWORDSMAN * n;
+        int totalIron = IRON_COST_SWORDSMAN * n;
+
+        if (!canCreate(totalFood, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Swordsman.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Swordsman.");
+
+        pay(totalFood, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[0].add(new Swordsman(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Spearman ---
     public void newSpearman(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, 0)) break;
-            pay(FOOD_COST_SPEARMAN, WOOD_COST_SPEARMAN, IRON_COST_SPEARMAN, 0);
-            army[1].add(new Spearman(technologyDefense, technologyAttack));
-            created++;
+        int totalFood = FOOD_COST_SPEARMAN * n;
+        int totalWood = WOOD_COST_SPEARMAN * n;
+        int totalIron = IRON_COST_SPEARMAN * n;
+
+        if (!canCreate(totalFood, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Spearman.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Spearman.");
+
+        pay(totalFood, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[1].add(new Spearman(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Crossbow ---
     public void newCrossbow(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(0, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, 0)) break;
-            pay(0, WOOD_COST_CROSSBOW, IRON_COST_CROSSBOW, 0);
-            army[2].add(new Crossbow(technologyDefense, technologyAttack));
-            created++;
+        int totalWood = WOOD_COST_CROSSBOW * n;
+        int totalIron = IRON_COST_CROSSBOW * n;
+
+        if (!canCreate(0, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Crossbow.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Crossbow.");
+
+        pay(0, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[2].add(new Crossbow(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Cannon ---
     public void newCannon(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(0, WOOD_COST_CANNON, IRON_COST_CANNON, 0)) break;
-            pay(0, WOOD_COST_CANNON, IRON_COST_CANNON, 0);
-            army[3].add(new Cannon(technologyDefense, technologyAttack));
-            created++;
+        int totalWood = WOOD_COST_CANNON * n;
+        int totalIron = IRON_COST_CANNON * n;
+
+        if (!canCreate(0, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Cannon.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Cannon.");
+
+        pay(0, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[3].add(new Cannon(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Arrow Tower ---
     public void newArrowTower(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(0, WOOD_COST_ARROWTOWER, 0, 0)) break;
-            pay(0, WOOD_COST_ARROWTOWER, 0, 0);
-            army[4].add(new ArrowTower(technologyDefense, technologyAttack));
-            created++;
+        int totalWood = WOOD_COST_ARROWTOWER * n;
+
+        if (!canCreate(0, totalWood, 0, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Arrow Tower.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Arrow Tower.");
+
+        pay(0, totalWood, 0, 0);
+        for (int i = 0; i < n; i++) {
+            army[4].add(new ArrowTower(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Catapult ---
     public void newCatapult(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(0, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, 0)) break;
-            pay(0, WOOD_COST_CATAPULT, IRON_COST_CATAPULT, 0);
-            army[5].add(new Catapult(technologyDefense, technologyAttack));
-            created++;
+        int totalWood = WOOD_COST_CATAPULT * n;
+        int totalIron = IRON_COST_CATAPULT * n;
+
+        if (!canCreate(0, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Catapult.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Catapult.");
+
+        pay(0, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[5].add(new Catapult(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Rocket Launcher ---
     public void newRocketLauncher(int n) throws ResourceException {
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(0, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, 0)) break;
-            pay(0, WOOD_COST_ROCKETLAUNCHERTOWER, IRON_COST_ROCKETLAUNCHERTOWER, 0);
-            army[6].add(new RocketLauncherTower(technologyDefense, technologyAttack));
-            created++;
+        int totalWood = WOOD_COST_ROCKETLAUNCHERTOWER * n;
+        int totalIron = IRON_COST_ROCKETLAUNCHERTOWER * n;
+
+        if (!canCreate(0, totalWood, totalIron, 0)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Rocket Launcher.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Rocket Launcher.");
+
+        pay(0, totalWood, totalIron, 0);
+        for (int i = 0; i < n; i++) {
+            army[6].add(new RocketLauncherTower(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Magician ---
     public void newMagician(int n) throws ResourceException, BuildingException {
-        if (magicTower < 1) throw new BuildingException("Necesitas una torre mágica para crear magos.");
-
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN)) break;
-            pay(FOOD_COST_MAGICIAN, WOOD_COST_MAGICIAN, IRON_COST_MAGICIAN, MANA_COST_MAGICIAN);
-            army[7].add(new Magician(technologyDefense, technologyAttack));
-            created++;
+        if (magicTower < 1) {
+            throw new BuildingException("Necesitas una torre mágica para crear magos.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Magician.");
+
+        int totalFood = FOOD_COST_MAGICIAN * n;
+        int totalWood = WOOD_COST_MAGICIAN * n;
+        int totalIron = IRON_COST_MAGICIAN * n;
+        int totalMana = MANA_COST_MAGICIAN * n;
+
+        if (!canCreate(totalFood, totalWood, totalIron, totalMana)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Magician.");
+        }
+
+        pay(totalFood, totalWood, totalIron, totalMana);
+        for (int i = 0; i < n; i++) {
+            army[7].add(new Magician(technologyDefense, technologyAttack));
+        }
     }
 
     // --- Priest ---
     public void newPriest(int n) throws ResourceException, BuildingException {
-        if (church < 1) throw new BuildingException("Necesitas una iglesia para crear sacerdotes.");
-
-        int created = 0;
-        for (int i = 0; i < n; i++) {
-            if (!canCreate(FOOD_COST_PRIEST, 0, 0, MANA_COST_PRIEST)) break;
-            pay(FOOD_COST_PRIEST, 0, 0, MANA_COST_PRIEST);
-            army[8].add(new Priest(technologyDefense, technologyAttack));
-            created++;
+        if (church < 1) {
+            throw new BuildingException("Necesitas una iglesia para crear sacerdotes.");
         }
-        if (created < n) throw new ResourceException("Solo se pudieron crear " + created + " Priest.");
-    }
 
+        // REGLA DEL ENUNCIADO: Límite de población de sacerdotes según las iglesias
+        int sacerdotesActuales = army[8].size();
+        if (sacerdotesActuales + n > church) {
+            throw new BuildingException("No puedes tener más Sacerdotes que Iglesias. Iglesias: " 
+                    + church + ", Sacerdotes actuales: " + sacerdotesActuales + ", Intentas crear: " + n);
+        }
+
+        int totalFood = FOOD_COST_PRIEST * n;
+        int totalMana = MANA_COST_PRIEST * n;
+
+        if (!canCreate(totalFood, 0, 0, totalMana)) {
+            throw new ResourceException("No hay recursos suficientes para crear " + n + " Priest.");
+        }
+
+        pay(totalFood, 0, 0, totalMana);
+        for (int i = 0; i < n; i++) {
+            army[8].add(new Priest(technologyDefense, technologyAttack));
+        }
+    }
     // ============================================================
     // PRINT STATS
     // ============================================================
