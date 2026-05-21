@@ -54,7 +54,6 @@ public class DesktopController {
             manaLabel.setText(String.valueOf(rc.getDisplayedMana()));
         }
 
-        // ⭐ ESTO SÍ ES PROPIO DEL DESKTOP
         attackTechLabel.setText("Ataque: " + civ.getTechnologyAttack());
         defenseTechLabel.setText("Defensa: " + civ.getTechnologyDefense());
 
@@ -67,9 +66,7 @@ public class DesktopController {
         threatLabel.setText("Amenaza: " + GameState.getThreatLevel() + "%");
     }
 
-    // =========================
     // NAVEGACIÓN
-    // =========================
 
     @FXML private void openUnits() { UtilsViews.setViewAnimating("Units"); }
     @FXML private void openBuildings() { UtilsViews.setViewAnimating("Buildings"); }

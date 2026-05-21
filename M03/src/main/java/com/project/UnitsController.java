@@ -34,9 +34,7 @@ public class UnitsController {
         Civilization civ = GameState.getPlayer();
         ArrayList<MilitaryUnit>[] army = civ.army;
 
-        // =========================
         // UNIDADES DE ATAQUE
-        // =========================
         addSection(attackList, "UNIDADES DE ATAQUE");
 
         addUnit(attackList, "Swordsman", "swordsman.png", army[0], 0, civ::newSwordsman);
@@ -44,18 +42,14 @@ public class UnitsController {
         addUnit(attackList, "Crossbow", "crossbow.png", army[2], 2, civ::newCrossbow);
         addUnit(attackList, "Cannon", "cannon.png", army[3], 3, civ::newCannon);
 
-        // =========================
         // UNIDADES DE DEFENSA
-        // =========================
         addSection(defenseList, "UNIDADES DE DEFENSA");
 
         addUnit(defenseList, "Arrow Tower", "arrow_tower.png", army[4], 4, civ::newArrowTower);
         addUnit(defenseList, "Catapult", "catapult_tower.png", army[5], 5, civ::newCatapult);
         addUnit(defenseList, "Rocket Launcher Tower", "rocket_tower.png", army[6], 6, civ::newRocketLauncher);
 
-        // =========================
         // UNIDADES ESPECIALES
-        // =========================
         addSection(specialList, "UNIDADES ESPECIALES");
 
         addUnit(specialList, "Magician", "magician.png", army[7], 7, civ::newMagician);
@@ -133,9 +127,7 @@ public class UnitsController {
         }
     }
 
-    // ============================================================
-    // RECLUTAMIENTO CORREGIDO
-    // ============================================================
+    // RECLUTAMIENTO
     private void tryRecruit(UnitItemController controller, RecruitAction action, int n) {
 
         controller.clearError();
@@ -147,7 +139,7 @@ public class UnitsController {
             return; // ⭐ NO refrescar si hubo error
         }
 
-        // ⭐ SOLO refrescar si el reclutamiento fue exitoso
+        // refrescar si el reclutamiento fue exitoso
         updateUnits();
 
         StatsController stats =

@@ -60,12 +60,12 @@ public class TechItemController {
             return;
         }
 
-        // ⭐ ACTUALIZAR ESTADO DEL ITEM
+        // ACTUALIZAR ESTADO DEL ITEM
         statusLabel.setText("Estado: Investigada");
         actionButton.setText("Completado");
         actionButton.setDisable(true);
 
-        // ⭐ REFRESCAR TODA LA GUI
+        // REFRESCAR TODA LA GUI
         TechController tech =
                 (TechController) UtilsViews.getController("Tech");
         if (tech != null) tech.updateTech();

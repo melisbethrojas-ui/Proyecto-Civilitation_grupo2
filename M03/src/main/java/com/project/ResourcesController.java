@@ -39,7 +39,7 @@ public class ResourcesController {
         int baseWood = Variables.CIVILIZATION_WOOD_GENERATED;
         int baseIron = Variables.CIVILIZATION_IRON_GENERATED;
 
-        // ⭐ SIEMPRE mostrar recursos reales
+        // mostrar recursos reales
         addSection("CURRENT RESOURCES");
 
         addResource("Food", "banquet.png", civ.food);
@@ -47,7 +47,7 @@ public class ResourcesController {
         addResource("Iron", "iron.png", civ.iron);
         addResource("Mana", "mana.png", civ.mana);
 
-        // ⭐ Mostrar generación real por minuto
+        // Mostrar generación real por minuto
         addSection("RESOURCE GENERATION (/min)");
 
         addStat("Food/min: " + (baseFood + civ.farm * Variables.CIVILIZATION_FOOD_GENERATED_PER_FARM));
@@ -104,7 +104,7 @@ public class ResourcesController {
         if (desktop != null) desktop.refresh();
     }
 
-    // ⭐ Getters corregidos: SIEMPRE devuelven recursos reales
+    // Getters corregidos: SIEMPRE devuelven recursos reales
     public int getDisplayedFood() {
         return GameState.getPlayer().food;
     }
