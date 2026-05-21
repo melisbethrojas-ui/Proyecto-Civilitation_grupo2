@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.project.BuildingsController"
+            prefWidth="1400"
+            prefHeight="900"
+            styleClass="page-container">
+
+    <!-- ===================================================== -->
+    <!-- TOP BAR -->
+    <!-- ===================================================== -->
+
+    <top>
+        <HBox spacing="18"
+              alignment="CENTER_LEFT"
+              styleClass="top-bar">
+
+            <Button text="← Volver"
+                    onAction="#goBack"
+                    styleClass="menu-button"/>
+
+            <VBox spacing="4">
+                <Label text="EDIFICIOS"
+                       styleClass="hero-title"/>
+
+                <Label text="Construye y mejora la infraestructura de tu civilización"
+                       styleClass="hero-subtitle"/>
+            </VBox>
+
+        </HBox>
+    </top>
+
+    <center>
+
+        <ScrollPane fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    styleClass="imperial-overlay">
+
+            <content>
+
+                <VBox spacing="40">
+
+                    <!-- EDIFICIOS DE PRODUCCIÓN -->
+                    <VBox fx:id="productionList"
+                          spacing="16"
+                          styleClass="card"/>
+
+                    <!-- EDIFICIOS ESPECIALES -->
+                    <VBox fx:id="specialList"
+                          spacing="16"
+                          styleClass="card"/>
+
+                </VBox>
+
+            </content>
+
+        </ScrollPane>
+
+    </center>
+
+</BorderPane>
