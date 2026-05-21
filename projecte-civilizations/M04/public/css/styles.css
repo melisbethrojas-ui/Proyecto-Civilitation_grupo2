@@ -1,0 +1,235 @@
+/* =========================================
+   1. VARIABLES Y CONFIGURACIÓN BASE
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+    --gold: #c5a059;
+    --gold-bright: #f3cf8a;
+    --bronze: #8e6d3d;
+    --dark-bg: #0a0a0c;
+    --night-blue: #12141d;
+    --glass: rgba(18, 20, 29, 0.8);
+    --transition: all 0.4s ease;
+}
+
+body {
+    background: radial-gradient(circle at top, #1a1c25 0%, var(--dark-bg) 100%);
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   2. NAVEGACIÓN Y CABECERA
+   ========================================= */
+.navbar {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.nav-logo {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    color: var(--gold) !important;
+    text-shadow: 0 0 15px rgba(197, 160, 89, 0.5);
+    letter-spacing: 3px;
+    text-decoration: none;
+}
+
+/* =========================================
+   3. COMPONENTES AAA (Glassmorphism)
+   ========================================= */
+.card, .battle-card, .glass, .grid-container section {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    border-radius: 2px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    padding: 25px 30px; /* Margen interno para que el texto no pegue al borde */
+    margin-bottom: 25px;
+    transition: var(--transition);
+}
+
+/* Línea decorativa superior en tarjetas */
+.card::before, .battle-card::before, .glass::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* =========================================
+   4. CAPTURAS DE PANTALLA (CORRECCIÓN)
+   ========================================= */
+/* Limpiamos el contenedor para que no se vea el borde doble negro/dorado */
+.screen-card {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-bottom: 20px;
+    box-shadow: none !important;
+}
+
+.screen-card::before { display: none; } /* Quitamos la línea dorada superior solo aquí */
+
+.screen-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--gold); /* Un único borde fino elegante */
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.screen-card img:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+}
+
+/* =========================================
+   5. TABLAS Y DATOS
+   ========================================= */
+table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    width: 100%;
+}
+
+th {
+    font-family: 'Cinzel', serif;
+    color: var(--bronze);
+    border-bottom: 1px solid var(--bronze);
+    padding: 15px;
+    text-align: left;
+}
+
+td {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+}
+
+/* =========================================
+   6. BOTONES Y ACCIONES
+   ========================================= */
+.btn-informe, .btn-detalles {
+    display: inline-block;
+    padding: 10px 25px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-bright);
+    font-family: 'Cinzel', serif;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-informe:hover, .btn-detalles:hover {
+    background: var(--gold);
+    color: var(--dark-bg);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+}
+
+/* =========================================
+   7. ICONOS Y RECURSOS
+   ========================================= */
+.res-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 10px 0;
+    font-size: 1.1rem;
+}
+
+.res-icon {
+    width: 35px;
+    height: 35px;
+    filter: drop-shadow(0 0 5px var(--gold));
+}
+
+.tiny-icon {
+    width: 18px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* =========================================
+   8. INFORMES DE BATALLA Y LOGS
+   ========================================= */
+.losses-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.loss-group h4 {
+    color: var(--gold);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+    font-size: 0.9rem;
+}
+
+.loss-group.enemy h4 { color: #ff4444; }
+
+.log-scroll {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-left: 3px solid var(--gold);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.log-scroll pre {
+    font-family: 'Inter', sans-serif;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+.report-header.VICTORIA { border-bottom: 4px solid #00ffcc; }
+.report-header.DERROTA { border-bottom: 4px solid #ff4444; }
+
+/* =========================================
+   9. ANIMACIONES Y RESPONSIVE
+   ========================================= */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main, .glass {
+    animation: slideUp 0.8s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+    .nav-container { flex-direction: column; gap: 15px; }
+    .nav-menu { font-size: 0.8rem; gap: 10px; }
+    h1 { font-size: 2rem !important; }
+    .grid-container, .losses-container { grid-template-columns: 1fr; flex-direction: column; }
+}
+
+/* Footer */
+footer {
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid rgba(197,160,89,0.1);
+}
+
+footer p::after {
+    content: " | Todos los derechos reservados. Nota Legal.";
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 5px;
+    opacity: 0.5;
+}

@@ -1,6 +1,19 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:\\Users\\annap\\Downloads\\mysql-connector-j-9.7.0\\mysql-connector-j-9.7.0\\mysql-connector-j-9.7.0.jar"
+
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "192.168.17.234",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "MySQL Server",
+            "username": "root",
+            "password": "root",
+            "database": "civilizations_db"
+        }
     ]
 }
