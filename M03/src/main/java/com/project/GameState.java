@@ -14,9 +14,7 @@ public class GameState {
     private static Civilization enemy;
     private static Battle battle;
 
-    // ===============================
     // AMENAZA Y BATALLA AUTOMÁTICA
-    // ===============================
     private static int threatLevel = 0;
     private static Battle lastAutoBattle;
 
@@ -25,9 +23,7 @@ public class GameState {
     private static Timer resourceTimer;
     private static Timer battleTimer;
 
-    // =========================================================
     // INICIALIZACIÓN DEL JUEGO
-    // =========================================================
     public static void initGame() {
 
         player = new Civilization();
@@ -40,9 +36,7 @@ public class GameState {
         startBattleLoop();     // Batalla automática cada 3 minutos
     }
 
-    // =========================================================
     // GETTERS
-    // =========================================================
     public static Civilization getPlayer() {
         return player;
     }
@@ -55,9 +49,7 @@ public class GameState {
         return battle;
     }
 
-    // =========================================================
     // AMENAZA
-    // =========================================================
     public static int getThreatLevel() {
         return threatLevel;
     }
@@ -70,9 +62,8 @@ public class GameState {
         threatLevel = Math.max(0, threatLevel - amount);
     }
 
-    // =========================================================
     // ÚLTIMA BATALLA AUTOMÁTICA
-    // =========================================================
+
     public static void setLastAutoBattle(Battle b) {
         lastAutoBattle = b;
     }
@@ -81,18 +72,14 @@ public class GameState {
         return lastAutoBattle;
     }
 
-    // =========================================================
     // BATALLA MANUAL
-    // =========================================================
     public static void startBattle() {
         ArrayList<MilitaryUnit>[] playerArmy = player.army;
         ArrayList<MilitaryUnit>[] enemyArmy = enemy.army;
         battle = new Battle(playerArmy, enemyArmy);
     }
 
-    // =========================================================
     // RECURSOS AUTOMÁTICOS CADA 1 MINUTO
-    // =========================================================
     private static void startResourceLoop() {
 
         resourceTimer = new Timer();
@@ -110,9 +97,7 @@ public class GameState {
         }, 60000, 60000); // 1 minuto
     }
 
-    // =========================================================
     // BATALLA AUTOMÁTICA CADA 3 MINUTOS
-    // =========================================================
     private static void startBattleLoop() {
 
         battleTimer = new Timer();
@@ -161,9 +146,7 @@ public class GameState {
         }, 180000, 180000); // 3 minutos
     }
 
-    // =========================================================
     // DETENER TIMERS
-    // =========================================================
     public static void stopGameLoop() {
         if (resourceTimer != null) resourceTimer.cancel();
         if (battleTimer != null) battleTimer.cancel();

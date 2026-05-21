@@ -64,9 +64,7 @@ public class BuildingsController {
                 () -> civ.newSmithy()
         );
 
-        // =========================
         // EDIFICIOS ESPECIALES
-        // =========================
         addSection(specialList, "EDIFICIOS ESPECIALES");
 
         addBuilding(

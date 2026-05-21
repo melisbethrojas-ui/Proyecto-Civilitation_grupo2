@@ -22,18 +22,14 @@ public class StatsController {
 
         Civilization civ = GameState.getPlayer();
 
-        // =========================
         // TECNOLOGÍA
-        // =========================
 
         addSection("TECNOLOGÍA");
 
         addStat("Ataque: " + civ.getTechnologyAttack());
         addStat("Defensa: " + civ.getTechnologyDefense());
 
-        // =========================
         // EDIFICIOS
-        // =========================
 
         addSection("EDIFICIOS");
 
@@ -43,9 +39,7 @@ public class StatsController {
         addStat("Torres Mágicas: " + civ.magicTower);
         addStat("Iglesias: " + civ.church);
 
-        // =========================
         // UNIDADES DEFENSIVAS
-        // =========================
 
         addSection("UNIDADES DEFENSIVAS");
 
@@ -53,9 +47,7 @@ public class StatsController {
         addStat("Catapultas: " + civ.army[5].size());
         addStat("Lanzacohetes: " + civ.army[6].size());
 
-        // =========================
         // UNIDADES DE ATAQUE
-        // =========================
 
         addSection("UNIDADES DE ATAQUE");
 
@@ -64,18 +56,14 @@ public class StatsController {
         addStat("Ballesteros: " + civ.army[2].size());
         addStat("Cañones: " + civ.army[3].size());
 
-        // =========================
         // UNIDADES ESPECIALES
-        // =========================
 
         addSection("UNIDADES ESPECIALES");
 
         addStat("Magos: " + civ.army[7].size());
         addStat("Sacerdotes: " + civ.army[8].size());
 
-        // =========================
-        // RECURSOS (LEÍDOS DESDE RESOURCES)
-        // =========================
+        // RECURSOS 
 
         addSection("RECURSOS");
 
@@ -94,9 +82,7 @@ public class StatsController {
             addStat("Maná: " + civ.mana);
         }
 
-        // =========================
         // GENERACIÓN DE RECURSOS (/min)
-        // =========================
 
         addSection("GENERACIÓN DE RECURSOS (/min)");
 
@@ -116,10 +102,6 @@ public class StatsController {
         addStat("Hierro/min: " + ironPerMin);
         addStat("Maná/min: " + manaPerMin);
     }
-
-    // =========================
-    // MÉTODOS DE UI
-    // =========================
 
     private void addSection(String title) {
 

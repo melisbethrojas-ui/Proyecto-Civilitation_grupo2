@@ -35,7 +35,6 @@ public class UtilsViews {
         boolean defaultView = false;
         FXMLLoader loader = new FXMLLoader(cls.getResource(path));
 
-        // ⭐ CAMBIO IMPORTANTE: Parent en vez de Pane
         Parent view = loader.load();
 
         ObservableList<Node> children = parentContainer.getChildren();

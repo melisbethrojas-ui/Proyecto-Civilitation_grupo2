@@ -37,7 +37,7 @@ public class Main extends Application {
         stage.setHeight(1000);
         stage.setMaximized(true);
 
-        // ⭐ AÑADIDO: permitir redimensionar
+        // permitir redimensionar
         stage.setResizable(true);
 
         
@@ -72,7 +72,7 @@ public class Main extends Application {
             stage.getIcons().add(icon);
         }
 
-        // ⭐ AÑADIDO: guardar el stage en UtilsViews para usar fullscreen desde controladores
+        // guardar el stage en UtilsViews para usar fullscreen desde controladores
         UtilsViews.setStage(stage);
     }
 

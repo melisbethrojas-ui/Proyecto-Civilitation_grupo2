@@ -102,9 +102,7 @@ public class BattleController {
         refreshAll();
     }
 
-    // ============================================================
-    //  NUEVO: MAPEO MANUAL DE ICONOS (SIN JSON, SIN DEFAULT)
-    // ============================================================
+    //  NUEVO: MAPEO MANUAL DE ICONOS 
 
     private String getIconForUnit(String unitName) {
         return switch (unitName) {
@@ -121,9 +119,7 @@ public class BattleController {
         };
     }
 
-    // ============================================================
-    //  NUEVO: addUnitBattle (igual que Units pero adaptado)
-    // ============================================================
+    //  NUEVO: addUnitBattl
 
     private void addUnitBattle(
             VBox list,
@@ -151,9 +147,7 @@ public class BattleController {
         }
     }
 
-    // ============================================================
-    //  ADAPTADO: addArmyToList usando iconos manuales
-    // ============================================================
+    //  addArmyToList usando iconos manuales
 
     private void addArmyToList(VBox list,
                                ArrayList<MilitaryUnit>[] initial,
