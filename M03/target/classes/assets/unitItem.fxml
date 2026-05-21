@@ -1,28 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.project.UnitItemController"
       spacing="20"
-      alignment="CENTER_LEFT"
-      style="-fx-padding: 15;"
-      styleClass="item-card">
+      styleClass="unit-card">
 
-    <ImageView fx:id="icon" fitWidth="64" fitHeight="64"/>
+    <!-- ICON -->
+    <ImageView fx:id="icon"
+               fitWidth="74"
+               fitHeight="74"
+               preserveRatio="true"
+               styleClass="unit-image"/>
 
-    <VBox spacing="5">
-        <Label fx:id="nameLabel" styleClass="item-label"/>
-        <Label fx:id="statsLabel" styleClass="item-info"/>
-        <Label fx:id="costLabel" styleClass="item-info"/>
+    <!-- INFO -->
+    <VBox spacing="6">
+
+        <Label fx:id="unitName"
+               text="Unit Name"
+               styleClass="unit-name"/>
+
+        <Label fx:id="stats"
+               text="ATK: 0 | DEF: 0"
+               styleClass="unit-stats"/>
+
+        <Label fx:id="cost"
+               text="Cost"
+               styleClass="unit-cost"/>
+
+        <Label fx:id="errorLabel"
+               text=""
+               styleClass="error-label"/>
+
     </VBox>
 
-    <Button fx:id="actionButton"
-            text="Crear"
-            onAction="#onAction"
-            styleClass="button"/>
+    <!-- BUTTONS -->
+    <VBox spacing="10"
+          alignment="CENTER_RIGHT">
+
+        <Button fx:id="btn1"
+                text="+1"
+                styleClass="recruit-button"/>
+
+        <Button fx:id="btn5"
+                text="+5"
+                styleClass="recruit-button"/>
+
+        <Button fx:id="btn10"
+                text="+10"
+                styleClass="recruit-button"/>
+
+    </VBox>
 
 </HBox>

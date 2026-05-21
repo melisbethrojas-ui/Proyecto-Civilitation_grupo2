@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.project.BuildingItemController"
       spacing="20"
       alignment="CENTER_LEFT"
-      style="-fx-padding: 15;"
       styleClass="item-card">
 
-    <ImageView fx:id="icon" fitWidth="64" fitHeight="64"/>
+    <padding>
+        <Insets top="18" right="18" bottom="18" left="18"/>
+    </padding>
 
-    <VBox spacing="5">
+    <ImageView fx:id="icon"
+               fitWidth="72"
+               fitHeight="72"
+               preserveRatio="true"/>
+
+    <VBox spacing="8"
+          HBox.hgrow="ALWAYS">
+
         <Label fx:id="nameLabel" styleClass="item-label"/>
+        <Label fx:id="levelLabel" styleClass="item-info"/>
         <Label fx:id="costLabel" styleClass="item-info"/>
-        <Label fx:id="effectLabel" styleClass="item-info"/>
-        <Label fx:id="statusLabel" styleClass="item-info"/>
+        <Label fx:id="effectLabel" styleClass="success-text"/>
+
+        <Label fx:id="errorLabel"
+               visible="false"
+               managed="false"
+               wrapText="true"
+               styleClass="danger-text"/>
+
     </VBox>
 
-    <Button fx:id="actionButton"
+    <Button fx:id="upgradeButton"
             text="Construir"
-            onAction="#onAction"
             styleClass="button"/>
 
 </HBox>

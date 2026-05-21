@@ -1,43 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
+<ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.project.BattleController"
-            styleClass="root">
+            fitToWidth="true"
+            styleClass="scroll-pane">
 
-    <top>
-        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20;" styleClass="card">
-            <Button text="← Volver" onAction="#goBack" styleClass="button"/>
-            <Label text="Simulación de Batalla"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold;"
-                   styleClass="subtitle"/>
+    <VBox spacing="24"
+          styleClass="page-container"
+          alignment="TOP_CENTER">
+
+        <!-- ============================================================
+             TÍTULO
+        ============================================================ -->
+        <HBox alignment="CENTER">
+            <Label text="BATALLA" styleClass="hero-title"/>
         </HBox>
-    </top>
 
-    <center>
-        <VBox spacing="20" style="-fx-padding: 20;" styleClass="card">
-            <Button text="Simular Batalla" onAction="#simulateBattle"
-                    style="-fx-font-size: 18px; -fx-pref-width: 200px;"
-                    styleClass="button"/>
+        <!-- ============================================================
+             HUD SUPERIOR
+        ============================================================ -->
+        <HBox spacing="40" alignment="CENTER">
+            <HBox spacing="10" alignment="CENTER" styleClass="hud-item">
+                <Label text="Tus tropas:" styleClass="item-label"/>
+                <Label fx:id="civUnitsLabel" styleClass="hud-value"/>
+            </HBox>
 
-            <Label text="Resultado:" style="-fx-font-size: 18px;" styleClass="subtitle"/>
-            <Label fx:id="resultLabel" style="-fx-font-size: 16px;" styleClass="label"/>
+            <HBox spacing="10" alignment="CENTER" styleClass="hud-item">
+                <Label text="Enemigo:" styleClass="item-label"/>
+                <Label fx:id="enemyUnitsLabel" styleClass="hud-value"/>
+            </HBox>
+        </HBox>
 
-            <Label text="Desarrollo de la batalla:" style="-fx-font-size: 18px;" styleClass="subtitle"/>
+        <!-- ============================================================
+             LISTAS DE UNIDADES
+        ============================================================ -->
+        <HBox spacing="30" alignment="TOP_CENTER">
 
-            <ScrollPane fitToWidth="true" prefHeight="300" styleClass="scroll-pane">
-                <TextArea fx:id="logArea" editable="false" wrapText="true"/>
-            </ScrollPane>
+            <!-- TUS TROPAS -->
+            <VBox spacing="12" alignment="TOP_CENTER" prefWidth="360">
+                <Label text="Tus tropas" styleClass="section-title"/>
+
+                <ScrollPane fitToWidth="true"
+                            prefHeight="360"
+                            styleClass="scroll-pane">
+                    <VBox fx:id="civList" spacing="12"/>
+                </ScrollPane>
+            </VBox>
+
+            <!-- TROPAS ENEMIGAS -->
+            <VBox spacing="12" alignment="TOP_CENTER" prefWidth="360">
+                <Label text="Tropas enemigas" styleClass="section-title"/>
+
+                <ScrollPane fitToWidth="true"
+                            prefHeight="360"
+                            styleClass="scroll-pane">
+                    <VBox fx:id="enemyList" spacing="12"/>
+                </ScrollPane>
+            </VBox>
+
+        </HBox>
+
+        <!-- ============================================================
+             BOTÓN DE BATALLA
+        ============================================================ -->
+        <HBox alignment="CENTER">
+            <Button fx:id="startButton"
+                    text="Iniciar Batalla"
+                    onAction="#startBattle"
+                    styleClass="button"
+                    prefWidth="220"/>
+        </HBox>
+
+        <!-- ============================================================
+             RESULTADOS
+        ============================================================ -->
+        <VBox spacing="6" alignment="CENTER">
+            <Label fx:id="winnerLabel" styleClass="section-title"/>
+            <Label fx:id="wasteLabel" styleClass="item-info"/>
         </VBox>
-    </center>
 
-</BorderPane>
+        <!-- ============================================================
+             LOG DE BATALLA (SIN SCROLLPANE, GRANDE)
+        ============================================================ -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Desarrollo de la batalla" styleClass="section-title"/>
+
+            <TextArea fx:id="logArea"
+                      editable="false"
+                      wrapText="true"
+                      prefHeight="500"
+                      prefWidth="900"
+                      style="-fx-font-size: 18px;"
+                      styleClass="log-area"/>
+        </VBox>
+
+        <!-- ============================================================
+             BOTÓN VOLVER
+        ============================================================ -->
+        <HBox alignment="CENTER">
+            <Button text="Volver"
+                    onAction="#goBack"
+                    styleClass="button"
+                    prefWidth="160"/>
+        </HBox>
+
+    </VBox>
+
+</ScrollPane>

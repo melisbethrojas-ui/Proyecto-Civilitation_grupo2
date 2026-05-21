@@ -3,7 +3,6 @@
    ============================================================ */
 
 .root {
-
     -fx-background-color:
         linear-gradient(
             to bottom,
@@ -11,100 +10,61 @@
             #0A1018 45%,
             #0D1622 100%
         );
-
     -fx-font-family: "Inter";
-
 }
-
 
 /* ============================================================
    GENERAL LAYOUT
    ============================================================ */
 
 .page-container {
-
     -fx-padding: 36;
     -fx-spacing: 22;
-
 }
-
 
 /* ============================================================
    TOP BAR
    ============================================================ */
 
 .top-bar {
-
     -fx-padding: 8 0 24 0;
-
     -fx-alignment: CENTER_LEFT;
-
     -fx-spacing: 16;
-
     -fx-border-color:
         transparent transparent rgba(212,175,55,0.12) transparent;
-
     -fx-border-width: 1;
-
 }
-
 
 /* ============================================================
    TITLES
    ============================================================ */
 
 .app-title {
-
     -fx-font-family: "Cinzel";
-
     -fx-font-size: 34px;
-
     -fx-font-weight: 800;
-
     -fx-letter-spacing: 4px;
-
     -fx-text-fill: #D4AF37;
-
     -fx-effect:
         dropshadow(gaussian, rgba(0,0,0,0.55), 10, 0.15, 0, 4);
-
 }
-
-
-/* HERO TITLE */
 
 .hero-title {
-
     -fx-font-family: "Cinzel";
-
     -fx-font-size: 50px;
-
     -fx-font-weight: 800;
-
     -fx-letter-spacing: 2px;
-
     -fx-text-fill: #E7C35A;
-
     -fx-effect:
         dropshadow(gaussian, rgba(0,0,0,0.6), 12, 0.18, 0, 4);
-
 }
-
-
-/* HERO SUBTITLE */
 
 .hero-subtitle {
-
     -fx-font-family: "Inter";
-
     -fx-font-size: 16px;
-
     -fx-font-weight: 400;
-
     -fx-text-fill: rgba(240,240,240,0.78);
-
 }
-
 
 /* ============================================================
    MAIN AAA CARDS
@@ -112,92 +72,59 @@
 
 .card,
 .cinematic-panel {
-
     -fx-background-color:
         linear-gradient(
             to bottom,
             #141C28,
             #0E141D
         );
-
     -fx-background-radius: 24;
-
     -fx-border-radius: 24;
-
-    -fx-border-color:
-        rgba(212,175,55,0.16);
-
+    -fx-border-color: rgba(212,175,55,0.16);
     -fx-border-width: 1;
-
     -fx-padding: 24;
-
     -fx-effect:
         dropshadow(gaussian, rgba(0,0,0,0.50), 16, 0.18, 0, 6);
-
 }
 
-
 /* ============================================================
-   LIGHTWEIGHT LIST ITEMS
+   LIGHTWEIGHT LIST ITEMS (OPTIMIZADO)
    ============================================================ */
 
 .item-card,
 .list-item {
-
     -fx-background-color: #131A24;
-
     -fx-background-radius: 18;
-
     -fx-border-radius: 18;
-
-    -fx-border-color:
-        rgba(212,175,55,0.10);
-
+    -fx-border-color: rgba(212,175,55,0.10);
     -fx-border-width: 1;
-
     -fx-padding: 16 20;
-
     -fx-spacing: 10;
 
+    /* 🔥 OPTIMIZACIÓN: quitar sombra pesada */
+    -fx-effect: none;
 }
-
-
-/* HOVER */
 
 .item-card:hover,
 .list-item:hover {
-
-    -fx-border-color:
-        rgba(212,175,55,0.35);
-
+    -fx-border-color: rgba(212,175,55,0.35);
     -fx-background-color: #18202D;
-
 }
-
 
 /* ============================================================
    TEXT INSIDE CARDS
    ============================================================ */
 
 .item-label {
-
     -fx-text-fill: #F5F5F5;
-
     -fx-font-size: 15px;
-
     -fx-font-weight: 700;
-
 }
-
 
 .item-info {
-
     -fx-text-fill: rgba(220,220,220,0.65);
-
     -fx-font-size: 13px;
-
 }
-
 
 /* ============================================================
    AAA BUTTONS
@@ -205,65 +132,40 @@
 
 .menu-button,
 .button {
-
     -fx-background-color:
         linear-gradient(
             to bottom,
             #D8B24B,
             #9A7238
         );
-
     -fx-text-fill: #05070B;
-
     -fx-font-family: "Inter";
-
     -fx-font-size: 14px;
-
     -fx-font-weight: 800;
-
     -fx-padding: 12 24;
-
     -fx-background-radius: 999;
-
     -fx-border-radius: 999;
-
-    -fx-border-color:
-        rgba(255,255,255,0.08);
-
+    -fx-border-color: rgba(255,255,255,0.08);
     -fx-border-width: 1;
-
     -fx-cursor: hand;
-
     -fx-effect:
         dropshadow(gaussian, rgba(0,0,0,0.40), 10, 0.12, 0, 3);
-
 }
-
-
-/* BUTTON HOVER */
 
 .menu-button:hover,
 .button:hover {
-
     -fx-background-color:
         linear-gradient(
             to bottom,
             #E7C35A,
             #B78742
         );
-
 }
-
-
-/* BUTTON PRESSED */
 
 .menu-button:pressed,
 .button:pressed {
-
     -fx-translate-y: 1;
-
 }
-
 
 /* ============================================================
    TEXT AREA
@@ -271,87 +173,49 @@
 
 .log-area,
 .text-area {
-
     -fx-control-inner-background: #0C121A;
-
     -fx-text-fill: #F5F5F5;
-
-    -fx-highlight-fill:
-        rgba(212,175,55,0.30);
-
+    -fx-highlight-fill: rgba(212,175,55,0.30);
     -fx-highlight-text-fill: white;
-
     -fx-background-radius: 16;
-
     -fx-border-radius: 16;
-
-    -fx-border-color:
-        rgba(212,175,55,0.12);
-
+    -fx-border-color: rgba(212,175,55,0.12);
     -fx-border-width: 1;
-
     -fx-padding: 12;
-
 }
-
-
-/* IMPORTANT */
 
 .text-area .content {
-
     -fx-background-color: #0C121A;
-
     -fx-background-radius: 16;
-
 }
-
 
 /* ============================================================
    TEXT FIELD
    ============================================================ */
 
 .text-field {
-
     -fx-background-color: #101720;
-
     -fx-text-fill: #F5F5F5;
-
-    -fx-prompt-text-fill:
-        rgba(255,255,255,0.32);
-
+    -fx-prompt-text-fill: rgba(255,255,255,0.32);
     -fx-background-radius: 14;
-
     -fx-border-radius: 14;
-
-    -fx-border-color:
-        rgba(212,175,55,0.14);
-
+    -fx-border-color: rgba(212,175,55,0.14);
     -fx-border-width: 1;
-
     -fx-padding: 12 16;
-
 }
-
 
 /* ============================================================
    SCROLLPANE
    ============================================================ */
 
 .scroll-pane {
-
     -fx-background: transparent;
-
     -fx-background-color: transparent;
-
 }
-
 
 .scroll-pane .viewport {
-
     -fx-background-color: transparent;
-
 }
-
 
 /* ============================================================
    SCROLLBAR
@@ -359,148 +223,152 @@
 
 .scroll-bar:vertical,
 .scroll-bar:horizontal {
-
     -fx-background-color: transparent;
-
 }
-
 
 .scroll-bar .thumb {
-
-    -fx-background-color:
-        rgba(212,175,55,0.55);
-
+    -fx-background-color: rgba(212,175,55,0.55);
     -fx-background-radius: 999;
-
 }
-
 
 /* ============================================================
    TABLES
    ============================================================ */
 
 .table-view {
-
     -fx-background-color: #121923;
-
     -fx-background-radius: 18;
-
     -fx-border-radius: 18;
-
-    -fx-border-color:
-        rgba(212,175,55,0.10);
-
+    -fx-border-color: rgba(212,175,55,0.10);
     -fx-border-width: 1;
-
 }
-
 
 .table-view .column-header-background {
-
-    -fx-background-color:
-        #18202D;
-
+    -fx-background-color: #18202D;
 }
-
 
 .table-view .column-header {
-
     -fx-background-color: transparent;
-
 }
-
 
 .table-view .label {
-
     -fx-text-fill: #D4AF37;
-
     -fx-font-weight: 700;
-
 }
 
-
 /* ============================================================
-   SEPARATORS
+   UNIT CARD (OPTIMIZADO)
    ============================================================ */
 
-.separator .line {
-
-    -fx-border-color:
-        rgba(212,175,55,0.18);
-
-}
-
-
-/* ============================================================
-   IMPERIAL OVERLAY
-   ============================================================ */
-
-.imperial-overlay {
-
+.unit-card {
     -fx-background-color:
-        rgba(212,175,55,0.03);
-
-}
-
-
-/* ============================================================
-   HEX STRATEGY TILE
-   ============================================================ */
-
-.hex-tile {
-
-    -fx-background-color: #18202D;
-
-    -fx-border-color:
-        rgba(212,175,55,0.12);
-
+        linear-gradient(
+            to bottom,
+            #161E2A,
+            #101720
+        );
+    -fx-background-radius: 22;
+    -fx-border-radius: 22;
+    -fx-border-color: rgba(212,175,55,0.12);
     -fx-border-width: 1;
+    -fx-padding: 18 22;
+    -fx-spacing: 18;
 
+    /* 🔥 OPTIMIZACIÓN: quitar sombra pesada */
+    -fx-effect: none;
 }
 
-
-.hex-tile:hover {
-
-    -fx-background-color: #1F2A3A;
-
-    -fx-border-color:
-        rgba(212,175,55,0.45);
-
+.unit-card:hover {
+    -fx-background-color:
+        linear-gradient(
+            to bottom,
+            #1B2433,
+            #121A24
+        );
+    -fx-border-color: rgba(212,175,55,0.30);
 }
-
 
 /* ============================================================
-   STATUS COLORS
+   UNIT IMAGE
    ============================================================ */
 
-.success-text {
-
-    -fx-text-fill: #7ED957;
-
+.unit-image {
+    -fx-fit-width: 74;
+    -fx-fit-height: 74;
 }
 
+/* ============================================================
+   UNIT NAME
+   ============================================================ */
 
-.warning-text {
-
-    -fx-text-fill: #E7C35A;
-
+.unit-name {
+    -fx-text-fill: #F5F5F5;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
 }
 
+/* ============================================================
+   UNIT STATS
+   ============================================================ */
 
-.danger-text {
+.unit-stats {
+    -fx-text-fill: rgba(240,240,240,0.78);
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
 
+/* ============================================================
+   COST LABEL
+   ============================================================ */
+
+.unit-cost {
+    -fx-text-fill: #D4AF37;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+/* ============================================================
+   ERROR LABEL
+   ============================================================ */
+
+.error-label {
     -fx-text-fill: #FF6B6B;
-
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
 }
 
-
 /* ============================================================
-   DEPTH SHADOW
+   RECRUIT BUTTONS
    ============================================================ */
 
-.depth-shadow {
+.recruit-button {
+    -fx-min-width: 58;
+    -fx-font-size: 13px;
+}
 
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.45), 12, 0.15, 0, 4);
+/* ============================================================
+   SECTIONS
+   ============================================================ */
 
+.section-title {
+    -fx-text-fill: #D4AF37;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-font-family: "Cinzel";
+}
+
+.section-box {
+    -fx-padding: 8 0 4 0;
+}
+/* HUD superior */
+.hud-item {
+    -fx-background-color: rgba(212,175,55,0.10);
+    -fx-background-radius: 12;
+    -fx-padding: 4 10;
+}
+
+.hud-value {
+    -fx-text-fill: #E7C35A;
+    -fx-font-size: 16px;
+    -fx-font-weight: 800;
 }

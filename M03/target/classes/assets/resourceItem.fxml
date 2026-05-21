@@ -9,10 +9,13 @@
       fx:controller="com.project.ResourceItemController"
       spacing="20"
       alignment="CENTER_LEFT"
-      style="-fx-padding: 15;"
       styleClass="item-card">
 
-    <ImageView fx:id="icon" fitWidth="64" fitHeight="64"/>
+    <ImageView fx:id="icon"
+               fitWidth="64"
+               fitHeight="64"
+               preserveRatio="true"
+               styleClass="unit-image"/>
 
     <VBox spacing="5">
         <Label fx:id="nameLabel" styleClass="item-label"/>

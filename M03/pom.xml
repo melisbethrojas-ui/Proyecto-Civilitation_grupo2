@@ -1,11 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.example</groupId>
     <artifactId>project-name</artifactId>
     <version>1.0.0</version>
+
     <build>
         <plugins>
+
+            <!-- COMPILADOR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -20,50 +26,62 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
+
     <dependencies>
-        <!-- Dependency for SQLite -->
+
+        <!-- SQLite -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.39.3.0</version>
         </dependency>
-        <!-- Dependency for JavaFX -->
+
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>22</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>22</version>
-        </dependency>       
-        <!-- Dependency for Java WebSocket -->
+        </dependency>
+
+        <!-- WebSocket -->
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.3</version>
         </dependency>
-        <!-- Dependency for JSON -->
+
+        <!-- JSON -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20240303</version> <!-- This seems to be a future date, please ensure it's the correct version -->
+            <version>20240303</version>
         </dependency>
-        <!-- Dependencies for SLF4J -->
+
+        <!-- SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.3</version>
         </dependency>
+
     </dependencies>
+
+    <!-- PERFIL COMPATIBLE CON TU run.sh -->
     <profiles>
         <profile>
             <id>runMain</id>
@@ -72,7 +90,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.6.0</version>
+                        <version>3.6.3</version>
                         <configuration>
                             <mainClass>${exec.mainClass}</mainClass>
                         </configuration>
@@ -81,4 +99,5 @@
             </build>
         </profile>
     </profiles>
+
 </project>

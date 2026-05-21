@@ -1,4 +1,5 @@
 package com.project;
+
 import java.util.ArrayList;
 
 import javafx.animation.Interpolator;
@@ -8,7 +9,7 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -19,7 +20,7 @@ public class UtilsViews {
     public static ArrayList<Object> controllers = new ArrayList<>();
 
     private static Stage mainStage;
-    
+
     public static void setStage(Stage stage) {
         mainStage = stage;
     }
@@ -30,10 +31,13 @@ public class UtilsViews {
 
     // Add one view to the list
     public static void addView(Class<?> cls, String name, String path) throws Exception {
-        
+
         boolean defaultView = false;
         FXMLLoader loader = new FXMLLoader(cls.getResource(path));
-        Pane view = loader.load();
+
+        // ⭐ CAMBIO IMPORTANTE: Parent en vez de Pane
+        Parent view = loader.load();
+
         ObservableList<Node> children = parentContainer.getChildren();
 
         // First view is the default view
@@ -68,7 +72,7 @@ public class UtilsViews {
                 return n.getId();
             }
         }
-        return null; // No hi ha cap vista activa
+        return null;
     }
 
     // Set visible view by its id (viewId)
@@ -88,7 +92,6 @@ public class UtilsViews {
             }
         }
 
-        // Remove focus from buttons
         parentContainer.requestFocus();
     }
 
@@ -107,10 +110,10 @@ public class UtilsViews {
         }
 
         if (curView.getId().equals(viewId)) {
-            return; // Do nothing if current view is the same as the next view
+            return;
         }
 
-        // Get nxtView
+        // Get next view
         Node nxtView = null;
         for (Node n : list) {
             if (n.getId().equals(viewId)) {
@@ -118,11 +121,9 @@ public class UtilsViews {
             }
         }
 
-        // Set nxtView visible
         nxtView.setVisible(true);
         nxtView.setManaged(true);
 
-        // By default, set animation to the left
         double width = parentContainer.getScene().getWidth();
         double xLeftStart = 0;
         double xLeftEnd = 0;
@@ -133,7 +134,6 @@ public class UtilsViews {
 
         if (list.indexOf(curView) < list.indexOf(nxtView)) {
 
-            // If curView is lower than nxtView, animate to the left
             xLeftStart = 0;
             xLeftEnd = -width;
             xRightStart = width;
@@ -144,9 +144,8 @@ public class UtilsViews {
             curView.translateXProperty().set(xLeftStart);
             nxtView.translateXProperty().set(xRightStart);
 
-        } else { 
+        } else {
 
-            // If curView is greater than nxtView, animate to the right
             xLeftStart = -width;
             xLeftEnd = 0;
             xRightStart = 0;
@@ -158,21 +157,18 @@ public class UtilsViews {
             nxtView.translateXProperty().set(xLeftStart);
         }
 
-        // Animate leftView 
         final double seconds = 0.4;
+
         KeyValue kvLeft = new KeyValue(animatedViewLeft.translateXProperty(), xLeftEnd, Interpolator.EASE_BOTH);
         KeyFrame kfLeft = new KeyFrame(Duration.seconds(seconds), kvLeft);
-        Timeline timelineLeft = new Timeline();
-        timelineLeft.getKeyFrames().add(kfLeft);
+        Timeline timelineLeft = new Timeline(kfLeft);
         timelineLeft.play();
 
-        // Animate rightView 
         KeyValue kvRight = new KeyValue(animatedViewRight.translateXProperty(), xRightEnd, Interpolator.EASE_BOTH);
         KeyFrame kfRight = new KeyFrame(Duration.seconds(seconds), kvRight);
-        Timeline timelineRight = new Timeline();
-        timelineRight.getKeyFrames().add(kfRight);
+        Timeline timelineRight = new Timeline(kfRight);
+
         timelineRight.setOnFinished(t -> {
-            // Hide other views and reset all translations
             for (Node n : list) {
                 if (!n.getId().equals(viewId)) {
                     n.setVisible(false);
@@ -181,9 +177,9 @@ public class UtilsViews {
                 n.translateXProperty().set(0);
             }
         });
+
         timelineRight.play();
 
-        // Remove focus from buttons
         parentContainer.requestFocus();
     }
 }

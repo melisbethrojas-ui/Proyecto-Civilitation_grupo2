@@ -1,5 +1,6 @@
 package com.project;
 
+import Logic.Civilization;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +18,21 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        GameState.initGame(); 
+        // genera recursos cada minuto
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    Civilization civ = GameState.getPlayer();
+                    civ.generateResources();
+                }
+            },
+            60000, 
+            60000   
+        );
+
+
         stage.setWidth(1280);
         stage.setHeight(1000);
         stage.setMaximized(true);
@@ -38,9 +54,9 @@ public class Main extends Application {
         UtilsViews.addView(getClass(), "Battle", "/assets/gui/battle.fxml");
         UtilsViews.addView(getClass(), "Stats", "/assets/gui/stats.fxml");
         UtilsViews.addView(getClass(), "Resources", "/assets/gui/resources.fxml");
-        UtilsViews.addView(getClass(), "Defenses", "/assets/gui/defenses.fxml");
         UtilsViews.addView(getClass(), "Tech", "/assets/gui/tech.fxml");
 
+        UtilsViews.setView("Desktop");
         Scene scene = new Scene(UtilsViews.parentContainer);
 
         scene.getStylesheets().add(getClass().getResource("/assets/gui/style.css").toExternalForm());
@@ -63,4 +79,9 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+        @Override
+    public void stop() {
+        System.exit(0);
+    }
+
 }

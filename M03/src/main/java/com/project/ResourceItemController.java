@@ -17,7 +17,7 @@ public class ResourceItemController {
         amountLabel.setText("Cantidad: " + amount);
 
         icon.setImage(new Image(
-            getClass().getResource("/assets/img/" + iconName).toExternalForm()
+                getClass().getResource("/assets/img/" + iconName).toExternalForm()
         ));
     }
 }

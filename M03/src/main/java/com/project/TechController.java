@@ -1,9 +1,10 @@
 package com.project;
 
+import Logic.Civilization;
 import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class TechController {
 
@@ -15,19 +16,47 @@ public class TechController {
     }
 
     public void updateTech() {
+
         techList.getChildren().clear();
 
-        // Datos de ejemplo (luego los conectas con tu modelo)
-        addTechItem("Mejorar los ataques", "attack.png", false, 50);
-        addTechItem("Mejorar la defensa", "defense.png", true, 80);
+        Civilization civ = GameState.getPlayer();
+
+        addTechItem(
+                "Mejorar Ataque",
+                "attack.png",
+                civ.isAttackTechResearched(),
+                civ.getAttackTechCost()
+        );
+
+        addTechItem(
+                "Mejorar Defensa",
+                "defense.png",
+                civ.isDefenseTechResearched(),
+                civ.getDefenseTechCost()
+        );
+        ResourcesController resources =
+            (ResourcesController) UtilsViews.getController("Resources");
+        if (resources != null) resources.updateResources();
+
+        StatsController stats =
+                (StatsController) UtilsViews.getController("Stats");
+        if (stats != null) stats.updateStats();
+
+        DesktopController desktop =
+                (DesktopController) UtilsViews.getController("Desktop");
+        if (desktop != null) desktop.refresh();
+
     }
 
     private void addTechItem(String name, String iconName, boolean researched, int cost) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/assets/techItem.fxml"));
-            HBox item = loader.load();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/assets/techItem.fxml")
+            );
 
+            HBox item = loader.load();
             TechItemController controller = loader.getController();
+
             controller.setData(name, iconName, researched, cost);
 
             techList.getChildren().add(item);
@@ -40,5 +69,11 @@ public class TechController {
     @FXML
     private void goBack() {
         UtilsViews.setViewAnimating("Desktop");
+
+        DesktopController desktop =
+                (DesktopController) UtilsViews.getController("Desktop");
+
+        if (desktop != null) desktop.refresh();
     }
+
 }

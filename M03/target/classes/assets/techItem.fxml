@@ -9,20 +9,35 @@
       fx:controller="com.project.TechItemController"
       spacing="20"
       alignment="CENTER_LEFT"
-      style="-fx-padding: 15;"
       styleClass="item-card">
 
-    <ImageView fx:id="icon" fitWidth="64" fitHeight="64"/>
+    <!-- ICONO -->
+    <ImageView fx:id="icon"
+               fitWidth="64"
+               fitHeight="64"
+               preserveRatio="true"
+               styleClass="unit-image"/>
 
-    <VBox spacing="5">
-        <Label fx:id="nameLabel" styleClass="item-label"/>
-        <Label fx:id="statusLabel" styleClass="item-info"/>
-        <Label fx:id="costLabel" styleClass="item-info"/>
+    <!-- INFO -->
+    <VBox spacing="6">
+
+        <Label fx:id="nameLabel"
+               styleClass="item-label"/>
+
+        <Label fx:id="statusLabel"
+               styleClass="item-info"/>
+
+        <Label fx:id="costLabel"
+               styleClass="item-info"/>
+
     </VBox>
 
-    <Button fx:id="actionButton"
-            text="Investigar"
-            onAction="#onAction"
-            styleClass="button"/>
+    <!-- BOTÓN -->
+    <VBox alignment="CENTER_RIGHT">
+        <Button fx:id="actionButton"
+                text="Investigar"
+                onAction="#onAction"
+                styleClass="button"/>
+    </VBox>
 
 </HBox>

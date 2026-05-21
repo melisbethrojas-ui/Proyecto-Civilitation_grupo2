@@ -8,38 +8,64 @@ import javafx.scene.image.ImageView;
 
 public class BuildingItemController {
 
-    @FXML private ImageView icon;
-    @FXML private Label nameLabel;
-    @FXML private Label costLabel;
-    @FXML private Label effectLabel;
-    @FXML private Label statusLabel;
-    @FXML private Button actionButton;
-
-    private String buildingName;
-
-    public void setData(String name, String iconName, String cost, String effect, boolean built) {
-
-        this.buildingName = name;
-
-        nameLabel.setText(name);
-        costLabel.setText("Coste: " + cost);
-        effectLabel.setText("Efecto: " + effect);
-
-        if (built) {
-            statusLabel.setText("Estado: Construido");
-            actionButton.setText("Mejorar");
-        } else {
-            statusLabel.setText("Estado: No construido");
-            actionButton.setText("Construir");
-        }
-
-        icon.setImage(new Image(
-            getClass().getResource("/assets/img/" + iconName).toExternalForm()
-        ));
-    }
+    @FXML
+    private ImageView icon;
 
     @FXML
-    private void onAction() {
-        System.out.println("Acción sobre edificio: " + buildingName);
+    private Label nameLabel;
+
+    @FXML
+    private Label levelLabel;
+
+    @FXML
+    private Label costLabel;
+
+    @FXML
+    private Label effectLabel;
+
+    @FXML
+    private Label errorLabel;
+
+    @FXML
+    public Button upgradeButton;
+
+    public void setData(
+            String name,
+            String iconName,
+            int level,
+            int food,
+            int wood,
+            int iron,
+            String effect
+    ) {
+
+        nameLabel.setText(name);
+
+        levelLabel.setText("Nivel actual: " + level);
+
+        costLabel.setText(
+                "Comida: " + food +
+                " | Madera: " + wood +
+                " | Hierro: " + iron
+        );
+
+        effectLabel.setText(effect);
+
+        icon.setImage(
+                new Image(
+                        getClass()
+                                .getResource("/assets/img/" + iconName)
+                                .toExternalForm()
+                )
+        );
+    }
+
+    public void showError(String msg) {
+        errorLabel.setText(msg);
+        errorLabel.setVisible(true);
+    }
+
+    public void clearError() {
+        errorLabel.setVisible(false);
     }
 }

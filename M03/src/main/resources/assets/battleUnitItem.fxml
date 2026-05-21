@@ -16,6 +16,11 @@
 
     <VBox spacing="3">
         <Label fx:id="nameLabel" styleClass="item-label"/>
+
+        <Label fx:id="initialLabel" styleClass="item-info"/>
+        <Label fx:id="remainingLabel" styleClass="item-info"/>
+        <Label fx:id="lossesLabel" styleClass="danger-text"/>
+
         <Label fx:id="statsLabel" styleClass="item-info"/>
     </VBox>
 

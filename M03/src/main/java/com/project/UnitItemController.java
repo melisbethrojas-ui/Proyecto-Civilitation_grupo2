@@ -9,27 +9,71 @@ import javafx.scene.image.ImageView;
 public class UnitItemController {
 
     @FXML private ImageView icon;
-    @FXML private Label nameLabel;
-    @FXML private Label statsLabel;
-    @FXML private Label costLabel;
-    @FXML private Button actionButton;
 
-    private String unitName;
+    @FXML private Label unitName;
+    @FXML private Label stats;
+    @FXML private Label cost;
+    @FXML private Label errorLabel;
 
-    public void setData(String name, String iconName, int attack, int defense, int hp, int costFood, int costIron) {
+    @FXML public Button btn1;
+    @FXML public Button btn5;
+    @FXML public Button btn10;
 
-        this.unitName = name;
+    public void setData(
+        String name,
+        String iconName,
+        int atk,
+        int armor,
+        int food,
+        int wood,
+        int iron,
+        int mana,
+        int unitCount
+    ) {
 
-        nameLabel.setText(name);
-        statsLabel.setText("ATK: " + attack + "  DEF: " + defense + "  HP: " + hp);
-        costLabel.setText("Coste: " + costFood + " comida, " + costIron + " hierro");
+    // Nombre con cantidad
+    unitName.setText(name + " (x" + unitCount + ")");
 
-        icon.setImage(new Image(getClass().getResource("/assets/img/" + iconName).toExternalForm()));
+    stats.setText(
+            "ATK: " + atk +
+            " | DEF: " + armor
+    );
+
+    cost.setText(
+            "Food: " + food +
+            " Wood: " + wood +
+            " Iron: " + iron +
+            " Mana: " + mana
+    );
+
+    try {
+        icon.setImage(
+                new Image(
+                        getClass().getResource("/assets/img/" + iconName).toExternalForm()
+                )
+        );
+    } catch (Exception e) {
+        icon.setImage(null);
     }
 
-    @FXML
-    private void onAction() {
-        // Aquí llamas a tu modelo real
-        System.out.println("Crear unidad: " + unitName);
+    clearError();
     }
+
+
+    public void clearError() {
+        if (errorLabel != null) {
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
+        }
+    }
+
+    public void showError(String msg) {
+        if (errorLabel != null) {
+            errorLabel.setText(msg);
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+        }
+    }
+
 }

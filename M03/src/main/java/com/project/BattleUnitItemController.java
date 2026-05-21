@@ -9,14 +9,31 @@ public class BattleUnitItemController {
 
     @FXML private ImageView icon;
     @FXML private Label nameLabel;
+    @FXML private Label initialLabel;
+    @FXML private Label remainingLabel;
+    @FXML private Label lossesLabel;
     @FXML private Label statsLabel;
 
-    public void setData(String name, int hp, int atk, int def, String iconName) {
+    public void setData(
+            String name,
+            String iconName,
+            int initial,
+            int remaining,
+            int atk,
+            int def
+    ) {
         nameLabel.setText(name);
-        statsLabel.setText("HP: " + hp + "  ATK: " + atk + "  DEF: " + def);
 
         icon.setImage(new Image(
-            getClass().getResource("/assets/img/" + iconName).toExternalForm()
+                getClass().getResource("/assets/img/" + iconName).toExternalForm()
         ));
+
+        initialLabel.setText("Inicial: " + initial);
+        remainingLabel.setText("Restantes: " + remaining);
+
+        int losses = initial - remaining;
+        lossesLabel.setText("Pérdidas: " + losses);
+
+        statsLabel.setText("ATK: " + atk + " | DEF: " + def);
     }
 }
