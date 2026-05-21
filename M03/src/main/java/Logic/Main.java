@@ -209,6 +209,7 @@ public class Main {
                 case 7 -> civ.upgradeTechnologyDefense();
                 default -> System.out.println("Opción no válida.");
             }
+            System.out.println("[ÉXITO] ¡Operación realizada correctamente!");
         } catch (ResourceException e) {
             System.out.println("[ERROR RECURSOS] " + e.getMessage());
         }
